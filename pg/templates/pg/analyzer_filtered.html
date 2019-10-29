@@ -1,0 +1,33 @@
+{% extends "pg/analyzer.html" %}
+{% load crispy_forms_tags %}
+{% load render_table from django_tables2 %}
+{% load static %}
+{% block filter %}
+
+ <div class="content-section col-md-8 col-md-offset-2">
+
+            {% if user.is_authenticated %}
+                Run: {{ run_name }}
+                Dataset: {{ dataset_name }}
+                Model: {{ model }}
+                Clean: {{ clean }}
+                Scaling: {{ scaling }}
+                Training: {{ training }}
+                Params: {{ params }}
+
+            <div class="text-center" style="text-align:center; font-weight: bold;">
+                <button id="download_run" class="btn btn-primary">Download Prediction</button>
+            </div>
+
+            <div class="text-center" style="text-align:center; font-weight: bold;">
+                <button id="download_model" class="btn btn-primary">Download Model</button>
+            </div>
+
+            <script src="{% static 'js/analyzer_filtered.js' %}"></script>
+
+            {% else %}
+                Please Log In
+            {% endif %}
+
+ </div>
+{% endblock filter %}

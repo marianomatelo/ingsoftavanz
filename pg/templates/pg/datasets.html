@@ -1,0 +1,43 @@
+{% extends "pg/index.html" %}
+{% load crispy_forms_tags %}
+{% load render_table from django_tables2 %}
+{% load static %}
+{% block start %}
+
+ <div class="content-section col-md-8 col-md-offset-2">
+
+            {% if user.is_authenticated %}
+
+            <br>
+            <div style="text-align:center; font-weight: bold;">
+                Available Datasets
+            </div>
+            <br>
+
+            {% render_table dataset_table %}
+
+            <div><ul class="nav navbar-nav navbar-right"></ul>
+            </div>
+
+            <div class="text-center" style="text-align:center; font-weight: bold;">
+                <button id="upload_button" class="btn btn-primary">Upload New Dataset</button>
+            </div>
+
+            <br>
+
+            <div id="upload_dataset">
+
+            {% block content %}
+               {% crispy form %}
+            {% endblock %}
+
+            </div>
+
+            <script src="{% static 'js/uploads.js' %}"></script>
+
+            {% else %}
+                Please Log In
+            {% endif %}
+
+ </div>
+{% endblock start %}

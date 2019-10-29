@@ -1,0 +1,36 @@
+{% extends "pg/index.html" %}
+{% load crispy_forms_tags %}
+{% load render_table from django_tables2 %}
+{% load static %}
+{% block start %}
+
+ <div class="content-section col-md-8 col-md-offset-2">
+
+            {% if user.is_authenticated %}
+            <br>
+            <div><br>Runs<br></div>
+            <br>
+
+            <div class="analyzer_filter">
+
+            {% block content %}
+               {% crispy form %}
+            {% endblock %}
+
+            </div>
+
+            {% block filter %}
+
+            {% endblock filter %}
+
+            <div><ul class="nav navbar-nav navbar-left"></ul>
+            </div>
+
+            <script src="{% static 'js/analyzer.js' %}"></script>
+
+            {% else %}
+                Please Log In
+            {% endif %}
+
+ </div>
+{% endblock start %}
