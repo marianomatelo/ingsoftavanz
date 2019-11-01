@@ -12,18 +12,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Dataset_Meta',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('description', models.CharField(max_length=300)),
-                ('problem', models.CharField(max_length=20)),
-                ('frequency', models.CharField(max_length=30)),
-                ('user', models.CharField(max_length=100)),
-                ('last_mod', models.DateTimeField(auto_now_add=True)),
-            ],
-        ),
-        migrations.CreateModel(
             name='User',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),

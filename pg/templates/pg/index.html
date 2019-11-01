@@ -46,7 +46,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" class="styleheader" href="{% url "index" %}">PLAYGROUND</a>
+          <a class="navbar-brand" class="styleheader" href="{% url "index" %}">ISA</a>
 
         </div>
 
@@ -57,9 +57,9 @@
 
             {% if user.is_authenticated %}
 
-            <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-out"></span> &nbsp; Logout</a></li>
+            <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-out"></span> &nbsp; Log out</a></li>
             {% else %}
-            <li><a href="{% url "register" %}"><span class="glyphicon glyphicon-user"></span> &nbsp; Sign up</a></li>
+            <li><a href="{% url "register" %}"><span class="glyphicon glyphicon-user"></span> &nbsp; Registrarse</a></li>
             <li><a href="{% url "login" %}"><span class="glyphicon glyphicon-log-in"></span> &nbsp; Log in</a></li>
             {% endif %}
 
@@ -68,56 +68,48 @@
       </div>
     </nav>
   </header>
+
   <br/>
   <br>
   <br>
+
   <div class="row">
     {% block start %}
 
+      {% if user.is_authenticated %}
+      <div id="wrapper" >
 
-    {% if user.is_authenticated %}
-    <div id="wrapper" >
+      </div>
 
-        <div class="button col-md-3 col-md-offset-2 center" style="text-align:center; font-weight: bold;">
-            <a href="{% url "datasets" %}" >
-            <img border="0" src="static/img/dataset.svg" width="150" height="150">
-            </a>
+      <br>
+      <br>
+
+      <div style="text-align:center; font-weight: bold;">
+          Bienvenido {{user.username}}
+      </div>
+
+      <div style="text-align:center; font-weight: bold;">
+          Rol: {{rol}}
+      </div>
+
+      {% if rol == 'admin' %}
+
+        <br>
+
+        <div style="text-align: center">
+          <input type="button" value="button">
         </div>
 
-        <div class="button col-md-3 center" style="text-align:center; font-weight: bold;">
-          <a href="{% url "playground" %}" >
-            <img border="0" src="static/img/sandbox.svg" width="150" height="150">
-            </a>
+      {% else %}
+      {% endif %}
+
+      {% else %}
+
+        <div style="text-align:center; font-weight: bold;">
+            Por favor haga log in o registrese
         </div>
 
-        <div class="button col-md-3 center" style="text-align:center; font-weight: bold;">
-            <a href="{% url "analyzer" %}" >
-            <img border="0" src="static/img/analyzer.svg" width="150" height="150">
-            </a>
-        </div>
-
-    </div>
-
-    <br>
-    <br>
-
-    <div style="text-align:center; font-weight: bold;">
-        Run Status
-    </div>
-
-    <br>
-
-    <div>
-
-      {% render_table runs_table %}
-
-    </div>
-
-    {% else %}
-
-        <img src="static/img/intro.png">
-
-    {% endif %}
+      {% endif %}
 
     {% endblock %}
   </div>

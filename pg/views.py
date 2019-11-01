@@ -13,22 +13,22 @@ from django.http import JsonResponse
 from django.utils.timezone import datetime
 from django.urls import reverse
 from django.shortcuts import redirect
-from . models import Dataset_Meta, Daemon
+from . models import User
 import pandas as pd
-from engine import daemon
-from pg.tables import datasetTable, runsTable
-from pg.forms import MessageForm, UploadsForm, AnalyzerForm
+# from pg.tables import datasetTable
+# from pg.forms import MessageForm
 from engine.DataManager import DataManager
 
 
 def index(request):
 
     if request.user.is_authenticated:
+        usuario = User.objects.filter(name='mariano')[0]
 
-        runs_table = runsTable(Daemon.objects.all())
-        # runs_table = runsTable(Daemon.objects.filter(status='running').order_by('pk'))
+        if usuario.rol == '1':
+            rol = 'admin'
 
-        return render(request, 'pg/index.html', {'title': 'index', 'runs_table': runs_table})
+    return render(request, 'pg/index.html', {'title': 'Bienvenido', 'rol': rol})
 
 
 def register(request):
@@ -36,6 +36,7 @@ def register(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             username = request.POST['username']
+            print(username)
             #########################mail####################################
             # htmly = get_template('pg/Email.html')
             # d = { 'username': username }
@@ -46,7 +47,10 @@ def register(request):
             # msg.send()
             ##################################################################
             form.save()
-            username = form.cleaned_data.get('username')
+            nuevo_usuario = User(rol=request.POST['rol'], name=request.POST['username'],
+                                 email=request.POST['email'], password=request.POST['password1'])
+            nuevo_usuario.save()
+
             messages.success(request, f'Your account has been created! You are now able to log in')
             return redirect('login')
     else:
