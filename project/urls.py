@@ -17,6 +17,8 @@ urlpatterns = [
 
     path('/', pg_view.index, name='index'),
 
+    path('mfa/', pg_view.mfa, name='mfa'),
+
     # path('datasets/', pg_view.dataset, name='datasets'),
     #
     # path('playground/', pg_view.playground, name='playground'),

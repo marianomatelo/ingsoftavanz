@@ -31,6 +31,17 @@ def index(request):
     return render(request, 'pg/index.html', {'title': 'Bienvenido', 'rol': rol})
 
 
+def mfa(request):
+
+    if request.user.is_authenticated:
+        usuario = User.objects.filter(name='mariano')[0]
+
+        if usuario.rol == '1':
+            rol = 'admin'
+
+    return render(request, 'pg/mfa.html', {'title': 'Bienvenido', 'rol': rol})
+
+
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
@@ -67,10 +78,9 @@ def Login(request):
 
         if user is not None:
             form = login(request, user)
-            # messages.success(request, f' wecome {username} !!')
-            return redirect('index')
+            return redirect('mfa')
         else:
-            messages.info(request, f'Error: Try to log in again')
+            messages.info(request, f'Error: Intente log in nuevamente')
 
     form = AuthenticationForm()
     return render(request, 'pg/login.html', {'form': form, 'title': 'Log In'})
