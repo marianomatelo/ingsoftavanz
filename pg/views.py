@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate,login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import UserRegisterForm
+from .forms import UserRegisterForm, keyForm
 from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
@@ -16,14 +16,14 @@ from django.shortcuts import redirect
 from . models import User
 import pandas as pd
 # from pg.tables import datasetTable
-# from pg.forms import MessageForm
-from engine.DataManager import DataManager
+import random
+import string
 
 
 def index(request):
 
     if request.user.is_authenticated:
-        usuario = User.objects.filter(name='mariano')[0]
+        usuario = User.objects.filter(name=request.user)[0]
 
         if usuario.rol == '1':
             rol = 'admin'
@@ -33,30 +33,35 @@ def index(request):
 
 def mfa(request):
 
-    if request.user.is_authenticated:
-        usuario = User.objects.filter(name='mariano')[0]
+    usuario = User.objects.filter(name=request.user)[0]
 
-        if usuario.rol == '1':
-            rol = 'admin'
+    if request.method == 'POST':
 
-    return render(request, 'pg/mfa.html', {'title': 'Bienvenido', 'rol': rol})
+        if request.POST['clave_multifactor'] == usuario.key:
+
+            return redirect('index')
+
+    form = keyForm()
+
+    usuario.key = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+
+    usuario.save()
+
+    htmly = get_template('pg/Email.html')
+    d = {'username': request.user, 'clave': usuario.key}
+    subject, from_email, to = 'ISA Clave MFA', 'software@fie.undef.edu.ar', usuario.email
+    html_content = htmly.render(d)
+    msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
+
+    return render(request, 'pg/mfa.html', {'form': form, 'title': 'Log In'})
 
 
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            username = request.POST['username']
-            print(username)
-            #########################mail####################################
-            # htmly = get_template('pg/Email.html')
-            # d = { 'username': username }
-            # subject, from_email, to = 'hello', 'from@example.com', 'ishaljaiswal.info@gmail.com'
-            # html_content = htmly.render(d)
-            # msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
-            # msg.attach_alternative(html_content, "text/html")
-            # msg.send()
-            ##################################################################
             form.save()
             nuevo_usuario = User(rol=request.POST['rol'], name=request.POST['username'],
                                  email=request.POST['email'], password=request.POST['password1'])

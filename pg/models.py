@@ -6,6 +6,7 @@ class User(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(blank=True)
     password = models.CharField(max_length=50)
+    key = models.CharField(max_length=100)
 
 
 # class Dataset_Meta(models.Model):
