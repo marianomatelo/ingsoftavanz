@@ -10,12 +10,25 @@ def leer_tabla(tabla):
         'Content-type': 'application/json',
     }
 
-    data = '{"tabla": "CodingTips"}'
+    data = '{"tabla": ' + tabla + '}'
 
-    response = requests.post('https://8luy98fw22.execute-api.us-east-1.amazonaws.com/default/consultar?tabla={}'.format(tabla), headers=headers, data=data)
+    response = requests.post('https://8luy98fw22.execute-api.us-east-1.amazonaws.com/default/consultar', headers=headers, data=data)
 
     print(response.content)
 
+
+def buscar_usuario(tabla):
+
+    headers = {
+        'Content-type': 'application/json',
+    }
+
+    data = '{"tabla": "CodingTips"}'
+
+    response = requests.post('https://8luy98fw22.execute-api.us-east-1.amazonaws.com/default/consultar?tabla={}'.format(tabla), headers=headers)
+    print(response.content)
+    json_data = json.loads(response.text)
+    print(json_data)
 
 def write():
 
@@ -41,7 +54,9 @@ def delete():
 
 if __name__ == '__main__':
 
-    leer_tabla(tabla='CodingTips')
+    # leer_tabla(tabla='usuarios')
+
+    buscar_usuario(tabla='usuarios')
 
     # write()
 
