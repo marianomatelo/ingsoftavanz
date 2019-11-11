@@ -18,44 +18,69 @@ import pandas as pd
 # from pg.tables import datasetTable
 import random
 import string
+from api_gateway.api import buscar_usuario, buscar_usuario_mfa
 
 
 def index(request):
 
-    if request.user.is_authenticated:
-        usuario = User.objects.filter(name=request.user)[0]
+    # if request.user.is_authenticated:
+    #     usuario = User.objects.filter(name=request.user)[0]
+    #
+    #     if usuario.rol == '1':
+    #         rol = 'admin'
 
-        if usuario.rol == '1':
-            rol = 'admin'
+    # return render(request, 'pg/index.html', {'title': 'Bienvenido', 'rol': rol})
 
-    return render(request, 'pg/index.html', {'title': 'Bienvenido', 'rol': rol})
+    return render(request, 'pg/index.html', {'title': 'Bienvenido'})
 
 
-def mfa(request):
+def mfa(request, nombre):
 
-    usuario = User.objects.filter(name=request.user)[0]
+    usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
+
+    if len(usuario) > 0:
+        print('Usuario validado')
+        nombre = usuario[0]
+        email = usuario[1]
+        clave_mfa = usuario[3]
 
     if request.method == 'POST':
 
-        if request.POST['clave_multifactor'] == usuario.key:
+        if request.POST['clave_multifactor'] == clave_mfa:
 
-            return redirect('index')
+            print('MFA Validado')
+
+            return redirect('menu', nombre=nombre)
 
     form = keyForm()
 
-    usuario.key = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
-
-    usuario.save()
+    # clave_mfa = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+    ### TODO: GUARDAR NUEVA CLAVE MFA
 
     htmly = get_template('pg/Email.html')
-    d = {'username': request.user, 'clave': usuario.key}
-    subject, from_email, to = 'ISA Clave MFA', 'software@fie.undef.edu.ar', usuario.email
+    d = {'username': nombre, 'clave': clave_mfa}
+    subject, from_email, to = 'ISA Clave MFA', 'software@fie.undef.edu.ar', email
     html_content = htmly.render(d)
     msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
     msg.attach_alternative(html_content, "text/html")
     msg.send()
 
-    return render(request, 'pg/mfa.html', {'form': form, 'title': 'Log In'})
+    return render(request, 'pg/mfa.html', {'form': form, 'title': 'MFA'})
+
+
+def menu(request, nombre):
+
+    usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
+
+    if len(usuario) > 0:
+        print('Usuario validado')
+        nombre = usuario[0]
+        rol = usuario[2]
+
+    else:
+        print('Usuario invalido')
+
+    return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol})
 
 
 def register(request):
@@ -77,15 +102,24 @@ def register(request):
 def Login(request):
     if request.method == 'POST':
 
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
+        usuario = buscar_usuario(tabla='usuarios', input_usuario=request.POST['username'], input_password=request.POST['password'])
 
-        if user is not None:
-            form = login(request, user)
-            return redirect('mfa')
+        if len(usuario) > 0:
+            print('Usuario validado')
+            nombre = usuario[0]
+            return redirect('mfa', nombre=nombre)
+
         else:
+            print('Usuario invalido')
             messages.info(request, f'Error: Intente log in nuevamente')
+
+        # user = authenticate(request, username=username, password=password)
+        #
+        # if user is not None:
+        #     form = login(request, user)
+        #     return redirect('mfa')
+        # else:
+        #     messages.info(request, f'Error: Intente log in nuevamente')
 
     form = AuthenticationForm()
     return render(request, 'pg/login.html', {'form': form, 'title': 'Log In'})

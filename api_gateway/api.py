@@ -17,18 +17,60 @@ def leer_tabla(tabla):
     print(response.content)
 
 
-def buscar_usuario(tabla):
+def buscar_usuario(tabla, input_usuario, input_password):
 
     headers = {
         'Content-type': 'application/json',
     }
 
-    data = '{"tabla": "CodingTips"}'
+    data = '{"tabla": ' + tabla + '}'
 
-    response = requests.post('https://8luy98fw22.execute-api.us-east-1.amazonaws.com/default/consultar?tabla={}'.format(tabla), headers=headers)
-    print(response.content)
-    json_data = json.loads(response.text)
-    print(json_data)
+    response = requests.post('https://8luy98fw22.execute-api.us-east-1.amazonaws.com/default/consultar', headers=headers, data=data)
+
+    usuarios = json.loads(response.text)
+
+    for key, value in usuarios.items():
+
+        if key == 'Items':
+
+            usuario = pd.DataFrame(value)
+
+            if input_usuario == usuario['nombre'].iloc[0] and input_password == usuario['password'].iloc[0]:
+
+                return [usuario['nombre'].iloc[0], usuario['email'].iloc[0], usuario['rol'].iloc[0], usuario['key'].iloc[0]]
+
+            else:
+
+                return []
+
+
+def buscar_usuario_mfa(tabla, input_usuario):
+
+    headers = {
+        'Content-type': 'application/json',
+    }
+
+    data = '{"tabla": ' + tabla + '}'
+
+    response = requests.post('https://8luy98fw22.execute-api.us-east-1.amazonaws.com/default/consultar', headers=headers, data=data)
+
+    usuarios = json.loads(response.text)
+
+    for key, value in usuarios.items():
+
+        if key == 'Items':
+
+            usuario = pd.DataFrame(value)
+
+            if input_usuario == usuario['nombre'].iloc[0]:
+
+                return [usuario['nombre'].iloc[0], usuario['email'].iloc[0], usuario['rol'].iloc[0], usuario['key'].iloc[0]]
+
+            else:
+
+                return []
+
+
 
 def write():
 
@@ -54,9 +96,19 @@ def delete():
 
 if __name__ == '__main__':
 
-    # leer_tabla(tabla='usuarios')
+    leer_tabla(tabla='usuarios')
 
-    buscar_usuario(tabla='usuarios')
+    # usuario = buscar_usuario(tabla='usuarios', input_usuario='Mariano', input_password='Continente7')
+    #
+    # if len(usuario) > 0:
+    #     print('Usuario validado')
+    #     nombre = usuario[0]
+    #     email = usuario[1]
+    #     rol = usuario[2]
+    #     key = usuario[3]
+    #
+    # else:
+    #     print('Usuario invalido')
 
     # write()
 

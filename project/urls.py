@@ -17,7 +17,9 @@ urlpatterns = [
 
     path('/', pg_view.index, name='index'),
 
-    path('mfa/', pg_view.mfa, name='mfa'),
+    path('mfa/(?P<nombre>\d+)/$', pg_view.mfa, name='mfa'),
+
+    path('menu/(?P<nombre>\d+)/$', pg_view.menu, name='menu'),
 
     # path('datasets/', pg_view.dataset, name='datasets'),
     #
