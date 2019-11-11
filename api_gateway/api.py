@@ -4,17 +4,17 @@ import requests
 import pandas as pd
 
 
-def read_all():
+def leer_tabla(tabla):
 
-    with urllib.request.urlopen("https://8luy98fw22.execute-api.us-east-1.amazonaws.com/default/tips") as url:
-        data = json.loads(url.read().decode())
-        data = pd.DataFrame(data)
+    headers = {
+        'Content-type': 'application/json',
+    }
 
-        for i in range(len(data)):
-            date = data['Items'][i]['date']
-            author = data['Items'][i]['author']
+    data = '{"tabla": "CodingTips"}'
 
-            print(date, author)
+    response = requests.post('https://8luy98fw22.execute-api.us-east-1.amazonaws.com/default/consultar?tabla={}'.format(tabla), headers=headers, data=data)
+
+    print(response.content)
 
 
 def write():
@@ -39,11 +39,9 @@ def delete():
     response = requests.post('https://8luy98fw22.execute-api.us-east-1.amazonaws.com/default/delete', headers=headers, data=data)
 
 
-
-
-
 if __name__ == '__main__':
-    read_all()
+
+    leer_tabla(tabla='CodingTips')
 
     # write()
 
