@@ -53,13 +53,9 @@ def mfa(request, nombre):
             return redirect('menu', nombre=nombre)
 
     form = keyForm()
-
-    # clave_mfa = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
-    ### TODO: GUARDAR NUEVA CLAVE MFA
-
     htmly = get_template('pg/Email.html')
     d = {'username': nombre, 'clave': clave_mfa}
-    subject, from_email, to = 'ISA Clave MFA', 'software@fie.undef.edu.ar', email
+    subject, from_email, to = 'ISA Clave MFA', 'trqarg@gmail.com', email
     html_content = htmly.render(d)
     msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
     msg.attach_alternative(html_content, "text/html")

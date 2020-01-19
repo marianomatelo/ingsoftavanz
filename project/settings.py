@@ -106,6 +106,6 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 ##################################
-EMAIL_HOST_USER = "software@fie.undef.edu.ar"
-EMAIL_HOST_PASSWORD = "Testing2019"
+EMAIL_HOST_USER = "trqarg@gmail.com"
+EMAIL_HOST_PASSWORD = "torquearg"
 ##################################

@@ -2,6 +2,7 @@
 import urllib.request, json
 import requests
 import pandas as pd
+import base64
 
 
 def leer_tabla(tabla):
@@ -35,7 +36,10 @@ def buscar_usuario(tabla, input_usuario, input_password):
 
             usuario = pd.DataFrame(value)
 
-            if input_usuario == usuario['nombre'].iloc[0] and input_password == usuario['password'].iloc[0]:
+            a = base64.b64encode(bytes(u'isa2019', "utf-8"))
+            b = base64.b64decode(a).decode("utf-8", "ignore")
+
+            if input_usuario == usuario['nombre'].iloc[0] and b == input_password:
 
                 return [usuario['nombre'].iloc[0], usuario['email'].iloc[0], usuario['rol'].iloc[0], usuario['key'].iloc[0]]
 
