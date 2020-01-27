@@ -41,7 +41,8 @@ def buscar_usuario(tabla, input_usuario, input_password):
 
             if input_usuario == usuario['nombre'].iloc[0] and b == input_password:
 
-                return [usuario['nombre'].iloc[0], usuario['email'].iloc[0], usuario['rol'].iloc[0], usuario['key'].iloc[0]]
+                return [usuario['nombre'].iloc[0], usuario['email'].iloc[0],
+                        usuario['rol'].iloc[0], usuario['key'].iloc[0]]
 
             else:
 
@@ -98,9 +99,22 @@ def delete():
     response = requests.post('https://8luy98fw22.execute-api.us-east-1.amazonaws.com/default/delete', headers=headers, data=data)
 
 
+def checkStatus():
+
+    url = 'https://stackoverflow.com/'
+    response_code = 200
+
+    r = requests.get(url)
+
+    if r.status_code != response_code:
+        return 'DOWN'
+    else:
+        return 'UP'
+
+
 if __name__ == '__main__':
 
-    leer_tabla(tabla='usuarios')
+    # leer_tabla(tabla='usuarios')
 
     # usuario = buscar_usuario(tabla='usuarios', input_usuario='Mariano', input_password='Continente7')
     #
@@ -117,3 +131,5 @@ if __name__ == '__main__':
     # write()
 
     # delete()
+
+    checkStatus()

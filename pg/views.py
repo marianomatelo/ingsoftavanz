@@ -18,7 +18,7 @@ import pandas as pd
 # from pg.tables import datasetTable
 import random
 import string
-from api_gateway.api import buscar_usuario, buscar_usuario_mfa
+from api_gateway.api import buscar_usuario, buscar_usuario_mfa, checkStatus
 
 
 def index(request):
@@ -72,11 +72,13 @@ def menu(request, nombre):
         print('Usuario validado')
         nombre = usuario[0]
         rol = usuario[2]
+        status = checkStatus()
 
     else:
         print('Usuario invalido')
 
-    return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol})
+    return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                            'status': status})
 
 
 def register(request):
@@ -90,8 +92,10 @@ def register(request):
 
             messages.success(request, f'Your account has been created! You are now able to log in')
             return redirect('login')
+
     else:
         form = UserRegisterForm()
+
     return render(request, 'pg/register.html', {'form': form, 'title': 'Reqister'})
 
 
@@ -109,15 +113,8 @@ def Login(request):
             print('Usuario invalido')
             messages.info(request, f'Error: Intente log in nuevamente')
 
-        # user = authenticate(request, username=username, password=password)
-        #
-        # if user is not None:
-        #     form = login(request, user)
-        #     return redirect('mfa')
-        # else:
-        #     messages.info(request, f'Error: Intente log in nuevamente')
-
     form = AuthenticationForm()
+
     return render(request, 'pg/login.html', {'form': form, 'title': 'Log In'})
 
 
