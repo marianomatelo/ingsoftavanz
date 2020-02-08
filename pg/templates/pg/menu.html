@@ -97,10 +97,22 @@
       {% if rol == 'Director' %}
 
         <br>
-
         <div style="text-align: center">
-          <input type="button" value="Crear Competencia">
+
+            <form method="POST"  action="{% url 'crearPlanEstudios' %}" style="">
+            {% csrf_token %}
+            <fieldset class="form-group">
+              {{ form|crispy}}
+            </fieldset>
+               <center>
+                <button style=""
+                        class="btn btn-outline-info" type="submit">Crear Plan de Estudios</button>
+              </center>
+
+          </form>
         </div>
+
+
 
         <div style="text-align: center">
           <input type="button" value="Crear Competencia">

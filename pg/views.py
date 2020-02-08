@@ -121,6 +121,8 @@ def Login(request):
 
 def crearPlanEstudios(request, nombre):
 
+    print('llegue')
+
     usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
 
     if len(usuario) > 0:
