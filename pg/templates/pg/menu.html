@@ -99,17 +99,17 @@
         <br>
         <div style="text-align: center">
 
-            <form method="POST"  action="{% url 'crearPlanEstudios' %}" style="">
-            {% csrf_token %}
-            <fieldset class="form-group">
-              {{ form|crispy}}
-            </fieldset>
-               <center>
-                <button style=""
-                        class="btn btn-outline-info" type="submit">Crear Plan de Estudios</button>
-              </center>
 
-          </form>
+            <div class="">
+               <div class="row d-flex justify-content-around mt-4">
+                 <a href="crearplanestudios/" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true" style='width:180px; height:50px'>Nuevo Cliente</a>
+<!--                 <a href="../alta_prop/" class="btn btn-primary btn-lg active" role="button" aria-pressed="true" style='width:180px; height:50px'>Nueva Propiedad</a>-->
+<!--               </div>-->
+<!--               <div class="row d-flex justify-content-around mt-4">-->
+<!--                 <a href="../alta_visita/" class="btn btn-primary btn-lg active" role="button" aria-pressed="true" style='width:180px; height:50px'>Nueva Visita</a>-->
+<!--                 <a href="../alta_op/" class="btn btn-primary btn-lg active" role="button" aria-pressed="true" style='width:180px; height:50px'>Nueva Operacion</a>-->
+<!--               </div>-->
+            </div>
         </div>
 
 
