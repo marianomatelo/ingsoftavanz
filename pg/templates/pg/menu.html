@@ -94,9 +94,26 @@
           Status DB: {{status}}
       </div>
 
-      {% if rol == 'admin' %}
+      {% if rol == 'Director' %}
 
         <br>
+
+        <div style="text-align: center">
+          <button type="submit"  onclick="location.href='{% url 'crearPlanEstudios' %}'" name='mybtn2'>Crear Plan de Estudios</button>
+        </div>
+
+        <div style="text-align: center">
+          <input type="button" value="Crear Competencia">
+        </div>
+
+        <div style="text-align: center">
+          <input type="button" value="Crear Capacidad">
+        </div>
+
+        <div style="text-align: center">
+          <input type="button" value="Crear Subcapacidad">
+        </div>
+
 
         <div style="text-align: center">
           <input type="button" value="Ver logs">

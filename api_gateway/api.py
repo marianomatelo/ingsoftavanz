@@ -114,7 +114,7 @@ def checkStatus():
 
 if __name__ == '__main__':
 
-    # leer_tabla(tabla='usuarios')
+    leer_tabla(tabla='usuarios')
 
     # usuario = buscar_usuario(tabla='usuarios', input_usuario='Mariano', input_password='Continente7')
     #
@@ -132,4 +132,4 @@ if __name__ == '__main__':
 
     # delete()
 
-    checkStatus()
+    # checkStatus()

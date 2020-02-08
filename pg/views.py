@@ -118,6 +118,24 @@ def Login(request):
     return render(request, 'pg/login.html', {'form': form, 'title': 'Log In'})
 
 
+
+def crearPlanEstudios(request, nombre):
+
+    usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
+
+    if len(usuario) > 0:
+        print('Usuario validado')
+        nombre = usuario[0]
+        rol = usuario[2]
+        status = checkStatus()
+
+    else:
+        print('Usuario invalido')
+
+    return render(request, 'pg/crearplanestudios.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                            'status': status})
+
+
 # def dataset(request):
 #
 #     if request.user.is_authenticated:
