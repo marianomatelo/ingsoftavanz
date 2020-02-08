@@ -119,7 +119,7 @@ def Login(request):
 
 
 
-def crearPlanEstudios(request, nombre):
+def crearPlanEstudios(request, nombre='director'):
 
     print('llegue')
 
