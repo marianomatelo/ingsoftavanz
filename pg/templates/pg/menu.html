@@ -102,7 +102,8 @@
 
             <div class="">
                <div class="row d-flex justify-content-around mt-4">
-                 <a href="../../crearPlanEstudios/" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true" style='width:180px; height:50px'>Crear Plan de Estudios</a>
+                 <a href="{% url 'crearPlanEstudios' nombre=nombre %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
+                    style='width:180px; height:50px'>Crear Plan de Estudios</a>
 <!--                 <a href="../alta_prop/" class="btn btn-primary btn-lg active" role="button" aria-pressed="true" style='width:180px; height:50px'>Nueva Propiedad</a>-->
 <!--               </div>-->
 <!--               <div class="row d-flex justify-content-around mt-4">-->
@@ -112,7 +113,12 @@
             </div>
         </div>
 
-
+        <div class="">
+             <div class="row d-flex justify-content-around mt-4">
+                 <a href="{% url 'mostrarPlanEstudios' nombre=nombre %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
+                    style='width:180px; height:50px'>Mostrar Planes de Estudios</a>
+            </div>
+        </div>
 
         <div style="text-align: center">
           <input type="button" value="Crear Competencia">

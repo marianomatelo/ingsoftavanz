@@ -57,8 +57,8 @@ class keyForm(forms.Form):
 
 
 class planEstudioForm(forms.Form):
-    nombre = forms.CharField(label='Nombre', max_length=30)
-    cargaHorariaTotal = forms.CharField(label='carga Horaria Total', max_length=30)
+    nombrePlan = forms.CharField(label='Nombre', max_length=30)
+    cargaHorariaTotal = forms.CharField(label='Carga Horaria Total', max_length=30)
     resolucionConeau = forms.CharField(label='Resolucion de la CONEAU', max_length=30)
     resolucionMinEdu = forms.CharField(label='Resolucion del Min de Edu', max_length=30)
     resolucionRectoral = forms.CharField(label='Resolucion Rectoral', max_length=30)

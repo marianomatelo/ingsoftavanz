@@ -9,7 +9,7 @@
         <h4>Datos del Plan de Estudio </h4>
       <div class="form-row">
           <div class="col-sm-12 col-md-6 form-group">
-            <input id="{{ form.nombre.id_for_label }}" name="{{ form.nombre.name }}" type="text" class="form-control {% if form.nombre.errors %}is-invalid{% endif %}"  placeholder="Nombre" required="" value="{{ form.nombre.value|default:'' }}" />
+            <input id="{{ form.nombrePlan.id_for_label }}" name="{{ form.nombrePlan.name }}" type="text" class="form-control {% if form.nombrePlan.errors %}is-invalid{% endif %}"  placeholder="nombrePlan" required="" value="{{ form.nombrePlan.value|default:'' }}" />
           </div>
           <div class="col-sm-12 col-md-6 form-group">
             <input id="{{ form.cargaHorariaTotal.id_for_label }}" name="{{ form.cargaHorariaTotal.name }}" type="text" class="form-control {% if form.cargaHorariaTotal.errors %}is-invalid{% endif %}" placeholder="Carga Horaia" required=""  value="{{ form.cargaHorariaTotal.value|default:'' }}" />

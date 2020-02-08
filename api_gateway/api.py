@@ -15,7 +15,16 @@ def leer_tabla(tabla):
 
     response = requests.post('https://8luy98fw22.execute-api.us-east-1.amazonaws.com/default/consultar', headers=headers, data=data)
 
-    print(response.content)
+    response = json.loads(response.text)
+
+    return response
+
+    # for key, value in response.items():
+    #     if key == 'Items':
+    #         usuario = pd.DataFrame(value)
+    #
+    #         return usuario['nombre'].iloc[0], usuario['cargaHorariaTotal'].iloc[0], usuario['resolucionMinEdu'].iloc[0],\
+    #                usuario['cargaHorariaTotal'].iloc[0], usuario['resolucionRectoral'].iloc[0]
 
 
 def buscar_usuario(tabla, input_usuario, input_password):
@@ -87,6 +96,8 @@ def write():
 
     response = requests.post('https://8luy98fw22.execute-api.us-east-1.amazonaws.com/default/tips', headers=headers, data=data)
 
+    print(response.content)
+
 
 def delete():
 
@@ -114,7 +125,7 @@ def checkStatus():
 
 if __name__ == '__main__':
 
-    leer_tabla(tabla='usuarios')
+    leer_tabla(tabla='PlanEstudios')
 
     # usuario = buscar_usuario(tabla='usuarios', input_usuario='Mariano', input_password='Continente7')
     #

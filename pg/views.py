@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from forms import *
+from pg.forms import *
 from django.contrib import messages
 from django.contrib.auth import authenticate,login
 from django.contrib.auth.decorators import login_required
@@ -19,7 +19,7 @@ import pandas as pd
 # from pg.tables import datasetTable
 import random
 import string
-from api_gateway.api import buscar_usuario, buscar_usuario_mfa, checkStatus
+from api_gateway.api import buscar_usuario, buscar_usuario_mfa, checkStatus, leer_tabla
 
 
 def index(request):
@@ -120,9 +120,7 @@ def Login(request):
 
 
 
-def crearPlanEstudios(request, nombre='director'):
-
-    print('llegue')
+def crearPlanEstudios(request, nombre):
 
     usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
 
@@ -135,20 +133,47 @@ def crearPlanEstudios(request, nombre='director'):
     else:
         print('Usuario invalido')
 
-    planEstudioForm()
+    form = planEstudioForm()
     if request.method == 'POST':
-        form = planEstudioForm(request.POST)
-        if form.is_valid():
-            nombre = form.cleaned_data['nombre']
-            cargaHorariaTotal = form.cleaned_data['cargaHorariaTotal']
-            resolucionConeau = form.cleaned_data['resolucionConeau']
-            resolucionMinEdu = form.cleaned_data['resolucionMinEdu']
-            resolucionRectoral = form.cleaned_data['resolucionRectoral']
+        try:
+            form = planEstudioForm(request.POST)
+            if form.is_valid():
+                nombrePlan = form.cleaned_data['nombrePlan']
+                cargaHorariaTotal = form.cleaned_data['cargaHorariaTotal']
+                resolucionConeau = form.cleaned_data['resolucionConeau']
+                resolucionMinEdu = form.cleaned_data['resolucionMinEdu']
+                resolucionRectoral = form.cleaned_data['resolucionRectoral']
 
-        print (nombre, cargaHorariaTotal,resolucionConeau,resolucionMinEdu, resolucionRectoral)
+                print (nombrePlan, cargaHorariaTotal,resolucionConeau,resolucionMinEdu, resolucionRectoral)
+
+                return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                                        'status': status})
+        except Exception:
+            pass
 
     return render(request, 'pg/crearplanestudios.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
-                                            'status': status})
+                                            'status': status, 'form': form})
+
+
+def mostrarPlanEstudios(request, nombre):
+
+    usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
+
+    if len(usuario) > 0:
+        print('Usuario validado')
+        nombre = usuario[0]
+        rol = usuario[2]
+        status = checkStatus()
+
+    else:
+        print('Usuario invalido')
+
+    response = leer_tabla('PlanEstudios')
+
+    print(response)
+
+    return render(request, 'pg/mostrarplanestudios.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                            'status': status, 'planes': response})
 
 
 # def dataset(request):
