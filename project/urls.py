@@ -21,7 +21,7 @@ urlpatterns = [
 
     path('menu/(?P<nombre>\d+)/$', pg_view.menu, name='menu'),
 
-    path('menu/crearPlanEstudios', pg_view.crearPlanEstudios, name='menu'),
+    path('crearPlanEstudios/(?P<nombre>\d+)/$', pg_view.crearPlanEstudios, name='crearPlanEstudios'),
 
     # path('datasets/', pg_view.dataset, name='datasets'),
     #
