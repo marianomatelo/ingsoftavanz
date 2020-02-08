@@ -3,62 +3,41 @@
 {% block start %}
 {% load widget_tweaks %}
 
-
-<div class="bloque_form">
-    <h4>Datos del Plan de Estudio </h4>
-  <div class="form-row">
-      <div class="col-sm-12 col-md-6 form-group">
-        <input id="{{ form.nombre.id_for_label }}" name="{{ form.nombre.name }}" type="text" class="form-control {% if form.nombre.errors %}is-invalid{% endif %}"  placeholder="Nombre" required="" value="{{ form.nombre.value|default:'' }}" />
+  <form method="post">
+       {% csrf_token %}
+    <div class="bloque_form">
+        <h4>Datos del Plan de Estudio </h4>
+      <div class="form-row">
+          <div class="col-sm-12 col-md-6 form-group">
+            <input id="{{ form.nombre.id_for_label }}" name="{{ form.nombre.name }}" type="text" class="form-control {% if form.nombre.errors %}is-invalid{% endif %}"  placeholder="Nombre" required="" value="{{ form.nombre.value|default:'' }}" />
+          </div>
+          <div class="col-sm-12 col-md-6 form-group">
+            <input id="{{ form.cargaHorariaTotal.id_for_label }}" name="{{ form.cargaHorariaTotal.name }}" type="text" class="form-control {% if form.cargaHorariaTotal.errors %}is-invalid{% endif %}" placeholder="Carga Horaia" required=""  value="{{ form.cargaHorariaTotal.value|default:'' }}" />
+          </div>
       </div>
-      <div class="col-sm-12 col-md-6 form-group">
-        <input id="{{ form.cargaHorariaTotal.id_for_label }}" name="{{ form.cargaHorariaTotal.name }}" type="text" class="form-control {% if form.cargaHorariaTotal.errors %}is-invalid{% endif %}" placeholder="Carga Horaia" required=""  value="{{ form.cargaHorariaTotal.value|default:'' }}" />
+
+
+      <div class="form-row">
+            <div class="col-sm-12 col-md-4 form-group">
+                <input id="{{ form.resolucionConeau.id_for_label }}" name="{{ form.resolucionConeau.name }}" type="text" class="form-control {% if form.resolucionConeau.errors %}is-invalid{% endif %}" placeholder="resolucion Coneau" required=""  value="{{ form.resolucionConeau.value|default:'' }}" />
+            </div>
+
+        <div class="col-sm-12 col-md-4 form-group">
+            <div class="input-group">
+              <input id="{{ form.resolucionMinEdu.id_for_label }}" name="{{ form.resolucionMinEdu.name }}" type="text" class="form-control {% if form.resolucionMinEdu.errors %}is-invalid{% endif %}" placeholder="resolucion MinEdu"   value="{{ form.resolucionMinEdu.value|default:'' }}" />
+            </div>
+        </div>
+
+           <div class="col-sm-12 col-md-4 form-group">
+            <div class="input-group">
+              <input id="{{ form.resolucionRectoral.id_for_label }}" name="{{ form.resolucionRectoral.name }}" type="text" class="form-control {% if form.resolucionRectoral.errors %}is-invalid{% endif %}" placeholder="resolucionRectoral"   value="{{ form.resolucionRectoral.value|default:'' }}" />
+            </div>
+        </div>
       </div>
-  </div>
 
-
-<!--  <div class="form-row">-->
-<!--        <div class="col-sm-12 col-md-6 form-group">-->
-<!--            <div class="input-group">-->
-<!--                <div class="input-group-prepend">-->
-<!--                <div class="input-group-text">@</div>-->
-<!--                 </div>-->
-<!--            <input id="{{ form.mail.id_for_label }}" name="{{ form.mail.name }}" type="email" class="form-control {% if form.mail.errors %}is-invalid{% endif %}" placeholder="Email" required=""  value="{{ form.mail.value|default:'' }}" />-->
-<!--            </div>-->
-<!--         </div>-->
-
-<!--    <div class="col-sm-12 col-md-6 form-group">-->
-<!--        <div class="input-group">-->
-<!--               <div class="input-group-prepend">-->
-<!--                <div class="input-group-text">@</div>-->
-<!--               </div>-->
-<!--        <input id="{{ form.mail2.id_for_label }}" name="{{ form.mail2.name }}" type="email" class="form-control {% if form.mail2.errors %}is-invalid{% endif %}" placeholder="Otro mail"   value="{{ form.mail2.value|default:'' }}" />-->
-<!--        </div>-->
-<!--    </div>-->
-<!--  </div>-->
-
-<!--  <div class="form-row">-->
-<!--      <div class="col-sm-12 col-md-6 form-group">-->
-<!--        <input id="{{ form.telefono.id_for_label }}" name="{{ form.telefono.name }}" type="tel" class="form-control {% if form.telefono.errors %}is-invalid{% endif %}"  placeholder="Numero de telefono" required="" value="{{ form.telefono.value|default:'' }}" />-->
-<!--      </div>-->
-<!--      <div class="col-sm-12 col-md-6 form-group">-->
-<!--        <input id="{{ form.telefono2.id_for_label }}" name="{{ form.telefono2.name }}" type="tel" class="form-control {% if form.telefono2.errors %}is-invalid{% endif %}" placeholder="Otro numero"   value="{{ form.telefono2.value|default:'' }}" />-->
-<!--      </div>-->
-<!--  </div>-->
-<!--</div>-->
-
-<!--<div class="bloque_form">-->
-<!--    <h4>Busqueda del Cliente </h4>-->
-<!--    <div class="form-row">-->
-<!--      <div class="col-sm-12 col-md-6 form-group">-->
-<!--        <input id="{{ form.busca_ambientes.id_for_label }}" name="{{ form.busca_ambientes.name }}" type="number" class="form-control {% if form.busca_ambientes.errors %}is-invalid{% endif %}"  placeholder="Cantidad de Ambientes"  value="{{ form.busca_ambientes.value|default:'' }}" />-->
-
-<!--      </div>-->
-<!--      <div class="col-sm-12 col-md-6 form-group">-->
-<!--        <input id="{{ form.busca_precio.id_for_label }}" name="{{ form.busca_precio.name }}" type="number" class="form-control {% if form.busca_precio.errors %}is-invalid{% endif %}" placeholder="Precio a pagar"   value="{{ form.busca_precio.value|default:'' }}" />-->
-<!--      </div>-->
-<!--       <div class="col-sm-12 col-md-6 form-group">-->
-<!--        <input id="{{ form.busca_localidad.id_for_label }}" name="{{ form.busca_localidad.name }}" type="text" class="form-control {% if form.busca_localidad.errors %}is-invalid{% endif %}" placeholder="Localidad "   value="{{ form.busca_localidad.value|default:'' }}" />-->
-<!--      </div>-->
-<!--    </div>-->
-<!--</div>-->
+     <div class="d-flex justify-content-around">
+        <button type="submit" class="btn btn-success">Crear</button>
+      </div>
+    </div>
+  </form>
 {% endblock start %}
