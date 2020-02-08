@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from forms import *
 from django.contrib import messages
 from django.contrib.auth import authenticate,login
 from django.contrib.auth.decorators import login_required
@@ -133,6 +134,18 @@ def crearPlanEstudios(request, nombre='director'):
 
     else:
         print('Usuario invalido')
+
+    planEstudioForm()
+    if request.method == 'POST':
+        form = planEstudioForm(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            cargaHorariaTotal = form.cleaned_data['cargaHorariaTotal']
+            resolucionConeau = form.cleaned_data['resolucionConeau']
+            resolucionMinEdu = form.cleaned_data['resolucionMinEdu']
+            resolucionRectoral = form.cleaned_data['resolucionRectoral']
+
+        print (nombre, cargaHorariaTotal,resolucionConeau,resolucionMinEdu, resolucionRectoral)
 
     return render(request, 'pg/crearplanestudios.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                             'status': status})

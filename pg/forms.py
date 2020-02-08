@@ -56,7 +56,7 @@ class keyForm(forms.Form):
         super(keyForm, self).__init__(*args, **kwargs)
 
 
-class ClienteMailForm(forms.Form):
+class planEstudioForm(forms.Form):
     nombre = forms.CharField(label='Nombre', max_length=30)
     cargaHorariaTotal = forms.CharField(label='carga Horaria Total', max_length=30)
     resolucionConeau = forms.CharField(label='Resolucion de la CONEAU', max_length=30)
