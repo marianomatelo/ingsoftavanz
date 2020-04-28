@@ -13,7 +13,7 @@ urlpatterns = [
     path('', include('pg.urls')),
     path('login/', pg_view.Login, name='login'),
     path('logout/', auth.LogoutView.as_view(template_name='pg/index.html'), name='logout'),
-    path('register/', pg_view.register, name='register'),
+    # path('register/', pg_view.register, name='register'),
 
     path('/', pg_view.index, name='index'),
 
@@ -23,7 +23,9 @@ urlpatterns = [
 
     path('crearPlanEstudios/(?P<nombre>\d+)/$', pg_view.crearPlanEstudios, name='crearPlanEstudios'),
 
-    path('mostrarPlanEstudios/(?P<nombre>\d+)/$', pg_view.crearPlanEstudios, name='mostrarPlanEstudios'),
+    path('mostrarPlanEstudios/(?P<nombre>\d+)/$', pg_view.mostrarPlanEstudios, name='mostrarPlanEstudios'),
+
+    path('mostrarPlanEstudiosDetalle/(?P<nombre>\d+)(?P<idplan>\d+)/$', pg_view.mostrarPlanEstudiosDetalle, name='mostrarPlanEstudiosDetalle'),
 
     # path('datasets/', pg_view.dataset, name='datasets'),
     #

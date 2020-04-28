@@ -12,25 +12,25 @@
             <input id="{{ form.nombrePlan.id_for_label }}" name="{{ form.nombrePlan.name }}" type="text" class="form-control {% if form.nombrePlan.errors %}is-invalid{% endif %}"  placeholder="nombrePlan" required="" value="{{ form.nombrePlan.value|default:'' }}" />
           </div>
           <div class="col-sm-12 col-md-6 form-group">
-            <input id="{{ form.cargaHorariaTotal.id_for_label }}" name="{{ form.cargaHorariaTotal.name }}" type="text" class="form-control {% if form.cargaHorariaTotal.errors %}is-invalid{% endif %}" placeholder="Carga Horaia" required=""  value="{{ form.cargaHorariaTotal.value|default:'' }}" />
+            <input id="{{ form.cargaHorariaTotal.id_for_label }}" name="{{ form.cargaHorariaTotal.name }}" type="text" class="form-control {% if form.cargaHorariaTotal.errors %}is-invalid{% endif %}" placeholder="Carga Horaria (Horas)" required="" value="{{ form.cargaHorariaTotal.value|default:'' }}" />
           </div>
       </div>
 
 
       <div class="form-row">
             <div class="col-sm-12 col-md-4 form-group">
-                <input id="{{ form.resolucionConeau.id_for_label }}" name="{{ form.resolucionConeau.name }}" type="text" class="form-control {% if form.resolucionConeau.errors %}is-invalid{% endif %}" placeholder="resolucion Coneau" required=""  value="{{ form.resolucionConeau.value|default:'' }}" />
+                <input id="{{ form.resolucionConeau.id_for_label }}" name="{{ form.resolucionConeau.name }}" type="text" class="form-control {% if form.resolucionConeau.errors %}is-invalid{% endif %}" placeholder="Resolucion Coneau" required="" value="{{ form.resolucionConeau.value|default:'' }}" />
             </div>
 
         <div class="col-sm-12 col-md-4 form-group">
             <div class="input-group">
-              <input id="{{ form.resolucionMinEdu.id_for_label }}" name="{{ form.resolucionMinEdu.name }}" type="text" class="form-control {% if form.resolucionMinEdu.errors %}is-invalid{% endif %}" placeholder="resolucion MinEdu"   value="{{ form.resolucionMinEdu.value|default:'' }}" />
+              <input id="{{ form.resolucionMinEdu.id_for_label }}" name="{{ form.resolucionMinEdu.name }}" type="text" class="form-control {% if form.resolucionMinEdu.errors %}is-invalid{% endif %}" placeholder="Resolucion Min Edu" value="{{ form.resolucionMinEdu.value|default:'' }}" />
             </div>
         </div>
 
            <div class="col-sm-12 col-md-4 form-group">
             <div class="input-group">
-              <input id="{{ form.resolucionRectoral.id_for_label }}" name="{{ form.resolucionRectoral.name }}" type="text" class="form-control {% if form.resolucionRectoral.errors %}is-invalid{% endif %}" placeholder="resolucionRectoral"   value="{{ form.resolucionRectoral.value|default:'' }}" />
+              <input id="{{ form.resolucionRectoral.id_for_label }}" name="{{ form.resolucionRectoral.name }}" type="text" class="form-control {% if form.resolucionRectoral.errors %}is-invalid{% endif %}" placeholder="Resolucion Rectoral" value="{{ form.resolucionRectoral.value|default:'' }}" />
             </div>
         </div>
       </div>

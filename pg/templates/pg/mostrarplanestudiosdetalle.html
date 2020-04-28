@@ -4,8 +4,9 @@
 {% load widget_tweaks %}
 
 <ul>
+    <li>idPlan nombrePlan cargaHorariaTota resolucionConeau resolucionMinEdu resolucionRectoral</li>
 {% for i in planes %}
-    <li><a href="{% url 'mostrarPlanEstudiosDetalle' nombre=nombre nombrePlan={{i.nombre}} %}">{{i.idPlan}} {{i.nombre}}</a></li>
+    <li>{{i.idPlan}} {{i.nombrePlan}} {{i.cargaHorariaTotal}} {{i.resolucionConeau}} {{i.resolucionMinEdu}} {{i.resolucionRectoral}}</li>
 {% endfor %}
 </ul>
 

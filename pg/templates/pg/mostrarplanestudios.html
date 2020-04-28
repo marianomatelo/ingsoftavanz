@@ -3,6 +3,10 @@
 {% block start %}
 {% load widget_tweaks %}
 
-hola
+<ul>
+{% for i in planes %}
+    <li><a href="{% url 'mostrarPlanEstudiosDetalle' nombre=nombre idplan=i.idPlan %}">{{i.idPlan}} - {{i.nombrePlan}}</a></li>
+{% endfor %}
+</ul>
 
 {% endblock start %}

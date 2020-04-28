@@ -59,7 +59,6 @@
 
             <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-out"></span> &nbsp; Salir</a></li>
             {% else %}
-<!--            <li><a href="{% url "register" %}"><span class="glyphicon glyphicon-user"></span> &nbsp; Registrarse</a></li>-->
             <li><a href="{% url "login" %}"><span class="glyphicon glyphicon-log-in"></span> &nbsp; Ingresar</a></li>
             {% endif %}
 
@@ -101,6 +100,7 @@
         </div>
 
       {% else %}
+
       {% endif %}
 
       {% else %}

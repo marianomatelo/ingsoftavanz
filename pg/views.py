@@ -30,7 +30,7 @@ def index(request):
 def Login(request):
 
     ### HARDCODEO ###
-    usuario ='Mariano'
+    usuario ='director'
 
 
     if request.method == 'POST':
@@ -53,8 +53,6 @@ def Login(request):
 
 def mfa(request, nombre):
 
-    ### HARDCODEO ###
-    usuario ='Mariano'
 
     # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
     #
@@ -96,7 +94,7 @@ def menu(request, nombre):
     # else:
     #     print('Usuario invalido')
 
-    rol = 'admin'
+    rol = 'Director'
 
     status = 'UP'
 
@@ -104,42 +102,49 @@ def menu(request, nombre):
                                             'status': status})
 
 
-def register(request):
-    if request.method == 'POST':
-        form = UserRegisterForm(request.POST)
-        if form.is_valid():
-            form.save()
-            nuevo_usuario = User(rol=request.POST['rol'], name=request.POST['username'],
-                                 email=request.POST['email'], password=request.POST['password1'])
-            nuevo_usuario.save()
-
-            messages.success(request, f'Your account has been created! You are now able to log in')
-            return redirect('login')
-
-    else:
-        form = UserRegisterForm()
-
-    return render(request, 'pg/register.html', {'form': form, 'title': 'Reqister'})
+# def register(request):
+#     if request.method == 'POST':
+#         form = UserRegisterForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             nuevo_usuario = User(rol=request.POST['rol'], name=request.POST['username'],
+#                                  email=request.POST['email'], password=request.POST['password1'])
+#             nuevo_usuario.save()
+#
+#             messages.success(request, f'Your account has been created! You are now able to log in')
+#             return redirect('login')
+#
+#     else:
+#         form = UserRegisterForm()
+#
+#     return render(request, 'pg/register.html', {'form': form, 'title': 'Reqister'})
 
 
 def crearPlanEstudios(request, nombre):
 
-    usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
+    usuario = 'tester'
+    rol = 'Director'
+    status = 'UP'
 
-    if len(usuario) > 0:
-        print('Usuario validado')
-        nombre = usuario[0]
-        rol = usuario[2]
-        status = checkStatus()
+    # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
 
-    else:
-        print('Usuario invalido')
+    # if len(usuario) > 0:
+    #     print('Usuario validado')
+    #     nombre = usuario[0]
+    #     rol = usuario[2]
+    #     status = checkStatus()
+    #
+    # else:
+    #     print('Usuario invalido')
 
     form = planEstudioForm()
     if request.method == 'POST':
         try:
             form = planEstudioForm(request.POST)
             if form.is_valid():
+
+                print ('Creando Plan de estudios')
+
                 nombrePlan = form.cleaned_data['nombrePlan']
                 cargaHorariaTotal = form.cleaned_data['cargaHorariaTotal']
                 resolucionConeau = form.cleaned_data['resolucionConeau']
@@ -147,6 +152,8 @@ def crearPlanEstudios(request, nombre):
                 resolucionRectoral = form.cleaned_data['resolucionRectoral']
 
                 print (nombrePlan, cargaHorariaTotal,resolucionConeau,resolucionMinEdu, resolucionRectoral)
+
+                print ('Plan de estudios creado')
 
                 return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                                         'status': status})
@@ -159,20 +166,49 @@ def crearPlanEstudios(request, nombre):
 
 def mostrarPlanEstudios(request, nombre):
 
-    usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
+    usuario = 'tester'
+    rol = 'Director'
+    status = 'UP'
 
-    if len(usuario) > 0:
-        print('Usuario validado')
-        nombre = usuario[0]
-        rol = usuario[2]
-        status = checkStatus()
+    # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
+    #
+    # if len(usuario) > 0:
+    #     print('Usuario validado')
+    #     nombre = usuario[0]
+    #     rol = usuario[2]
+    #     status = checkStatus()
+    #
+    # else:
+    #     print('Usuario invalido')
+    #
+    # response = leer_tabla('PlanEstudios')
 
-    else:
-        print('Usuario invalido')
-
-    response = leer_tabla('PlanEstudios')
-
-    print(response)
+    response = {'Items': [{'resolucionConeau': 'A1A', 'cargaHorariaTotal': '160', 'resolucionMinEdu': '111', 'nombrePlan': 'Ing Agrimensura', 'resolucionRectoral': '222', 'idPlan': '3'}], 'Count': 1, 'ScannedCount': 1}
 
     return render(request, 'pg/mostrarplanestudios.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
-                                            'status': status, 'planes': response})
+                                            'status': status, 'planes': response['Items']})
+
+
+def mostrarPlanEstudiosDetalle(request, nombre, idplan):
+
+    usuario = 'tester'
+    rol = 'Director'
+    status = 'UP'
+
+    # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
+    #
+    # if len(usuario) > 0:
+    #     print('Usuario validado')
+    #     nombre = usuario[0]
+    #     rol = usuario[2]
+    #     status = checkStatus()
+    #
+    # else:
+    #     print('Usuario invalido')
+    #
+    # response = leer_tabla('PlanEstudios')
+
+    response = {'Items': [{'resolucionConeau': 'A1A', 'cargaHorariaTotal': '160', 'resolucionMinEdu': '111', 'nombrePlan': 'Ing Agrimensura', 'resolucionRectoral': '222', 'idPlan': '3'}], 'Count': 1, 'ScannedCount': 1}
+
+    return render(request, 'pg/mostrarplanestudiosdetalle.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                            'status': status, 'planes': response['Items']})
