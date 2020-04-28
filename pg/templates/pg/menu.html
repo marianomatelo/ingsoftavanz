@@ -26,7 +26,6 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-
   <link rel="stylesheet" type="text/css" href="{% static 'pg/index.css' %}" />
 
 </head>
@@ -46,7 +45,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" class="styleheader">ISA</a>
+          <a class="navbar-brand" class="styleheader" href="{% url 'menu' nombre=nombre %}">ISA</a>
 
         </div>
 
@@ -104,38 +103,46 @@
                <div class="row d-flex justify-content-around mt-4">
                  <a href="{% url 'crearPlanEstudios' nombre=nombre %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
                     style='width:180px; height:50px'>Crear Plan de Estudios</a>
-<!--                 <a href="../alta_prop/" class="btn btn-primary btn-lg active" role="button" aria-pressed="true" style='width:180px; height:50px'>Nueva Propiedad</a>-->
-<!--               </div>-->
-<!--               <div class="row d-flex justify-content-around mt-4">-->
-<!--                 <a href="../alta_visita/" class="btn btn-primary btn-lg active" role="button" aria-pressed="true" style='width:180px; height:50px'>Nueva Visita</a>-->
-<!--                 <a href="../alta_op/" class="btn btn-primary btn-lg active" role="button" aria-pressed="true" style='width:180px; height:50px'>Nueva Operacion</a>-->
-<!--               </div>-->
+              </div>
+              </div>
+
+            <div class="">
+                 <div class="row d-flex justify-content-around mt-4">
+                     <a href="{% url 'mostrarPlanEstudios' nombre=nombre %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
+                        style='width:180px; height:50px'>Mostrar Planes de Estudios</a>
+                </div>
             </div>
-        </div>
 
-        <div class="">
-             <div class="row d-flex justify-content-around mt-4">
-                 <a href="{% url 'mostrarPlanEstudios' nombre=nombre %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
-                    style='width:180px; height:50px'>Mostrar Planes de Estudios</a>
+            <div class="">
+                 <div class="row d-flex justify-content-around mt-4">
+                     <a href="{% url 'crearMateria' nombre=nombre %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
+                        style='width:180px; height:50px'>Crear Materia</a>
+                </div>
             </div>
-        </div>
 
-        <div style="text-align: center">
-          <input type="button" value="Crear Competencia">
-        </div>
+            <div class="">
+                 <div class="row d-flex justify-content-around mt-4">
+                     <a href="{% url 'mostrarMaterias' nombre=nombre %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
+                        style='width:180px; height:50px'>Mostrar Materias</a>
+                </div>
+            </div>
 
-        <div style="text-align: center">
-          <input type="button" value="Crear Capacidad">
-        </div>
+            <div style="text-align: center">
+              <input type="button" value="Crear Competencia">
+            </div>
 
-        <div style="text-align: center">
-          <input type="button" value="Crear Subcapacidad">
-        </div>
+            <div style="text-align: center">
+              <input type="button" value="Crear Capacidad">
+            </div>
+
+            <div style="text-align: center">
+              <input type="button" value="Crear Subcapacidad">
+            </div>
 
 
-        <div style="text-align: center">
-          <input type="button" value="Ver logs">
-        </div>
+            <div style="text-align: center">
+              <input type="button" value="Ver logs">
+            </div>
 
       {% else %}
       {% endif %}

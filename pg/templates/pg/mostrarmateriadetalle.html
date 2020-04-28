@@ -1,0 +1,22 @@
+{% extends "pg/menu.html" %}
+{% load crispy_forms_tags %}
+{% block start %}
+{% load widget_tweaks %}
+
+Contenido curricular
+
+<ul>
+    <li>idContenidoCurricular Descriptor</li>
+{% for i in planes %}
+    <li>{{i.idContenidoCurricular}} {{i.Descriptor}} {{i.idMateria}}</li>
+{% endfor %}
+</ul>
+
+
+<div class="row d-flex justify-content-around mt-4">
+ <a href="{% url 'crearContenidoCurricular' nombre=nombre idmateria=idmateria%}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
+    style='width:180px; height:50px'>Crear Contenido Curricular</a>
+</div>
+
+
+{% endblock start %}

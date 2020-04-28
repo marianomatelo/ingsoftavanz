@@ -27,6 +27,15 @@ urlpatterns = [
 
     path('mostrarPlanEstudiosDetalle/(?P<nombre>\d+)(?P<idplan>\d+)/$', pg_view.mostrarPlanEstudiosDetalle, name='mostrarPlanEstudiosDetalle'),
 
+    path('crearMateria/(?P<nombre>\d+)/$', pg_view.crearMateria, name='crearMateria'),
+
+    path('mostrarMaterias/(?P<nombre>\d+)/$', pg_view.mostrarMaterias, name='mostrarMaterias'),
+
+    path('mostrarMateriaDetalle/(?P<nombre>\d+)(?P<idmateria>\d+)/$', pg_view.mostrarMateriaDetalle,
+         name='mostrarMateriaDetalle'),
+
+    path('crearContenidoCurricular/(?P<nombre>\d+)(?P<idmateria>\d+)/$', pg_view.crearContenidoCurricular, name='crearContenidoCurricular'),
+
     # path('datasets/', pg_view.dataset, name='datasets'),
     #
     # path('playground/', pg_view.playground, name='playground'),

@@ -3,13 +3,15 @@
 {% block start %}
 {% load widget_tweaks %}
 
+Materia: {{idmateria}}
+
   <form method="post">
        {% csrf_token %}
     <div class="bloque_form">
         <h4>Datos de la materia</h4>
       <div class="form-row">
           <div class="col-sm-12 col-md-6 form-group">
-            <input id="{{ form.materia.id_for_label }}" name="{{ form.materia.name }}" type="text" class="form-control {% if form.materia.errors %}is-invalid{% endif %}"  placeholder="Nombre de la materia" required="" value="{{ form.materia.value|default:'' }}" />
+            <input id="{{ form.descriptor.id_for_label }}" name="{{ form.descriptor.name }}" type="text" class="form-control {% if form.descriptor.errors %}is-invalid{% endif %}"  placeholder="Descripcion del contenido curricular" required="" value="{{ form.descriptor.value|default:'' }}" />
           </div>
       </div>
 

@@ -62,3 +62,9 @@ class planEstudioForm(forms.Form):
     resolucionConeau = forms.CharField(label='Resolucion de la CONEAU', max_length=30)
     resolucionMinEdu = forms.CharField(label='Resolucion del Min de Edu', max_length=30)
     resolucionRectoral = forms.CharField(label='Resolucion Rectoral', max_length=30)
+
+class materiaForm(forms.Form):
+    materia = forms.CharField(label='Nombre de la materia', max_length=80)
+
+class curricularForm(forms.Form):
+    descriptor = forms.CharField(label='Descriptor del contenido curricular', max_length=80)

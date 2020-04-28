@@ -122,7 +122,7 @@ def menu(request, nombre):
 
 def crearPlanEstudios(request, nombre):
 
-    usuario = 'tester'
+    nombre = 'tester'
     rol = 'Director'
     status = 'UP'
 
@@ -166,7 +166,7 @@ def crearPlanEstudios(request, nombre):
 
 def mostrarPlanEstudios(request, nombre):
 
-    usuario = 'tester'
+    nombre = 'tester'
     rol = 'Director'
     status = 'UP'
 
@@ -191,7 +191,7 @@ def mostrarPlanEstudios(request, nombre):
 
 def mostrarPlanEstudiosDetalle(request, nombre, idplan):
 
-    usuario = 'tester'
+    nombre = 'tester'
     rol = 'Director'
     status = 'UP'
 
@@ -212,3 +212,134 @@ def mostrarPlanEstudiosDetalle(request, nombre, idplan):
 
     return render(request, 'pg/mostrarplanestudiosdetalle.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                             'status': status, 'planes': response['Items']})
+
+
+def crearMateria(request, nombre):
+
+    nombre = 'tester'
+    rol = 'Director'
+    status = 'UP'
+
+    # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
+
+    # if len(usuario) > 0:
+    #     print('Usuario validado')
+    #     nombre = usuario[0]
+    #     rol = usuario[2]
+    #     status = checkStatus()
+    #
+    # else:
+    #     print('Usuario invalido')
+
+    form = materiaForm()
+    if request.method == 'POST':
+        try:
+            form = materiaForm(request.POST)
+            if form.is_valid():
+
+                print ('Creando Materia')
+
+                descriptor = form.cleaned_data['materia']
+
+                print (descriptor)
+
+                print ('Materia Creada')
+
+                return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                                        'status': status})
+        except Exception:
+            pass
+
+    return render(request, 'pg/crearmateria.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                            'status': status, 'form': form})
+
+
+def mostrarMaterias(request, nombre):
+
+    nombre = 'tester'
+    rol = 'Director'
+    status = 'UP'
+
+    # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
+    #
+    # if len(usuario) > 0:
+    #     print('Usuario validado')
+    #     nombre = usuario[0]
+    #     rol = usuario[2]
+    #     status = checkStatus()
+    #
+    # else:
+    #     print('Usuario invalido')
+    #
+    # response = leer_tabla('PlanEstudios')
+
+    response = {'Items': [{'idMateria': '1', 'Descriptor': 'Fisica 1'}], 'Count': 1, 'ScannedCount': 1}
+
+    return render(request, 'pg/mostrarmaterias.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                            'status': status, 'planes': response['Items']})
+
+
+def mostrarMateriaDetalle(request, nombre, idmateria):
+
+    nombre = 'tester'
+    rol = 'Director'
+    status = 'UP'
+
+    # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
+    #
+    # if len(usuario) > 0:
+    #     print('Usuario validado')
+    #     nombre = usuario[0]
+    #     rol = usuario[2]
+    #     status = checkStatus()
+    #
+    # else:
+    #     print('Usuario invalido')
+    #
+    # response = leer_tabla('ContenidoCurricular')
+
+    response = {'Items': [{'idContenidoCurricular': '1', 'Descriptor': 'Objetivo', 'idMateria': 1}], 'Count': 1, 'ScannedCount': 1}
+
+    return render(request, 'pg/mostrarmateriadetalle.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                            'status': status, 'planes': response['Items'], 'idmateria': idmateria})
+
+
+
+def crearContenidoCurricular(request, nombre, idmateria):
+
+    nombre = 'tester'
+    rol = 'Director'
+    status = 'UP'
+
+    # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
+
+    # if len(usuario) > 0:
+    #     print('Usuario validado')
+    #     nombre = usuario[0]
+    #     rol = usuario[2]
+    #     status = checkStatus()
+    #
+    # else:
+    #     print('Usuario invalido')
+
+    form = curricularForm()
+    if request.method == 'POST':
+        try:
+            form = curricularForm(request.POST)
+            if form.is_valid():
+
+                print ('Creando Curricula')
+
+                descriptor = form.cleaned_data['descriptor']
+
+                print (descriptor)
+
+                print ('Curricula Creada')
+
+                return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                                        'status': status})
+        except Exception:
+            pass
+
+    return render(request, 'pg/crearcontenidocurricular.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                            'status': status, 'form': form, 'idmateria': idmateria})

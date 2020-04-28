@@ -1,0 +1,14 @@
+{% extends "pg/menu.html" %}
+{% load crispy_forms_tags %}
+{% block start %}
+{% load widget_tweaks %}
+
+
+<ul>
+    id Materia    Descriptor
+{% for i in planes %}
+    <li><a href="{% url 'mostrarMateriaDetalle' nombre=nombre idmateria=i.idMateria %}">{{i.idMateria}} - {{i.Descriptor}}</a></li>
+{% endfor %}
+</ul>
+
+{% endblock start %}
