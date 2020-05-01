@@ -1,0 +1,32 @@
+{% extends "pg/menu.html" %}
+{% load crispy_forms_tags %}
+{% block start %}
+{% load widget_tweaks %}
+
+Contenido curricular
+<br>
+{{idcontenidocurricular}}
+{{idmateria}}
+{{descriptor}}
+
+<br>
+<br>
+
+Unidades
+
+<ul>
+    <li>Unidades</li>
+{% for i in response_unidades %}
+    <li>
+         <a href="{% url 'mostrarUnidad' nombre=nombre idunidad=i.idUnidad%}">
+             {{i.idUnidad}} {{i.Descriptor}} {{i.idContenidoCurricular}}</a>
+    </li>
+{% endfor %}
+</ul>
+
+<br>
+<br>
+
+Act Formacion Practica
+
+{% endblock start %}

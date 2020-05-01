@@ -9,7 +9,6 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
 
-    #####pg related path##########################
     path('', include('pg.urls')),
     path('login/', pg_view.Login, name='login'),
     path('logout/', auth.LogoutView.as_view(template_name='pg/index.html'), name='logout'),
@@ -35,6 +34,17 @@ urlpatterns = [
          name='mostrarMateriaDetalle'),
 
     path('crearContenidoCurricular/(?P<nombre>\d+)(?P<idmateria>\d+)/$', pg_view.crearContenidoCurricular, name='crearContenidoCurricular'),
+
+    path('mostrarContenidoCurricular/(?P<nombre>\d+)(?P<idcontenidocurricular>\d+)(?P<idmateria>\d+)(?P<descriptor>\d+)/$',
+         pg_view.mostrarContenidoCurricular, name='mostrarContenidoCurricular'),
+
+    path(
+        'mostrarUnidad/(?P<nombre>\d+)(?P<idunidad>\d+)$',
+        pg_view.mostrarUnidad, name='mostrarUnidad'),
+
+    path(
+        'mostrarActFormacionPractica/(?P<nombre>\d+)(?P<idcontenidocurricular>\d+)(?P<idmateria>\d+)(?P<descriptor>\d+)/$',
+        pg_view.mostrarActFormacionPractica, name='mostrarActFormacionPractica'),
 
     # path('datasets/', pg_view.dataset, name='datasets'),
     #

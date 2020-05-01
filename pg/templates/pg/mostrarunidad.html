@@ -6,11 +6,11 @@
 Contenido curricular
 
 <ul>
-    <li>idContenidoCurricular Descriptor</li>
-{% for i in planes %}
+    <li>Unidades</li>
+{% for i in response_unidades %}
     <li>
          <a href="{% url 'mostrarContenidoCurricular' nombre=nombre idcontenidocurricular=i.idContenidoCurricular idmateria=i.idMateria descriptor=i.Descriptor%}">
-             {{i.idContenidoCurricular}} {{i.Descriptor}} {{i.idMateria}}</a>
+             {{i.idContenidoCurricular}} {{i.Descriptor}} {{i.idContenidoCurricular}}</a>
     </li>
 {% endfor %}
 </ul>
