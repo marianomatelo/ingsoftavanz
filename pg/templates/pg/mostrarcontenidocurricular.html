@@ -5,14 +5,14 @@
 
 Contenido curricular
 <br>
+idcontenidocurricular idmateria descriptor
+<br>
 {{idcontenidocurricular}}
 {{idmateria}}
 {{descriptor}}
 
 <br>
 <br>
-
-Unidades
 
 <ul>
     <li>Unidades</li>
@@ -27,6 +27,14 @@ Unidades
 <br>
 <br>
 
-Act Formacion Practica
+<ul>
+    <li>Act Formacion Practica</li>
+{% for i in response_act_formacion %}
+    <li>
+         <a href="{% url 'mostrarActFormacionPractica' nombre=nombre idactformacionpractica=i.idActFormacionPractica%}">
+             {{i.idActFormacionPractica}} {{i.Descriptor}} {{i.idContenidoCurricular}}</a>
+    </li>
+{% endfor %}
+</ul>
 
 {% endblock start %}

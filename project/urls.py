@@ -38,12 +38,10 @@ urlpatterns = [
     path('mostrarContenidoCurricular/(?P<nombre>\d+)(?P<idcontenidocurricular>\d+)(?P<idmateria>\d+)(?P<descriptor>\d+)/$',
          pg_view.mostrarContenidoCurricular, name='mostrarContenidoCurricular'),
 
-    path(
-        'mostrarUnidad/(?P<nombre>\d+)(?P<idunidad>\d+)$',
+    path('mostrarUnidad/(?P<nombre>\d+)(?P<idunidad>\d+)/$',
         pg_view.mostrarUnidad, name='mostrarUnidad'),
 
-    path(
-        'mostrarActFormacionPractica/(?P<nombre>\d+)(?P<idcontenidocurricular>\d+)(?P<idmateria>\d+)(?P<descriptor>\d+)/$',
+    path('mostrarActFormacionPractica/(?P<nombre>\d+)(?P<idactformacionpractica>\d+)/$',
         pg_view.mostrarActFormacionPractica, name='mostrarActFormacionPractica'),
 
     # path('datasets/', pg_view.dataset, name='datasets'),

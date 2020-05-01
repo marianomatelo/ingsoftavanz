@@ -344,11 +344,11 @@ def crearContenidoCurricular(request, nombre, idmateria):
     return render(request, 'pg/crearcontenidocurricular.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                             'status': status, 'form': form, 'idmateria': idmateria})
 
+
 def mostrarContenidoCurricular(request, nombre, idcontenidocurricular, idmateria, descriptor):
 
     nombre = 'tester'
     rol = 'Director'
-    status = 'UP'
 
     # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
     #
@@ -368,17 +368,15 @@ def mostrarContenidoCurricular(request, nombre, idcontenidocurricular, idmateria
     response_act_formacion = {'Items': [{'idActFormacionPractica': '1', 'Descriptor': 'TP 1', 'idContenidoCurricular': 1}], 'Count': 1, 'ScannedCount': 1}
 
     return render(request, 'pg/mostrarcontenidocurricular.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
-                                            'status': status, 'response_cont_curricular': response_cont_curricular['Items'], 'idcontenidocurricular': idcontenidocurricular,
+                            'response_cont_curricular': response_cont_curricular['Items'],
                             'idcontenidocurricular': idcontenidocurricular, 'idmateria': idmateria, 'descriptor': descriptor,
-                            'response_unidades': response_unidades, 'response_act_formacion': response_act_formacion
+                            'response_unidades': response_unidades['Items'], 'response_act_formacion': response_act_formacion['Items']
                                                                   })
-
 
 def mostrarUnidad(request, nombre, idunidad):
 
     nombre = 'tester'
     rol = 'Director'
-    status = 'UP'
 
     # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
     #
@@ -396,11 +394,12 @@ def mostrarUnidad(request, nombre, idunidad):
     response_unidades = {'Items': [{'idUnidad': '1', 'Descriptor': 'Repaso', 'idContenidoCurricular': 1}], 'Count': 1, 'ScannedCount': 1}
 
     return render(request, 'pg/mostrarunidad.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
-                                            'status': status, 'response_unidades': response_unidades
+                                                     'idunidad': idunidad,
+                                                     'response_unidades': response_unidades['Items']
                                                                   })
 
 
-def mostrarActFormacionPractica(request, nombre, idcontenidocurricular, idmateria, descriptor):
+def mostrarActFormacionPractica(request, nombre, idactformacionpractica):
 
     nombre = 'tester'
     rol = 'Director'
@@ -423,8 +422,7 @@ def mostrarActFormacionPractica(request, nombre, idcontenidocurricular, idmateri
     response_unidades = {'Items': [{'idUnidad': '1', 'Descriptor': 'Repaso', 'idContenidoCurricular': 1}], 'Count': 1, 'ScannedCount': 1}
     response_act_formacion = {'Items': [{'idActFormacionPractica': '1', 'Descriptor': 'TP 1', 'idContenidoCurricular': 1}], 'Count': 1, 'ScannedCount': 1}
 
-    return render(request, 'pg/mostrarcontenidocurricular.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
-                                            'status': status, 'planes': response_cont_curricular['Items'],
-                            'idcontenidocurricular': idcontenidocurricular, 'idmateria': idmateria, 'descriptor': descriptor,
-                            'response_unidades': response_unidades, 'response_act_formacion': response_act_formacion
+    return render(request, 'pg/mostraractformacionpractica.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                            'response_act_formacion': response_act_formacion['Items'],
+                            'idactformacionpractica': idactformacionpractica,
                                                                   })
