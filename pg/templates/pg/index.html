@@ -56,10 +56,7 @@
           <ul class="nav navbar-nav navbar-right">
 
             {% if user.is_authenticated %}
-
             <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-out"></span> &nbsp; Salir</a></li>
-            {% else %}
-            <li><a href="{% url "login" %}"><span class="glyphicon glyphicon-log-in"></span> &nbsp; Ingresar</a></li>
             {% endif %}
 
           </ul>
@@ -108,11 +105,18 @@
         <br>
 
         <div style="text-align:center; font-weight: bold;">
-            Bienvenido
+            Bienvenido al sistema de gestion de carreras
         </div>
 
         <div style="text-align:center;">
             Por favor haga click en Ingresar
+
+            {% if user.is_authenticated %}
+
+            {% else %}
+            <br>
+            <a href="{% url "login" %}"><span class="glyphicon glyphicon-log-in"></span> &nbsp; Ingresar</a>
+            {% endif %}
         </div>
 
       {% endif %}

@@ -151,7 +151,7 @@ def crearPlanEstudios(request, nombre):
                 resolucionMinEdu = form.cleaned_data['resolucionMinEdu']
                 resolucionRectoral = form.cleaned_data['resolucionRectoral']
 
-                print (nombrePlan, cargaHorariaTotal,resolucionConeau,resolucionMinEdu, resolucionRectoral)
+                print (nombrePlan, cargaHorariaTotal, resolucionConeau, resolucionMinEdu, resolucionRectoral)
 
                 print ('Plan de estudios creado')
 
@@ -170,19 +170,6 @@ def mostrarPlanEstudios(request, nombre):
     rol = 'Director'
     status = 'UP'
 
-    # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
-    #
-    # if len(usuario) > 0:
-    #     print('Usuario validado')
-    #     nombre = usuario[0]
-    #     rol = usuario[2]
-    #     status = checkStatus()
-    #
-    # else:
-    #     print('Usuario invalido')
-    #
-    # response = leer_tabla('PlanEstudios')
-
     response = {'Items': [{'resolucionConeau': 'A1A', 'cargaHorariaTotal': '160', 'resolucionMinEdu': '111', 'nombrePlan': 'Ing Agrimensura', 'resolucionRectoral': '222', 'idPlan': '3'}], 'Count': 1, 'ScannedCount': 1}
 
     return render(request, 'pg/mostrarplanestudios.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
@@ -195,23 +182,16 @@ def mostrarPlanEstudiosDetalle(request, nombre, idplan):
     rol = 'Director'
     status = 'UP'
 
-    # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
-    #
-    # if len(usuario) > 0:
-    #     print('Usuario validado')
-    #     nombre = usuario[0]
-    #     rol = usuario[2]
-    #     status = checkStatus()
-    #
-    # else:
-    #     print('Usuario invalido')
-    #
-    # response = leer_tabla('PlanEstudios')
+    response = {'Items': [{'resolucionConeau': 'A1A', 'cargaHorariaTotal': '160', 'resolucionMinEdu': '111',
+                           'nombrePlan': 'Ing Agrimensura', 'resolucionRectoral': '222', 'idPlan': '3'}], 'Count': 1, 'ScannedCount': 1}
 
-    response = {'Items': [{'resolucionConeau': 'A1A', 'cargaHorariaTotal': '160', 'resolucionMinEdu': '111', 'nombrePlan': 'Ing Agrimensura', 'resolucionRectoral': '222', 'idPlan': '3'}], 'Count': 1, 'ScannedCount': 1}
+    response_materias = {'Items': [{'idMateria': '1', 'Descriptor': 'Fisica 1'}], 'Count': 1, 'ScannedCount': 1}
+
+    response_competencias = {'Items': [{'idCompetencia': '32', 'Descriptor': 'Sistemas informaticos'}], 'Count': 1, 'ScannedCount': 1}
 
     return render(request, 'pg/mostrarplanestudiosdetalle.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
-                                            'status': status, 'planes': response['Items']})
+                                            'status': status, 'planes': response['Items'], 'materias': response_materias['Items'],
+                                            'competencias': response_competencias['Items']})
 
 
 def crearMateria(request, nombre):
@@ -219,17 +199,6 @@ def crearMateria(request, nombre):
     nombre = 'tester'
     rol = 'Director'
     status = 'UP'
-
-    # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
-
-    # if len(usuario) > 0:
-    #     print('Usuario validado')
-    #     nombre = usuario[0]
-    #     rol = usuario[2]
-    #     status = checkStatus()
-    #
-    # else:
-    #     print('Usuario invalido')
 
     form = materiaForm()
     if request.method == 'POST':
@@ -260,19 +229,6 @@ def mostrarMaterias(request, nombre):
     rol = 'Director'
     status = 'UP'
 
-    # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
-    #
-    # if len(usuario) > 0:
-    #     print('Usuario validado')
-    #     nombre = usuario[0]
-    #     rol = usuario[2]
-    #     status = checkStatus()
-    #
-    # else:
-    #     print('Usuario invalido')
-    #
-    # response = leer_tabla('PlanEstudios')
-
     response = {'Items': [{'idMateria': '1', 'Descriptor': 'Fisica 1'}], 'Count': 1, 'ScannedCount': 1}
 
     return render(request, 'pg/mostrarmaterias.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
@@ -285,24 +241,10 @@ def mostrarMateriaDetalle(request, nombre, idmateria):
     rol = 'Director'
     status = 'UP'
 
-    # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
-    #
-    # if len(usuario) > 0:
-    #     print('Usuario validado')
-    #     nombre = usuario[0]
-    #     rol = usuario[2]
-    #     status = checkStatus()
-    #
-    # else:
-    #     print('Usuario invalido')
-    #
-    # response = leer_tabla('ContenidoCurricular')
-
     response = {'Items': [{'idContenidoCurricular': '1', 'Descriptor': 'Objetivo', 'idMateria': 1}], 'Count': 1, 'ScannedCount': 1}
 
     return render(request, 'pg/mostrarmateriadetalle.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                             'status': status, 'planes': response['Items'], 'idmateria': idmateria})
-
 
 
 def crearContenidoCurricular(request, nombre, idmateria):
@@ -310,17 +252,6 @@ def crearContenidoCurricular(request, nombre, idmateria):
     nombre = 'tester'
     rol = 'Director'
     status = 'UP'
-
-    # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
-
-    # if len(usuario) > 0:
-    #     print('Usuario validado')
-    #     nombre = usuario[0]
-    #     rol = usuario[2]
-    #     status = checkStatus()
-    #
-    # else:
-    #     print('Usuario invalido')
 
     form = curricularForm()
     if request.method == 'POST':
@@ -350,19 +281,6 @@ def mostrarContenidoCurricular(request, nombre, idcontenidocurricular, idmateria
     nombre = 'tester'
     rol = 'Director'
 
-    # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
-    #
-    # if len(usuario) > 0:
-    #     print('Usuario validado')
-    #     nombre = usuario[0]
-    #     rol = usuario[2]
-    #     status = checkStatus()
-    #
-    # else:
-    #     print('Usuario invalido')
-    #
-    # response = leer_tabla('ContenidoCurricular')
-
     response_cont_curricular = {'Items': [{'idContenidoCurricular': '1', 'Descriptor': 'Objetivo', 'idMateria': 1}], 'Count': 1, 'ScannedCount': 1}
     response_unidades = {'Items': [{'idUnidad': '1', 'Descriptor': 'Repaso', 'idContenidoCurricular': 1}], 'Count': 1, 'ScannedCount': 1}
     response_act_formacion = {'Items': [{'idActFormacionPractica': '1', 'Descriptor': 'TP 1', 'idContenidoCurricular': 1}], 'Count': 1, 'ScannedCount': 1}
@@ -378,19 +296,6 @@ def mostrarUnidad(request, nombre, idunidad):
     nombre = 'tester'
     rol = 'Director'
 
-    # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
-    #
-    # if len(usuario) > 0:
-    #     print('Usuario validado')
-    #     nombre = usuario[0]
-    #     rol = usuario[2]
-    #     status = checkStatus()
-    #
-    # else:
-    #     print('Usuario invalido')
-    #
-    # response = leer_tabla('ContenidoCurricular')
-
     response_unidades = {'Items': [{'idUnidad': '1', 'Descriptor': 'Repaso', 'idContenidoCurricular': 1}], 'Count': 1, 'ScannedCount': 1}
 
     return render(request, 'pg/mostrarunidad.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
@@ -405,19 +310,6 @@ def mostrarActFormacionPractica(request, nombre, idactformacionpractica):
     rol = 'Director'
     status = 'UP'
 
-    # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
-    #
-    # if len(usuario) > 0:
-    #     print('Usuario validado')
-    #     nombre = usuario[0]
-    #     rol = usuario[2]
-    #     status = checkStatus()
-    #
-    # else:
-    #     print('Usuario invalido')
-    #
-    # response = leer_tabla('ContenidoCurricular')
-
     response_cont_curricular = {'Items': [{'idContenidoCurricular': '1', 'Descriptor': 'Objetivo', 'idMateria': 1}], 'Count': 1, 'ScannedCount': 1}
     response_unidades = {'Items': [{'idUnidad': '1', 'Descriptor': 'Repaso', 'idContenidoCurricular': 1}], 'Count': 1, 'ScannedCount': 1}
     response_act_formacion = {'Items': [{'idActFormacionPractica': '1', 'Descriptor': 'TP 1', 'idContenidoCurricular': 1}], 'Count': 1, 'ScannedCount': 1}
@@ -426,3 +318,38 @@ def mostrarActFormacionPractica(request, nombre, idactformacionpractica):
                             'response_act_formacion': response_act_formacion['Items'],
                             'idactformacionpractica': idactformacionpractica,
                                                                   })
+
+
+def crearCompetencia(request, nombre, idplan):
+
+    nombre = 'tester'
+    rol = 'Director'
+    status = 'UP'
+
+    form = competenciaForm()
+    if request.method == 'POST':
+        try:
+            form = competenciaForm(request.POST)
+            if form.is_valid():
+
+                descriptor = form.cleaned_data['competencia']
+
+                return mostrarPlanEstudiosDetalle(request, nombre, idplan)
+
+        except Exception:
+            pass
+
+    return render(request, 'pg/crearcompetencia.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                            'status': status, 'form': form})
+
+
+def mostrarCompetencias(request, nombre):
+
+    nombre = 'tester'
+    rol = 'Director'
+    status = 'UP'
+
+    response_competencias = {'Items': [{'idCompetencia': '32', 'Descriptor': 'Sistemas informaticos'}], 'Count': 1, 'ScannedCount': 1}
+
+    return render(request, 'pg/mostrarcompetencias.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                            'status': status, 'planes': response_competencias['Items']})

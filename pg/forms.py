@@ -68,3 +68,6 @@ class materiaForm(forms.Form):
 
 class curricularForm(forms.Form):
     descriptor = forms.CharField(label='Descriptor del contenido curricular', max_length=80)
+
+class competenciaForm(forms.Form):
+    competencia = forms.CharField(label='Descripcion de la Competencia', max_length=80)

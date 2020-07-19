@@ -13,10 +13,32 @@
 
 Materias
 
+<ul>
+    id Materia    Descriptor
+{% for i in materias %}
+    {{i.idMateria}} - {{i.Descriptor}}
+
+{% endfor %}
+</ul>
 
 
 Competencias
 
+<ul>
+    id Competencia    Descriptor
+{% for i in competencias %}
+    {{i.idCompetencia}} - {{i.Descriptor}}
+
+{% endfor %}
+</ul>
+
+
+<div class="row d-flex justify-content-around mt-4">
+{% for i in planes %}
+     <a href="{% url 'crearCompetencia' nombre=nombre idplan=i.idPlan %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
+    style='width:180px; height:50px'>Crear Competencia</a>
+{% endfor %}
+</div>
 
 
 {% endblock start %}

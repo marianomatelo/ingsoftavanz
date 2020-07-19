@@ -1,0 +1,24 @@
+{% extends "pg/menu.html" %}
+{% load crispy_forms_tags %}
+{% block start %}
+{% load widget_tweaks %}
+
+  <form method="post">
+       {% csrf_token %}
+    <div class="bloque_form">
+        <h4>Datos de la competencia</h4>
+      <div class="form-row">
+          <div class="col-sm-12 col-md-6 form-group">
+            <input id="{{ form.competencia.id_for_label }}" name="{{ form.competencia.name }}" type="text"
+                   class="form-control {% if form.competencia.errors %}is-invalid{% endif %}"
+                   placeholder="Descripcion de la competencia" required="" value="{{ form.competencia.value|default:'' }}" />
+          </div>
+      </div>
+
+     <div class="d-flex justify-content-around">
+        <button type="submit" class="btn btn-success">Crear</button>
+      </div>
+    </div>
+  </form>
+
+{% endblock start %}

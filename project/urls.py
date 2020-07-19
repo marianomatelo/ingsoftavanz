@@ -44,10 +44,10 @@ urlpatterns = [
     path('mostrarActFormacionPractica/(?P<nombre>\d+)(?P<idactformacionpractica>\d+)/$',
         pg_view.mostrarActFormacionPractica, name='mostrarActFormacionPractica'),
 
-    # path('datasets/', pg_view.dataset, name='datasets'),
-    #
-    # path('playground/', pg_view.playground, name='playground'),
-    #
-    # path('analyzer/', pg_view.analyzer, name='analyzer'),
+    path('crearCompetencia/(?P<nombre>\d+)(?P<idplan>\d+)/$', pg_view.crearCompetencia, name='crearCompetencia'),
+
+    path('mostrarCompetencias/(?P<nombre>\d+)/$', pg_view.mostrarCompetencias, name='mostrarCompetencias'),
+
+
 
 ]

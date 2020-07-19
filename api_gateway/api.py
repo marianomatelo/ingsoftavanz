@@ -112,20 +112,19 @@ def delete():
 
 def checkStatus():
 
-    url = 'https://stackoverflow.com/'
-    response_code = 200
+    url = 'api.internal.ml.com/shipping-monitor-api/shipments/30012299707/shipping-monitor/info'
 
-    r = requests.get(url)
+    # url = 'https://jsonplaceholder.typicode.com/todos/1'
+    response = requests.get(url)  # To execute get request
+    print(response.status_code)  # To print http response code
+    print(response.text)  # To print formatted JSON response
 
-    if r.status_code != response_code:
-        return 'DOWN'
-    else:
-        return 'UP'
+    print(response.text)
 
 
 if __name__ == '__main__':
 
-    leer_tabla(tabla='PlanEstudios')
+    # leer_tabla(tabla='PlanEstudios')
 
     # usuario = buscar_usuario(tabla='usuarios', input_usuario='Mariano', input_password='Continente7')
     #
@@ -143,4 +142,4 @@ if __name__ == '__main__':
 
     # delete()
 
-    # checkStatus()
+    checkStatus()
