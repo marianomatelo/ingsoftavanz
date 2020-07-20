@@ -143,17 +143,11 @@ def crearPlanEstudios(request, nombre):
             form = planEstudioForm(request.POST)
             if form.is_valid():
 
-                print ('Creando Plan de estudios')
-
                 nombrePlan = form.cleaned_data['nombrePlan']
                 cargaHorariaTotal = form.cleaned_data['cargaHorariaTotal']
                 resolucionConeau = form.cleaned_data['resolucionConeau']
                 resolucionMinEdu = form.cleaned_data['resolucionMinEdu']
                 resolucionRectoral = form.cleaned_data['resolucionRectoral']
-
-                print (nombrePlan, cargaHorariaTotal, resolucionConeau, resolucionMinEdu, resolucionRectoral)
-
-                print ('Plan de estudios creado')
 
                 return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                                         'status': status})
@@ -206,13 +200,7 @@ def crearMateria(request, nombre):
             form = materiaForm(request.POST)
             if form.is_valid():
 
-                print ('Creando Materia')
-
                 descriptor = form.cleaned_data['materia']
-
-                print (descriptor)
-
-                print ('Materia Creada')
 
                 return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                                         'status': status})
@@ -332,7 +320,7 @@ def crearCompetencia(request, nombre, idplan):
             form = competenciaForm(request.POST)
             if form.is_valid():
 
-                descriptor = form.cleaned_data['competencia']
+                # guardar con idplan
 
                 return mostrarPlanEstudiosDetalle(request, nombre, idplan)
 
@@ -353,3 +341,42 @@ def mostrarCompetencias(request, nombre):
 
     return render(request, 'pg/mostrarcompetencias.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                             'status': status, 'planes': response_competencias['Items']})
+
+
+def mostrarCompetenciaDetalle(request, nombre, idcompetencia):
+
+    nombre = 'tester'
+    rol = 'Director'
+    status = 'UP'
+
+    response_competencia = {'Items': [{'idCompetencia': '32', 'Descriptor': 'Sistemas informaticos'}], 'Count': 1, 'ScannedCount': 1}
+
+    response_capacidades = {'Items': [{'idCapacidad': '7', 'Descriptor': 'Programar'}, {'idCapacidad': '5', 'Descriptor': 'Diagramar'}]}
+
+    return render(request, 'pg/mostrarcompetenciadetalle.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                            'status': status,
+                                            'competencias': response_competencia['Items'],
+                                            'capacidades': response_capacidades['Items']})
+
+
+def crearCapacidad(request, nombre, idcompetencia):
+
+    nombre = 'tester'
+    rol = 'Director'
+    status = 'UP'
+
+    form = capacidadForm()
+    if request.method == 'POST':
+        try:
+            form = capacidadForm(request.POST)
+            if form.is_valid():
+
+                # guardar con idcompetencia
+
+                return mostrarCompetenciaDetalle(request, nombre, idcompetencia)
+
+        except Exception:
+            pass
+
+    return render(request, 'pg/crearcapacidad.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                            'status': status, 'form': form})

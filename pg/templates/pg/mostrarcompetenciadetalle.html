@@ -1,0 +1,32 @@
+{% extends "pg/menu.html" %}
+{% load crispy_forms_tags %}
+{% block start %}
+{% load widget_tweaks %}
+
+Competencia
+<ul>
+{% for i in competencias %}
+   e{{i.idCompetencia}} - {{i.Descriptor}}
+    <br>
+{% endfor %}
+</ul>
+
+
+Capacidades
+<ul>
+{% for i in capacidades %}
+   e{{i.idCapacidad}} - {{i.Descriptor}}
+    <br>
+{% endfor %}
+</ul>
+
+
+<div class="row d-flex justify-content-around mt-4">
+{% for i in competencias %}
+     <a href="{% url 'crearCapacidad' nombre=nombre idcompetencia=i.idCompetencia %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
+    style='width:180px; height:50px'>Crear Capacidad</a>
+{% endfor %}
+</div>
+
+
+{% endblock start %}

@@ -48,6 +48,8 @@ urlpatterns = [
 
     path('mostrarCompetencias/(?P<nombre>\d+)/$', pg_view.mostrarCompetencias, name='mostrarCompetencias'),
 
+    path('mostrarCompetenciaDetalle/(?P<nombre>\d+)(?P<idcompetencia>\d+)/$', pg_view.mostrarCompetenciaDetalle,
+         name='mostrarCompetenciaDetalle'),
 
-
+    path('crearCapacidad/(?P<nombre>\d+)(?P<idcompetencia>\d+)/$', pg_view.crearCapacidad, name='crearCapacidad'),
 ]

@@ -5,10 +5,9 @@
 
 <ul>
 {% for i in planes %}
-    <li><a href="{% url 'mostrarCompetenciaDetalle' nombre=nombre idCompetencia=i.idCompetencia %}">{{i.idCompetencia}} - {{i.Descriptor}}</a></li>
+    <li><a href="{% url 'mostrarCompetenciaDetalle' nombre=nombre idcompetencia=i.idCompetencia %}">{{i.idCompetencia}} - {{i.Descriptor}}</a></li>
 {% endfor %}
 </ul>
-
 
 
 {% endblock start %}

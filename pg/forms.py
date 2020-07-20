@@ -71,3 +71,6 @@ class curricularForm(forms.Form):
 
 class competenciaForm(forms.Form):
     competencia = forms.CharField(label='Descripcion de la Competencia', max_length=80)
+
+class capacidadForm(forms.Form):
+    capacidad = forms.CharField(label='Descripcion de la Competencia', max_length=80)
