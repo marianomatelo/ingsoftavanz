@@ -78,3 +78,31 @@ input[type=submit] {
 .center {
     margin: 0 auto;
 }
+
+a.button{
+font-size: 120%;
+font-weight: 900;
+color: #eee;
+text-align: center;
+text-shadow: 0 -1px 1px #000;
+text-decoration: none;
+display: block;
+margin-left: 50%;
+background-color: #222;
+-webkit-border-radius: 2px;
+-webkit-box-shadow: 0 1px 1px #888;
+margin-bottom: 2px;
+border: 1px solid #000;
+}
+
+a.button:active{
+-webkit-box-shadow: 0 2px 2px #888;
+}
+
+a.button:hover span{
+top: -2px;
+}
+
+a.button:active span{
+top: 0;
+}
