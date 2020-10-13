@@ -45,7 +45,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" class="styleheader" href="{% url 'menu' nombre=nombre %}">ISA</a>
+          <a class="navbar-brand" class="styleheader" href="{% url 'menu' nombre=nombre rol=rol %}">ISA</a>
 
         </div>
 
@@ -80,7 +80,7 @@
       </div>
 
       <div style="margin-left:50%; font-weight: bold;">
-          Status: {{status}}
+          Status API: {{status}}
       </div>
 
       <div style="margin-left:50%; font-weight: bold;">

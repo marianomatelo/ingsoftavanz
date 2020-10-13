@@ -20,32 +20,33 @@ import pandas as pd
 import random
 import string
 from api_gateway.api import buscar_usuario, buscar_usuario_mfa, checkStatus, leer_tabla
+from dao import Dao
 
 
 def index(request):
 
-    return render(request, 'pg/index.html', {'title': 'ISA 2019 APP'})
+    return render(request, 'pg/index.html', {'title': 'ISA'})
 
 
 def Login(request):
 
-    ### HARDCODEO ###
-    usuario ='director'
-
-
     if request.method == 'POST':
 
-        # usuario = buscar_usuario(tabla='usuarios', input_usuario=request.POST['username'], input_password=request.POST['password'])
+        dao = Dao(host='34.233.129.172', port='18081', user='postgres', password='continente7', db='nano')
 
-        if len(usuario) > 0:
+        df_usuarios = dao.download_from_query(
+            """SELECT * FROM usuarios WHERE usuario = '{}' AND password = '{}'""".format(request.POST['username'],
+                                                                                         request.POST['password']))
+
+        if len(df_usuarios) > 0:
             print('Usuario validado')
-            nombre = usuario[0]
-            return redirect('mfa', nombre=nombre)
-    #
-    #     else:
-    #         print('Usuario invalido')
-    #         messages.info(request, f'Error: Intente log in nuevamente')
-    #
+            usuario = request.POST['username']
+            return redirect('mfa', nombre=usuario)
+
+        else:
+            print('Usuario invalido')
+            messages.info(request, f'Error: Intente log in nuevamente')
+
     form = AuthenticationForm()
 
     return render(request, 'pg/login.html', {'form': form, 'title': 'Log In'})
@@ -53,21 +54,18 @@ def Login(request):
 
 def mfa(request, nombre):
 
+    if request.method == 'POST':\
 
-    # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
-    #
-    # if len(usuario) > 0:
-    #     print('Usuario validado')
-    #     nombre = usuario[0]
-    #     clave_mfa = usuario[3]
+        dao = Dao(host='34.233.129.172', port='18081', user='postgres', password='continente7', db='nano')
 
-    if request.method == 'POST':
+        df_mfa = dao.download_from_query(
+            """SELECT * FROM usuarios WHERE usuario = '{}' AND mfa = '{}'""".format(nombre,
+                                                                                    request.POST['clave_multifactor']))
 
-        # if request.POST['clave_multifactor'] == clave_mfa:
+        if len(df_mfa) > 0:
+            print('MFA Validado')
 
-        print('MFA Validado')
-
-        return redirect('menu', nombre=nombre)
+            return redirect('menu', nombre=nombre, rol=df_mfa['rol'].iloc[0])
 
     form = keyForm()
     # htmly = get_template('pg/Email.html')
@@ -81,20 +79,7 @@ def mfa(request, nombre):
     return render(request, 'pg/mfa.html', {'form': form, 'title': 'MFA'})
 
 
-def menu(request, nombre):
-
-    # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
-    #
-    # if len(usuario) > 0:
-    #     print('Usuario validado')
-    #     nombre = usuario[0]
-    #     rol = usuario[2]
-    #     status = checkStatus()
-    #
-    # else:
-    #     print('Usuario invalido')
-
-    rol = 'Director'
+def menu(request, nombre, rol):
 
     status = 'UP'
 

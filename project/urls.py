@@ -18,7 +18,7 @@ urlpatterns = [
 
     path('mfa/(?P<nombre>\d+)/$', pg_view.mfa, name='mfa'),
 
-    path('menu/(?P<nombre>\d+)/$', pg_view.menu, name='menu'),
+    path('menu/(?P<nombre>\d+)(?P<rol>\d+)$', pg_view.menu, name='menu'),
 
     path('crearPlanEstudios/(?P<nombre>\d+)/$', pg_view.crearPlanEstudios, name='crearPlanEstudios'),
 
