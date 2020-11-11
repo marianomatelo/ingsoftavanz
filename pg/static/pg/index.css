@@ -106,3 +106,34 @@ top: -2px;
 a.button:active span{
 top: 0;
 }
+
+
+ul {
+    width: 450px;
+    position: relative;
+    margin-left: 0%;
+}
+ul:before, ul:after {
+    text-align: center;
+    display: block;
+    border: 1px solid black;
+    border-bottom: 0;
+    width: 48%;
+}
+
+li {
+    text-align: center;
+    width: 48%;
+    float: left;
+    border: 1px solid black;
+    margin-bottom: -1px;
+}
+li:nth-child(even) {
+    margin-left: -1px;
+}
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  text-align: center;
+}

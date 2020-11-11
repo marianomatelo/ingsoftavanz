@@ -3,39 +3,86 @@
 {% block start %}
 {% load widget_tweaks %}
 
-<ul>
-    <li>idPlan nombrePlan cargaHorariaTota resolucionConeau resolucionMinEdu resolucionRectoral</li>
-{% for i in planes %}
-    <li>{{i.idPlan}} {{i.nombrePlan}} {{i.cargaHorariaTotal}} {{i.resolucionConeau}} {{i.resolucionMinEdu}} {{i.resolucionRectoral}}</li>
-{% endfor %}
-</ul>
+<div style="margin-left:40%;">
 
+Planes de estudio - Detalle
+
+<br>
+<br>
+
+<table>
+  <tr>
+    <th>id de Plan</th>
+    <th>Nombre de Plan</th>
+    <th>Carga horaria total</th>
+    <th>Resolucion Coneau</th>
+    <th>Resolucion Min Edu</th>
+    <th>Resolucion Rectoral</th>
+  </tr>
+  <tr>
+    {% for i in planes %}
+    <td>{{i.idPlan}}</td>
+    <td>{{i.nombrePlan}}</td>
+      <td>{{i.cargaHorariaTotal}}</td>
+    <td>{{i.resolucionConeau}}</td>
+      <td>{{i.resolucionMinEdu}}</td>
+    <td>{{i.resolucionRectoral}}</td>
+  </tr>
+    {% endfor %}
+</table>
+
+<br>
+<br>
+<br>
 
 Materias
 
-<ul>
-    id Materia    Descriptor
-{% for i in materias %}
-    {{i.idMateria}} - {{i.Descriptor}}
+<br>
+<br>
 
-{% endfor %}
-</ul>
+<table>
+  <tr>
+    <th>id de Materia</th>
+    <th>Descripcion</th>
+  </tr>
+  <tr>
+    {% for i in materias %}
+    <td>{{i.idMateria}}</td>
+    <td>{{i.Descriptor}}</td>
+  </tr>
+    {% endfor %}
+</table>
 
+<br>
+<br>
+<br>
 
 Competencias
 
-<ul>
-    id Competencia    Descriptor
-{% for i in competencias %}
-    {{i.idCompetencia}} - {{i.Descriptor}}
+<br>
+<br>
 
-{% endfor %}
-</ul>
+<table>
+  <tr>
+    <th>id de Competencia</th>
+    <th>Descripcion</th>
+  </tr>
+  <tr>
+    {% for i in competencias %}
+    <td>{{i.idCompetencia}}</td>
+    <td>{{i.Descriptor}}</td>
+  </tr>
+    {% endfor %}
+</table>
 
+
+<br>
+<br>
+</div>
 
 <div class="row d-flex justify-content-around mt-4">
 {% for i in planes %}
-     <a href="{% url 'crearCompetencia' nombre=nombre idplan=i.idPlan %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
+     <a href="{% url 'crearCompetencia' nombre=nombre idplan=i.idPlan %}" class="button"  role="button" aria-pressed="true"
     style='width:180px; height:50px'>Crear Competencia</a>
 {% endfor %}
 </div>

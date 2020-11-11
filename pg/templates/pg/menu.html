@@ -65,11 +65,10 @@
   <br/>
   <br>
   <br>
+  <br>
+  <br>
 
     {% block start %}
-
-      <br>
-      <br>
 
       <div style="margin-left:50%; font-weight: bold;">
           Bienvenido {{nombre}}
@@ -109,10 +108,35 @@
          <a href="{% url 'mostrarCompetencias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
             style='width:180px; height:50px'>Ver logs</a>
 
-      {% else %}
+      {% endif %}
 
+
+
+      {% if rol == 'admin' %}
+
+        <br>
+
+         <a href="{% url 'crearPlanEstudios' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Crear Plan de Estudios</a>
+
+         <a href="{% url 'mostrarPlanEstudios' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Mostrar Planes de Estudios</a>
+
+         <a href="{% url 'crearMateria' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Crear Materia</a>
+
+         <a href="{% url 'mostrarMaterias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Mostrar Materias</a>
+
+         <a href="{% url 'mostrarCompetencias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Mostrar Competencias</a>
+
+         <a href="{% url 'mostrarCompetencias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Ver logs</a>
 
       {% endif %}
+
+
 
     {% endblock %}
 

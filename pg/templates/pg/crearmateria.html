@@ -11,6 +11,9 @@
           <div class="col-sm-12 col-md-6 form-group">
             <input id="{{ form.materia.id_for_label }}" name="{{ form.materia.name }}" type="text" class="form-control {% if form.materia.errors %}is-invalid{% endif %}"  placeholder="Nombre de la materia" required="" value="{{ form.materia.value|default:'' }}" />
           </div>
+          <div class="col-sm-12 col-md-6 form-group">
+            <input id="{{ form.descriptor.id_for_label }}" name="{{ form.descriptor.name }}" type="text" class="form-control {% if form.descriptor.errors %}is-invalid{% endif %}"  placeholder="Descripcion de la materia" required="" value="{{ form.descriptor.value|default:'' }}" />
+          </div>
       </div>
 
      <div class="d-flex justify-content-around">

@@ -65,12 +65,16 @@ class planEstudioForm(forms.Form):
 
 class materiaForm(forms.Form):
     materia = forms.CharField(label='Nombre de la materia', max_length=80)
+    descriptor = forms.CharField(label='Descriptor de la materia', max_length=80)
 
 class curricularForm(forms.Form):
+    contenido = forms.CharField(label='Nombre del contenido curricular', max_length=80)
     descriptor = forms.CharField(label='Descriptor del contenido curricular', max_length=80)
 
 class competenciaForm(forms.Form):
-    competencia = forms.CharField(label='Descripcion de la Competencia', max_length=80)
+    competencia = forms.CharField(label='Nombre de la Competencia', max_length=80)
+    descriptor = forms.CharField(label='Descriptor de la Competencia', max_length=80)
 
 class capacidadForm(forms.Form):
-    capacidad = forms.CharField(label='Descripcion de la Competencia', max_length=80)
+    capacidad = forms.CharField(label='Nombre de la Capacidad', max_length=80)
+    descriptor = forms.CharField(label='Descriptor de la Capacidad', max_length=80)

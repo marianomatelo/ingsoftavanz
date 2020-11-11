@@ -3,15 +3,20 @@
 {% block start %}
 {% load widget_tweaks %}
 
+<div style="margin-left:40%;">
+
   <form method="post">
        {% csrf_token %}
     <div class="bloque_form">
-        <h4>Datos de la competencia</h4>
+        <h4>Crear Competencia</h4>
       <div class="form-row">
           <div class="col-sm-12 col-md-6 form-group">
-            <input id="{{ form.competencia.id_for_label }}" name="{{ form.competencia.name }}" type="text"
-                   class="form-control {% if form.competencia.errors %}is-invalid{% endif %}"
-                   placeholder="Descripcion de la competencia" required="" value="{{ form.competencia.value|default:'' }}" />
+            <div class="col-sm-12 col-md-6 form-group">
+            <input id="{{ form.competencia.id_for_label }}" name="{{ form.competencia.name }}" type="text" class="form-control {% if form.competencia.errors %}is-invalid{% endif %}"  placeholder="Nombre de la Competencia" required="" value="{{ form.competencia.value|default:'' }}" />
+          </div>
+            <input id="{{ form.descriptor.id_for_label }}" name="{{ form.descriptor.name }}" type="text"
+                   class="form-control {% if form.descriptor.errors %}is-invalid{% endif %}"
+                   placeholder="Descripcion de la Competencia" required="" value="{{ form.descriptor.value|default:'' }}" />
           </div>
       </div>
 
@@ -20,5 +25,7 @@
       </div>
     </div>
   </form>
+
+</div>
 
 {% endblock start %}
