@@ -6,7 +6,7 @@
   <form method="post">
        {% csrf_token %}
     <div class="bloque_form">
-        <h4>Datos de la materia</h4>
+        <h4>Crear Materia</h4>
       <div class="form-row">
           <div class="col-sm-12 col-md-6 form-group">
             <input id="{{ form.materia.id_for_label }}" name="{{ form.materia.name }}" type="text" class="form-control {% if form.materia.errors %}is-invalid{% endif %}"  placeholder="Nombre de la materia" required="" value="{{ form.materia.value|default:'' }}" />

@@ -3,23 +3,39 @@
 {% block start %}
 {% load widget_tweaks %}
 
+<div style="margin-left:40%;">
+
 Contenido curricular
-
-<ul>
-    <li>idContenidoCurricular Descriptor</li>
-{% for i in planes %}
-    <li>
-         <a href="{% url 'mostrarContenidoCurricular' nombre=nombre idcontenidocurricular=i.idContenidoCurricular idmateria=i.idMateria descriptor=i.Descriptor%}">
-             {{i.idContenidoCurricular}} {{i.Descriptor}} {{i.idMateria}}</a>
-    </li>
-{% endfor %}
-</ul>
+    <br>
+<br>
 
 
-<div class="row d-flex justify-content-around mt-4">
- <a href="{% url 'crearContenidoCurricular' nombre=nombre idmateria=idmateria%}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
-    style='width:180px; height:50px'>Crear Contenido Curricular</a>
+    <table>
+  <tr>
+    <th>id Contenido Curricular</th>
+    <th>Descripcion</th>
+      <th>Id de Materia</th>
+  </tr>
+  <tr>
+    {% for i in planes %}
+    <td>   <a href="{% url 'mostrarContenidoCurricular' nombre=nombre idcontenidocurricular=i.idContenidoCurricular idmateria=i.idMateria descriptor=i.Descriptor%}">
+             {{i.idContenidoCurricular}} {{i.Descriptor}} {{i.idMateria}}</a></td>
+    <td>{{i.Descriptor}}</td>
+      <td>{{i.idMateria}}</td>
+  </tr>
+    {% endfor %}
+</table>
+
+
+<br>
+<br>
+
+
 </div>
 
+<div class="row d-flex justify-content-around mt-4">
+ <a href="{% url 'crearContenidoCurricular' nombre=nombre idmateria=idmateria%}" class="button"  role="button" aria-pressed="true"
+    style='width:180px; height:50px'>Crear Contenido Curricular</a>
+</div>
 
 {% endblock start %}

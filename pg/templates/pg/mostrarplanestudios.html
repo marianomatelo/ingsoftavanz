@@ -5,17 +5,23 @@
 
 <div style="margin-left:40%;">
 
-Planes de estudio
+<b>Planes de estudio</b>
 
 <br>
 <br>
 
-<ul>
-
-{% for i in planes %}
-    <li><a href="{% url 'mostrarPlanEstudiosDetalle' nombre=nombre idplan=i.idPlan %}">{{i.idPlan}} - {{i.nombrePlan}}</a></li>
-{% endfor %}
-</ul>
+<table>
+  <tr>
+    <th>id Plan de Estudios</th>
+    <th>Nombre</th>
+  </tr>
+  <tr>
+    {% for i in planes %}
+    <td><a href="{% url 'mostrarPlanEstudiosDetalle' nombre=nombre idplan=i.idPlan %}">{{i.idPlan}}</a></td>
+    <td><a href="{% url 'mostrarPlanEstudiosDetalle' nombre=nombre idplan=i.idPlan %}">{{i.nombrePlan}}</a></td>
+  </tr>
+    {% endfor %}
+</table>
 
 </div>
 

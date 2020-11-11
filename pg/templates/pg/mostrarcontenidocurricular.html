@@ -3,13 +3,25 @@
 {% block start %}
 {% load widget_tweaks %}
 
-Contenido curricular
+<div style="margin-left:40%;">
+
+<b>Contenido curricular</b>
+
 <br>
-idcontenidocurricular idmateria descriptor
 <br>
-{{idcontenidocurricular}}
-{{idmateria}}
-{{descriptor}}
+
+<table>
+  <tr>
+    <th>id de Contenido Curricular</th>
+    <th>id de Materia</th>
+    <th>Descripcion</th>
+  </tr>
+  <tr>
+    <td>{{idcontenidocurricular}}</td>
+    <td>{{idmateria}}</td>
+    <td>{{descriptor}}</td>
+  </tr>
+</table>
 
 <br>
 <br>
@@ -36,5 +48,7 @@ idcontenidocurricular idmateria descriptor
     </li>
 {% endfor %}
 </ul>
+
+</div>
 
 {% endblock start %}
