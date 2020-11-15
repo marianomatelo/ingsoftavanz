@@ -26,28 +26,64 @@
 <br>
 <br>
 
-<ul>
-    <li>Unidades</li>
-{% for i in response_unidades %}
-    <li>
-         <a href="{% url 'mostrarUnidad' nombre=nombre idunidad=i.idUnidad%}">
-             {{i.idUnidad}} {{i.Descriptor}} {{i.idContenidoCurricular}}</a>
-    </li>
-{% endfor %}
-</ul>
+<b>Unidades</b>
 
 <br>
 <br>
 
-<ul>
-    <li>Act Formacion Practica</li>
-{% for i in response_act_formacion %}
-    <li>
-         <a href="{% url 'mostrarActFormacionPractica' nombre=nombre idactformacionpractica=i.idActFormacionPractica%}">
-             {{i.idActFormacionPractica}} {{i.Descriptor}} {{i.idContenidoCurricular}}</a>
-    </li>
-{% endfor %}
-</ul>
+<table>
+  <tr>
+    <th>id Unidad</th>
+    <th>Descripcion</th>
+  </tr>
+  <tr>
+    {% for i in response_unidades %}
+      <td>{{i.idUnidad}}</td>
+        <td>{{i.Descriptor}}</td>
+  </tr>
+    {% endfor %}
+</table>
+
+<br>
+<br>
+
+<b>Act Formacion Practica</b>
+
+<br>
+<br>
+
+
+
+<table>
+  <tr>
+    <th>id Acta de Formacion Practica</th>
+    <th>Descripcion</th>
+  </tr>
+  <tr>
+    {% for i in response_act_formacion %}
+      <td>
+     {{i.idActFormacionPractica}}</a></td>
+      <td>
+     {{i.Descriptor}} </a></td>
+  </tr>
+    {% endfor %}
+</table>
+
+
+<br>
+<br>
+
+<div class="row d-flex justify-content-around mt-4">
+ <a href="{% url 'crearUnidad' nombre=nombre idcontenidocurricular=idcontenidocurricular %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
+    style='width:180px; height:50px' >Crear Unidad</a>
+</div>
+
+<br>
+
+<div class="row d-flex justify-content-around mt-4">
+ <a href="{% url 'crearActa' nombre=nombre idcontenidocurricular=idcontenidocurricular %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
+    style='width:180px; height:50px' >Crear Acta</a>
+</div>
 
 </div>
 

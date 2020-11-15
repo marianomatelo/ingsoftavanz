@@ -3,17 +3,21 @@
 {% block start %}
 {% load widget_tweaks %}
 
-Unidad
-<br>
-{{idunidad}}
+<b>Unidad: {{idunidad}}</b>
 
 <br>
+<br>
 
-<div class="row d-flex justify-content-around mt-4">
- <a class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
-    style='width:180px; height:50px'>Crear Unidad</a>
-</div>
-
+<table>
+  <tr>
+    <th>Descripcion</th>
+  </tr>
+  <tr>
+    {% for i in planes %}
+      <td><a href="{% url 'mostrarMateriaDetalle' nombre=nombre idmateria=i.idMateria %}">{{i.Descriptor}}</a></td>
+  </tr>
+    {% endfor %}
+</table>
 
 
 {% endblock start %}

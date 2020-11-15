@@ -52,4 +52,8 @@ urlpatterns = [
          name='mostrarCompetenciaDetalle'),
 
     path('crearCapacidad/(?P<nombre>\d+)(?P<idcompetencia>\d+)/$', pg_view.crearCapacidad, name='crearCapacidad'),
+
+    path('crearUnidad/(?P<nombre>\d+)(?P<idcontenidocurricular>\d+)/$', pg_view.crearUnidad, name='crearUnidad'),
+
+    path('crearActa/(?P<nombre>\d+)(?P<idcontenidocurricular>\d+)/$', pg_view.crearActa, name='crearActa'),
 ]

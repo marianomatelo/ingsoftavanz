@@ -1,0 +1,24 @@
+{% extends "pg/menu.html" %}
+{% load crispy_forms_tags %}
+{% block start %}
+{% load widget_tweaks %}
+
+  <form method="post">
+       {% csrf_token %}
+    <div class="bloque_form">
+        <h4>Crear Unidad</h4>
+      <div class="form-row">
+          <div class="col-sm-12 col-md-6 form-group">
+            <input id="{{ form.unidad.id_for_label }}" name="{{ form.unidad.name }}" type="text" class="form-control {% if form.unidad.errors %}is-invalid{% endif %}"  placeholder="Nombre de la Unidad" required="" value="{{ form.unidad.value|default:'' }}" />
+          </div>
+          <div class="col-sm-12 col-md-6 form-group">
+            <input id="{{ form.descriptor.id_for_label }}" name="{{ form.descriptor.name }}" type="text" class="form-control {% if form.descriptor.errors %}is-invalid{% endif %}"  placeholder="Descripcion de la Unidad" required="" value="{{ form.descriptor.value|default:'' }}" />
+          </div>
+      </div>
+
+     <div class="d-flex justify-content-around">
+        <button type="submit" class="btn btn-success">Crear</button>
+      </div>
+    </div>
+  </form>
+{% endblock start %}

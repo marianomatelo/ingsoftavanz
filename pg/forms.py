@@ -64,17 +64,25 @@ class planEstudioForm(forms.Form):
     resolucionRectoral = forms.CharField(label='Resolucion Rectoral', max_length=30)
 
 class materiaForm(forms.Form):
-    materia = forms.CharField(label='Nombre de la materia', max_length=80)
-    descriptor = forms.CharField(label='Descriptor de la materia', max_length=80)
+    materia = forms.CharField(label='Nombre de la Materia', max_length=80)
+    descriptor = forms.CharField(label='Descripcion de la Materia', max_length=80)
 
 class curricularForm(forms.Form):
-    contenido = forms.CharField(label='Nombre del contenido curricular', max_length=80)
-    descriptor = forms.CharField(label='Descriptor del contenido curricular', max_length=80)
+    contenido = forms.CharField(label='Nombre del Contenido Curricular', max_length=80)
+    descriptor = forms.CharField(label='Descripcion del Contenido Curricular', max_length=80)
 
 class competenciaForm(forms.Form):
     competencia = forms.CharField(label='Nombre de la Competencia', max_length=80)
-    descriptor = forms.CharField(label='Descriptor de la Competencia', max_length=80)
+    descriptor = forms.CharField(label='Descripcion de la Competencia', max_length=80)
 
 class capacidadForm(forms.Form):
     capacidad = forms.CharField(label='Nombre de la Capacidad', max_length=80)
-    descriptor = forms.CharField(label='Descriptor de la Capacidad', max_length=80)
+    descriptor = forms.CharField(label='Descripcion de la Capacidad', max_length=80)
+
+class unidadForm(forms.Form):
+    unidad = forms.CharField(label='Nombre de la Unidad', max_length=80)
+    descriptor = forms.CharField(label='Descripcion de la Unidad', max_length=80)
+
+class actaForm(forms.Form):
+    acta = forms.CharField(label='Nombre del Acta', max_length=80)
+    descriptor = forms.CharField(label='Descripcion del Acta', max_length=80)

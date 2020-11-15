@@ -365,3 +365,49 @@ def crearCapacidad(request, nombre, idcompetencia):
 
     return render(request, 'pg/crearcapacidad.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                             'status': status, 'form': form})
+
+
+def crearUnidad(request, nombre, idcontenidocurricular):
+
+    nombre = 'tester'
+    rol = 'Director'
+    status = 'UP'
+
+    form = unidadForm()
+    if request.method == 'POST':
+        try:
+            form = unidadForm(request.POST)
+            if form.is_valid():
+
+                descriptor = form.cleaned_data['unidad']
+
+                return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                                        'status': status})
+        except Exception:
+            pass
+
+    return render(request, 'pg/crearunidad.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                            'status': status, 'form': form})
+
+
+def crearActa(request, nombre, idcontenidocurricular):
+
+    nombre = 'tester'
+    rol = 'Director'
+    status = 'UP'
+
+    form = actaForm()
+    if request.method == 'POST':
+        try:
+            form = actaForm(request.POST)
+            if form.is_valid():
+
+                descriptor = form.cleaned_data['unidad']
+
+                return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                                        'status': status})
+        except Exception:
+            pass
+
+    return render(request, 'pg/crearacta.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                            'status': status, 'form': form})
