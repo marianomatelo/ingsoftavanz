@@ -3,23 +3,49 @@
 {% block start %}
 {% load widget_tweaks %}
 
-Competencia
-<ul>
-{% for i in competencias %}
-   e{{i.idCompetencia}} - {{i.Descriptor}}
-    <br>
-{% endfor %}
-</ul>
 
+<div style="margin-left:40%;">
 
-Capacidades
-<ul>
-{% for i in capacidades %}
-   e{{i.idCapacidad}} - {{i.Descriptor}}
-    <br>
-{% endfor %}
-</ul>
+<b>Competencia</b>
 
+<br>
+<br>
+
+<table>
+  <tr>
+    <th>id Competencia</th>
+    <th>Descripcion</th>
+  </tr>
+  <tr>
+    {% for i in competencias %}
+      <td>{{i.idCompetencia}}</td>
+    <td>{{i.Descriptor}}</td>
+  </tr>
+    {% endfor %}
+</table>
+
+<br>
+<br>
+
+<b>Capacidades</b>
+
+<br>
+<br>
+
+<table>
+  <tr>
+    <th>id Competencia</th>
+    <th>Descripcion</th>
+  </tr>
+  <tr>
+    {% for i in capacidades %}
+      <td>{{i.idCapacidad}}</td>
+    <td>{{i.Descriptor}}</td>
+  </tr>
+    {% endfor %}
+</table>
+
+<br>
 
 <div class="row d-flex justify-content-around mt-4">
 {% for i in competencias %}
@@ -28,5 +54,7 @@ Capacidades
 {% endfor %}
 </div>
 
+
+</div>
 
 {% endblock start %}
