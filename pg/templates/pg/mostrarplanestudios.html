@@ -17,8 +17,8 @@
   </tr>
   <tr>
     {% for i in planes %}
-    <td><a href="{% url 'mostrarPlanEstudiosDetalle' nombre=nombre idplan=i.idPlan %}">{{i.idPlan}}</a></td>
-    <td><a href="{% url 'mostrarPlanEstudiosDetalle' nombre=nombre idplan=i.idPlan %}">{{i.nombrePlan}}</a></td>
+    <td><a href="{% url 'mostrarPlanEstudiosDetalle' nombre=nombre idplan=i.idplan %}">{{i.idplan}}</a></td>
+    <td><a href="{% url 'mostrarPlanEstudiosDetalle' nombre=nombre idplan=i.idplan %}">{{i.nombreplan}}</a></td>
   </tr>
     {% endfor %}
 </table>

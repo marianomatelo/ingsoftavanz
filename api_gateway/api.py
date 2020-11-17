@@ -3,6 +3,8 @@ import urllib.request, json
 import requests
 import pandas as pd
 import base64
+from dao import Dao
+import os
 
 
 def leer_tabla(tabla):
@@ -85,6 +87,55 @@ def buscar_usuario_mfa(tabla, input_usuario):
                 return []
 
 
+def validar_usuario(nombre):
+
+    dao = connect()
+
+    q = """SELECT usuario, email, rol, id, "password", mfa FROM public.usuarios WHERE usuario = '{}'""".format(nombre)
+
+    df = dao.download_from_query(q)
+
+    if len(df) == 1:
+        print('User Validated')
+
+        return True, df['rol'].iloc[0]
+
+    else:
+        print('Invalid user')
+
+    return False, df['rol'].iloc[0]
+
+
+def guardar_db(tabla, datos):
+
+    dao = connect()
+
+    campos = ''
+
+    for i in datos:
+
+        campos = str(campos) + "'" + str(i) + "',"
+
+    query = """ INSERT INTO {} (nombreplan, cargahorariatotal, resolucionconeau, resolucionminedu, resolucionrectoral) VALUES ({})""".format(tabla, str(datos)[1:-1])
+
+    dao.run_query(query)
+
+
+def buscar_db(tabla):
+
+    dao = connect()
+
+    q = """SELECT * FROM {} """.format(tabla)
+
+    return dao.download_from_query(q)
+
+
+def connect():
+
+    dao = Dao(host='34.233.129.172', port='18081', user='postgres', password='continente7', db='nano')
+
+    return dao
+
 
 def write():
 
@@ -112,34 +163,10 @@ def delete():
 
 def checkStatus():
 
-    url = 'api.internal.ml.com/shipping-monitor-api/shipments/30012299707/shipping-monitor/info'
+    status = True if os.system("ping -c 1 " + '34.233.129.172') is 0 else False
 
-    # url = 'https://jsonplaceholder.typicode.com/todos/1'
-    response = requests.get(url)  # To execute get request
-    print(response.status_code)  # To print http response code
-    print(response.text)  # To print formatted JSON response
+    if status:
+        return 'UP'
 
-    print(response.text)
-
-
-if __name__ == '__main__':
-
-    # leer_tabla(tabla='PlanEstudios')
-
-    # usuario = buscar_usuario(tabla='usuarios', input_usuario='Mariano', input_password='Continente7')
-    #
-    # if len(usuario) > 0:
-    #     print('Usuario validado')
-    #     nombre = usuario[0]
-    #     email = usuario[1]
-    #     rol = usuario[2]
-    #     key = usuario[3]
-    #
-    # else:
-    #     print('Usuario invalido')
-
-    # write()
-
-    # delete()
-
-    checkStatus()
+    else:
+        return 'DOWN'

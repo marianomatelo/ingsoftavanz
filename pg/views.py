@@ -19,8 +19,9 @@ import pandas as pd
 # from pg.tables import datasetTable
 import random
 import string
-from api_gateway.api import buscar_usuario, buscar_usuario_mfa, checkStatus, leer_tabla
+from api_gateway.api import buscar_usuario, buscar_usuario_mfa, checkStatus, leer_tabla, validar_usuario, guardar_db, buscar_db
 from dao import Dao
+import json
 
 
 def index(request):
@@ -81,6 +82,7 @@ def mfa(request, nombre):
 
 def menu(request, nombre, rol):
 
+    # status = checkStatus()
     status = 'UP'
 
     return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
@@ -107,37 +109,35 @@ def menu(request, nombre, rol):
 
 def crearPlanEstudios(request, nombre):
 
-    nombre = 'tester'
-    rol = 'Director'
+    # status = checkStatus()
     status = 'UP'
 
-    # usuario = buscar_usuario_mfa(tabla='usuarios', input_usuario=nombre)
-
-    # if len(usuario) > 0:
-    #     print('Usuario validado')
-    #     nombre = usuario[0]
-    #     rol = usuario[2]
-    #     status = checkStatus()
-    #
-    # else:
-    #     print('Usuario invalido')
+    validated, rol = validar_usuario(nombre)
 
     form = planEstudioForm()
-    if request.method == 'POST':
-        try:
-            form = planEstudioForm(request.POST)
-            if form.is_valid():
 
-                nombrePlan = form.cleaned_data['nombrePlan']
-                cargaHorariaTotal = form.cleaned_data['cargaHorariaTotal']
-                resolucionConeau = form.cleaned_data['resolucionConeau']
-                resolucionMinEdu = form.cleaned_data['resolucionMinEdu']
-                resolucionRectoral = form.cleaned_data['resolucionRectoral']
+    if validated:
 
-                return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
-                                                        'status': status})
-        except Exception:
-            pass
+        if request.method == 'POST':
+
+            try:
+
+                form = planEstudioForm(request.POST)
+
+                if form.is_valid():
+
+                    nombrePlan = form.cleaned_data['nombrePlan']
+                    cargaHorariaTotal = form.cleaned_data['cargaHorariaTotal']
+                    resolucionConeau = form.cleaned_data['resolucionConeau']
+                    resolucionMinEdu = form.cleaned_data['resolucionMinEdu']
+                    resolucionRectoral = form.cleaned_data['resolucionRectoral']
+
+                    guardar_db('planestudios', [nombrePlan, cargaHorariaTotal, resolucionConeau, resolucionMinEdu, resolucionRectoral])
+
+                    return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol, 'status': status})
+
+            except Exception:
+                pass
 
     return render(request, 'pg/crearplanestudios.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                             'status': status, 'form': form})
@@ -145,21 +145,27 @@ def crearPlanEstudios(request, nombre):
 
 def mostrarPlanEstudios(request, nombre):
 
-    nombre = 'tester'
-    rol = 'Director'
+    # status = checkStatus()
     status = 'UP'
 
-    response = {'Items': [{'resolucionConeau': 'A1A', 'cargaHorariaTotal': '160', 'resolucionMinEdu': '111', 'nombrePlan': 'Ing Agrimensura', 'resolucionRectoral': '222', 'idPlan': '3'}], 'Count': 1, 'ScannedCount': 1}
+    validated, rol = validar_usuario(nombre)
+
+    df = buscar_db('planestudios')
+
+    # parsing the DataFrame in json format.
+    json_records = df.reset_index().to_json(orient='records')
+    data = json.loads(json_records)
 
     return render(request, 'pg/mostrarplanestudios.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
-                                            'status': status, 'planes': response['Items']})
+                                            'status': status, 'planes': data})
 
 
 def mostrarPlanEstudiosDetalle(request, nombre, idplan):
 
-    nombre = 'tester'
-    rol = 'Director'
+    # status = checkStatus()
     status = 'UP'
+
+    validated, rol = validar_usuario(nombre)
 
     response = {'Items': [{'resolucionConeau': 'A1A', 'cargaHorariaTotal': '160', 'resolucionMinEdu': '111',
                            'nombrePlan': 'Ing Agrimensura', 'resolucionRectoral': '222', 'idPlan': '3'}], 'Count': 1, 'ScannedCount': 1}
