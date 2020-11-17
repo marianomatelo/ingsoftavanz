@@ -19,7 +19,7 @@ import pandas as pd
 # from pg.tables import datasetTable
 import random
 import string
-from api_gateway.api import buscar_usuario, buscar_usuario_mfa, checkStatus, leer_tabla, validar_usuario, guardar_db, buscar_db
+from api_gateway.api import buscar_usuario, buscar_usuario_mfa, checkStatus, leer_tabla, validar_usuario, guardar_db, buscar_db, buscar_db_id
 from dao import Dao
 import json
 
@@ -85,6 +85,8 @@ def menu(request, nombre, rol):
     # status = checkStatus()
     status = 'UP'
 
+    validated, rol = validar_usuario(nombre)
+
     return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                             'status': status})
 
@@ -132,7 +134,8 @@ def crearPlanEstudios(request, nombre):
                     resolucionMinEdu = form.cleaned_data['resolucionMinEdu']
                     resolucionRectoral = form.cleaned_data['resolucionRectoral']
 
-                    guardar_db('planestudios', [nombrePlan, cargaHorariaTotal, resolucionConeau, resolucionMinEdu, resolucionRectoral])
+                    guardar_db('planestudios', 'nombreplan, cargahorariatotal, resolucionconeau, resolucionminedu, resolucionrectoral',
+                               [nombrePlan, cargaHorariaTotal, resolucionConeau, resolucionMinEdu, resolucionRectoral])
 
                     return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol, 'status': status})
 
@@ -154,10 +157,10 @@ def mostrarPlanEstudios(request, nombre):
 
     # parsing the DataFrame in json format.
     json_records = df.reset_index().to_json(orient='records')
-    data = json.loads(json_records)
+    planes_json = json.loads(json_records)
 
     return render(request, 'pg/mostrarplanestudios.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
-                                            'status': status, 'planes': data})
+                                            'status': status, 'planes': planes_json})
 
 
 def mostrarPlanEstudiosDetalle(request, nombre, idplan):
@@ -167,31 +170,42 @@ def mostrarPlanEstudiosDetalle(request, nombre, idplan):
 
     validated, rol = validar_usuario(nombre)
 
-    response = {'Items': [{'resolucionConeau': 'A1A', 'cargaHorariaTotal': '160', 'resolucionMinEdu': '111',
-                           'nombrePlan': 'Ing Agrimensura', 'resolucionRectoral': '222', 'idPlan': '3'}], 'Count': 1, 'ScannedCount': 1}
+    df_planes = buscar_db_id('planestudios', 'idplan', idplan)
+
+    # parsing the DataFrame in json format.
+    json_records = df_planes.reset_index().to_json(orient='records')
+    json_plan = json.loads(json_records)
 
     response_materias = {'Items': [{'idMateria': '1', 'Descriptor': 'Fisica 1'}], 'Count': 1, 'ScannedCount': 1}
 
     response_competencias = {'Items': [{'idCompetencia': '32', 'Descriptor': 'Sistemas informaticos'}], 'Count': 1, 'ScannedCount': 1}
 
     return render(request, 'pg/mostrarplanestudiosdetalle.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
-                                            'status': status, 'planes': response['Items'], 'materias': response_materias['Items'],
+                                            'status': status, 'plan': json_plan, 'materias': response_materias['Items'],
                                             'competencias': response_competencias['Items']})
 
 
 def crearMateria(request, nombre):
 
-    nombre = 'tester'
-    rol = 'Director'
+    # status = checkStatus()
     status = 'UP'
 
+    validated, rol = validar_usuario(nombre)
+
     form = materiaForm()
+
     if request.method == 'POST':
+
         try:
+
             form = materiaForm(request.POST)
+
             if form.is_valid():
 
-                descriptor = form.cleaned_data['materia']
+                nombreMateria = form.cleaned_data['materia']
+                descripcion = form.cleaned_data['descriptor']
+
+                guardar_db('materias', 'nombre, descripcion', [nombreMateria, descripcion])
 
                 return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                                         'status': status})
@@ -204,33 +218,58 @@ def crearMateria(request, nombre):
 
 def mostrarMaterias(request, nombre):
 
-    nombre = 'tester'
-    rol = 'Director'
+    # status = checkStatus()
     status = 'UP'
 
-    response = {'Items': [{'idMateria': '1', 'Descriptor': 'Fisica 1'}], 'Count': 1, 'ScannedCount': 1}
+    validated, rol = validar_usuario(nombre)
+
+    df = buscar_db('materias')
+
+    # parsing the DataFrame in json format.
+    json_records = df.reset_index().to_json(orient='records')
+    materias_json = json.loads(json_records)
 
     return render(request, 'pg/mostrarmaterias.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
-                                            'status': status, 'planes': response['Items']})
+                                            'status': status, 'materias': materias_json})
 
 
 def mostrarMateriaDetalle(request, nombre, idmateria):
 
-    nombre = 'tester'
-    rol = 'Director'
+    # status = checkStatus()
     status = 'UP'
 
-    response = {'Items': [{'idContenidoCurricular': '1', 'Descriptor': 'Objetivo', 'idMateria': 1}], 'Count': 1, 'ScannedCount': 1}
+    validated, rol = validar_usuario(nombre)
+
+    df = buscar_db_id('materias', 'idmateria', idmateria)
+
+    # parsing the DataFrame in json format.
+    json_records = df.reset_index().to_json(orient='records')
+    materias_json = json.loads(json_records)
+
+    # Busco Contenidos Curriculares relacionados a la Materia
+    df = buscar_db_id('contenidocurricular', 'idmateria', idmateria)
+
+    # parsing the DataFrame in json format.
+    json_records = df.reset_index().to_json(orient='records')
+    contenidos_json = json.loads(json_records)
+
+    print(contenidos_json)
 
     return render(request, 'pg/mostrarmateriadetalle.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
-                                            'status': status, 'planes': response['Items'], 'idmateria': idmateria})
+                                            'status': status, 'materias': materias_json, 'idmateria': idmateria, 'contenidos': contenidos_json})
+
 
 
 def crearContenidoCurricular(request, nombre, idmateria):
 
-    nombre = 'tester'
-    rol = 'Director'
+    # status = checkStatus()
     status = 'UP'
+
+    validated, rol = validar_usuario(nombre)
+
+    df = buscar_db_id('materias', 'idmateria', idmateria)
+
+    nombre_materia = df['nombre'].iloc[0]
 
     form = curricularForm()
     if request.method == 'POST':
@@ -238,13 +277,10 @@ def crearContenidoCurricular(request, nombre, idmateria):
             form = curricularForm(request.POST)
             if form.is_valid():
 
-                print ('Creando Curricula')
+                nombreContenido = form.cleaned_data['contenido']
+                descripcion = form.cleaned_data['descriptor']
 
-                descriptor = form.cleaned_data['descriptor']
-
-                print (descriptor)
-
-                print ('Curricula Creada')
+                guardar_db('contenidocurricular', 'descripcion, idmateria, nombre', [nombreContenido, idmateria, descripcion])
 
                 return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                                         'status': status})
@@ -252,13 +288,15 @@ def crearContenidoCurricular(request, nombre, idmateria):
             pass
 
     return render(request, 'pg/crearcontenidocurricular.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
-                                            'status': status, 'form': form, 'idmateria': idmateria})
+                                            'status': status, 'form': form, 'nombre_materia': nombre_materia})
 
 
 def mostrarContenidoCurricular(request, nombre, idcontenidocurricular, idmateria, descriptor):
 
-    nombre = 'tester'
-    rol = 'Director'
+    # status = checkStatus()
+    status = 'UP'
+
+    validated, rol = validar_usuario(nombre)
 
     response_cont_curricular = {'Items': [{'idContenidoCurricular': '1', 'Descriptor': 'Objetivo', 'idMateria': 1}], 'Count': 1, 'ScannedCount': 1}
     response_unidades = {'Items': [{'idUnidad': '1', 'Descriptor': 'Repaso', 'idContenidoCurricular': 1}], 'Count': 1, 'ScannedCount': 1}
@@ -272,8 +310,10 @@ def mostrarContenidoCurricular(request, nombre, idcontenidocurricular, idmateria
 
 def mostrarUnidad(request, nombre, idunidad):
 
-    nombre = 'tester'
-    rol = 'Director'
+    # status = checkStatus()
+    status = 'UP'
+
+    validated, rol = validar_usuario(nombre)
 
     response_unidades = {'Items': [{'idUnidad': '1', 'Descriptor': 'Repaso', 'idContenidoCurricular': 1}], 'Count': 1, 'ScannedCount': 1}
 
@@ -285,9 +325,10 @@ def mostrarUnidad(request, nombre, idunidad):
 
 def mostrarActFormacionPractica(request, nombre, idactformacionpractica):
 
-    nombre = 'tester'
-    rol = 'Director'
+    # status = checkStatus()
     status = 'UP'
+
+    validated, rol = validar_usuario(nombre)
 
     response_cont_curricular = {'Items': [{'idContenidoCurricular': '1', 'Descriptor': 'Objetivo', 'idMateria': 1}], 'Count': 1, 'ScannedCount': 1}
     response_unidades = {'Items': [{'idUnidad': '1', 'Descriptor': 'Repaso', 'idContenidoCurricular': 1}], 'Count': 1, 'ScannedCount': 1}
@@ -301,9 +342,10 @@ def mostrarActFormacionPractica(request, nombre, idactformacionpractica):
 
 def crearCompetencia(request, nombre, idplan):
 
-    nombre = 'tester'
-    rol = 'Director'
+    # status = checkStatus()
     status = 'UP'
+
+    validated, rol = validar_usuario(nombre)
 
     form = competenciaForm()
     if request.method == 'POST':
@@ -324,9 +366,10 @@ def crearCompetencia(request, nombre, idplan):
 
 def mostrarCompetencias(request, nombre):
 
-    nombre = 'tester'
-    rol = 'Director'
+    # status = checkStatus()
     status = 'UP'
+
+    validated, rol = validar_usuario(nombre)
 
     response_competencias = {'Items': [{'idCompetencia': '32', 'Descriptor': 'Sistemas informaticos'}], 'Count': 1, 'ScannedCount': 1}
 
@@ -336,9 +379,10 @@ def mostrarCompetencias(request, nombre):
 
 def mostrarCompetenciaDetalle(request, nombre, idcompetencia):
 
-    nombre = 'tester'
-    rol = 'Director'
+    # status = checkStatus()
     status = 'UP'
+
+    validated, rol = validar_usuario(nombre)
 
     response_competencia = {'Items': [{'idCompetencia': '32', 'Descriptor': 'Sistemas informaticos'}], 'Count': 1, 'ScannedCount': 1}
 
@@ -352,9 +396,10 @@ def mostrarCompetenciaDetalle(request, nombre, idcompetencia):
 
 def crearCapacidad(request, nombre, idcompetencia):
 
-    nombre = 'tester'
-    rol = 'Director'
+    # status = checkStatus()
     status = 'UP'
+
+    validated, rol = validar_usuario(nombre)
 
     form = capacidadForm()
     if request.method == 'POST':
@@ -375,9 +420,10 @@ def crearCapacidad(request, nombre, idcompetencia):
 
 def crearUnidad(request, nombre, idcontenidocurricular):
 
-    nombre = 'tester'
-    rol = 'Director'
+    # status = checkStatus()
     status = 'UP'
+
+    validated, rol = validar_usuario(nombre)
 
     form = unidadForm()
     if request.method == 'POST':
@@ -398,9 +444,10 @@ def crearUnidad(request, nombre, idcontenidocurricular):
 
 def crearActa(request, nombre, idcontenidocurricular):
 
-    nombre = 'tester'
-    rol = 'Director'
+    # status = checkStatus()
     status = 'UP'
+
+    validated, rol = validar_usuario(nombre)
 
     form = actaForm()
     if request.method == 'POST':

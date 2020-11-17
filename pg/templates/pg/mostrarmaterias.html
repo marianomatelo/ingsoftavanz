@@ -14,11 +14,13 @@
   <tr>
     <th>id Materia</th>
     <th>Nombre</th>
+    <th>Descripcion</th>
   </tr>
   <tr>
-    {% for i in planes %}
-      <td><a href="{% url 'mostrarMateriaDetalle' nombre=nombre idmateria=i.idMateria %}">{{i.idMateria}}</a></td>
-    <td><a href="{% url 'mostrarMateriaDetalle' nombre=nombre idmateria=i.idMateria %}">{{i.Descriptor}}</a></td>
+    {% for i in materias %}
+      <td><a href="{% url 'mostrarMateriaDetalle' nombre=nombre idmateria=i.idmateria %}">{{i.idmateria}}</a></td>
+      <td><a href="{% url 'mostrarMateriaDetalle' nombre=nombre idmateria=i.idmateria %}">{{i.nombre}}</a></td>
+      <td>{{i.descripcion}}</td>
   </tr>
     {% endfor %}
 </table>

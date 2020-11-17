@@ -103,10 +103,10 @@ def validar_usuario(nombre):
     else:
         print('Invalid user')
 
-    return False, df['rol'].iloc[0]
+    return False, 'Guest'
 
 
-def guardar_db(tabla, datos):
+def guardar_db(tabla, fields, datos):
 
     dao = connect()
 
@@ -116,7 +116,7 @@ def guardar_db(tabla, datos):
 
         campos = str(campos) + "'" + str(i) + "',"
 
-    query = """ INSERT INTO {} (nombreplan, cargahorariatotal, resolucionconeau, resolucionminedu, resolucionrectoral) VALUES ({})""".format(tabla, str(datos)[1:-1])
+    query = """ INSERT INTO {} ({}) VALUES ({})""".format(tabla, fields, str(datos)[1:-1])
 
     dao.run_query(query)
 
@@ -126,6 +126,17 @@ def buscar_db(tabla):
     dao = connect()
 
     q = """SELECT * FROM {} """.format(tabla)
+
+    return dao.download_from_query(q)
+
+
+def buscar_db_id(tabla, id_col, id):
+
+    dao = connect()
+
+    q = """SELECT * FROM {} WHERE {} = '{}'""".format(tabla, id_col, id)
+
+    print(q)
 
     return dao.download_from_query(q)
 

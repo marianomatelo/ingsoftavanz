@@ -5,7 +5,7 @@
 
 <div style="margin-left:40%;">
 
-<b>Planes de estudio - Detalle</b>
+<b>Plan de estudio - Detalle</b>
 
 <br>
 <br>
@@ -20,13 +20,13 @@
     <th>Resolucion Rectoral</th>
   </tr>
   <tr>
-    {% for i in planes %}
-    <td>{{i.idPlan}}</td>
-    <td>{{i.nombrePlan}}</td>
-      <td>{{i.cargaHorariaTotal}}</td>
-    <td>{{i.resolucionConeau}}</td>
-      <td>{{i.resolucionMinEdu}}</td>
-    <td>{{i.resolucionRectoral}}</td>
+    {% for i in plan %}
+    <td>{{i.idplan}}</td>
+    <td>{{i.nombreplan}}</td>
+    <td>{{i.cargahorariatotal}}</td>
+    <td>{{i.resolucionconeau}}</td>
+    <td>{{i.resolucionminedu}}</td>
+    <td>{{i.resolucionrectoral}}</td>
   </tr>
     {% endfor %}
 </table>
@@ -78,7 +78,7 @@
 
 <br>
 <br>
-</div>
+
 
 <div class="row d-flex justify-content-around mt-4">
 {% for i in planes %}
@@ -87,5 +87,6 @@
 {% endfor %}
 </div>
 
+</div>
 
 {% endblock start %}
