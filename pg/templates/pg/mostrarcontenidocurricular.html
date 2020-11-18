@@ -34,12 +34,14 @@
 <table>
   <tr>
     <th>id Unidad</th>
+    <th>Nombre</th>
     <th>Descripcion</th>
   </tr>
   <tr>
     {% for i in response_unidades %}
-      <td>{{i.idUnidad}}</td>
-        <td>{{i.Descriptor}}</td>
+      <td>{{i.idunidad}}</td>
+      <td>{{i.nombre}}</td>
+      <td>{{i.descriptor}}</td>
   </tr>
     {% endfor %}
 </table>
@@ -52,19 +54,18 @@
 <br>
 <br>
 
-
-
 <table>
   <tr>
     <th>id Acta de Formacion Practica</th>
+    <th>Nombre</th>
     <th>Descripcion</th>
   </tr>
   <tr>
     {% for i in response_act_formacion %}
-      <td>
-     {{i.idActFormacionPractica}}</a></td>
-      <td>
-     {{i.Descriptor}} </a></td>
+  <tr>
+      <td>{{i.idacta}}</td>
+      <td>{{i.nombre}}</td>
+      <td>{{i.descriptor}}</td>
   </tr>
     {% endfor %}
 </table>

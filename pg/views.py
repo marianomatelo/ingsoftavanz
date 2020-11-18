@@ -253,8 +253,6 @@ def mostrarMateriaDetalle(request, nombre, idmateria):
     json_records = df.reset_index().to_json(orient='records')
     contenidos_json = json.loads(json_records)
 
-    print(contenidos_json)
-
     return render(request, 'pg/mostrarmateriadetalle.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                             'status': status, 'materias': materias_json, 'idmateria': idmateria, 'contenidos': contenidos_json})
 
@@ -293,19 +291,31 @@ def crearContenidoCurricular(request, nombre, idmateria):
 
 def mostrarContenidoCurricular(request, nombre, idcontenidocurricular, idmateria, descriptor):
 
-    # status = checkStatus()
-    status = 'UP'
-
     validated, rol = validar_usuario(nombre)
 
-    response_cont_curricular = {'Items': [{'idContenidoCurricular': '1', 'Descriptor': 'Objetivo', 'idMateria': 1}], 'Count': 1, 'ScannedCount': 1}
-    response_unidades = {'Items': [{'idUnidad': '1', 'Descriptor': 'Repaso', 'idContenidoCurricular': 1}], 'Count': 1, 'ScannedCount': 1}
-    response_act_formacion = {'Items': [{'idActFormacionPractica': '1', 'Descriptor': 'TP 1', 'idContenidoCurricular': 1}], 'Count': 1, 'ScannedCount': 1}
+    df = buscar_db_id('contenidocurricular', 'idmateria', idmateria)
+
+    # parsing the DataFrame in json format.
+    json_records = df.reset_index().to_json(orient='records')
+    contenido_json = json.loads(json_records)
+
+    df = buscar_db_id('unidades', 'idcontenidocurricular', idcontenidocurricular)
+
+    # parsing the DataFrame in json format.
+    json_records = df.reset_index().to_json(orient='records')
+    unidades_json = json.loads(json_records)
+
+
+    df = buscar_db_id('actaformacion', 'idcontenidocurricular', idcontenidocurricular)
+
+    # parsing the DataFrame in json format.
+    json_records = df.reset_index().to_json(orient='records')
+    actas_json = json.loads(json_records)
 
     return render(request, 'pg/mostrarcontenidocurricular.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
-                            'response_cont_curricular': response_cont_curricular['Items'],
+                            'response_cont_curricular': contenido_json,
                             'idcontenidocurricular': idcontenidocurricular, 'idmateria': idmateria, 'descriptor': descriptor,
-                            'response_unidades': response_unidades['Items'], 'response_act_formacion': response_act_formacion['Items']
+                            'response_unidades': unidades_json, 'response_act_formacion': actas_json
                                                                   })
 
 def mostrarUnidad(request, nombre, idunidad):
@@ -431,7 +441,10 @@ def crearUnidad(request, nombre, idcontenidocurricular):
             form = unidadForm(request.POST)
             if form.is_valid():
 
-                descriptor = form.cleaned_data['unidad']
+                nombreunidad = form.cleaned_data['unidad']
+                descripcion = form.cleaned_data['descriptor']
+
+                guardar_db('unidades', 'nombre, descriptor, idcontenidocurricular', [nombreunidad, descripcion, idcontenidocurricular])
 
                 return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                                         'status': status})
@@ -455,7 +468,10 @@ def crearActa(request, nombre, idcontenidocurricular):
             form = actaForm(request.POST)
             if form.is_valid():
 
-                descriptor = form.cleaned_data['unidad']
+                nombreacta = form.cleaned_data['acta']
+                descripcion = form.cleaned_data['descriptor']
+
+                guardar_db('actaformacion', 'nombre, descriptor, idcontenidocurricular', [nombreacta, descripcion, idcontenidocurricular])
 
                 return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                                         'status': status})
