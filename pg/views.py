@@ -176,13 +176,21 @@ def mostrarPlanEstudiosDetalle(request, nombre, idplan):
     json_records = df_planes.reset_index().to_json(orient='records')
     json_plan = json.loads(json_records)
 
-    response_materias = {'Items': [{'idMateria': '1', 'Descriptor': 'Fisica 1'}], 'Count': 1, 'ScannedCount': 1}
+    df = buscar_db_id('planestudios_materia', 'idplan', idplan)
 
-    response_competencias = {'Items': [{'idCompetencia': '32', 'Descriptor': 'Sistemas informaticos'}], 'Count': 1, 'ScannedCount': 1}
+    # parsing the DataFrame in json format.
+    json_records = df.reset_index().to_json(orient='records')
+    materias_json = json.loads(json_records)
+
+    df = buscar_db_id('competencia', 'idplan', idplan)
+
+    # parsing the DataFrame in json format.
+    json_records = df.reset_index().to_json(orient='records')
+    competencias_json = json.loads(json_records)
 
     return render(request, 'pg/mostrarplanestudiosdetalle.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
-                                            'status': status, 'plan': json_plan, 'materias': response_materias['Items'],
-                                            'competencias': response_competencias['Items']})
+                                            'status': status, 'plan': json_plan, 'materias': materias_json,
+                                            'competencias': competencias_json})
 
 
 def crearMateria(request, nombre):
@@ -363,7 +371,10 @@ def crearCompetencia(request, nombre, idplan):
             form = competenciaForm(request.POST)
             if form.is_valid():
 
-                # guardar con idplan
+                nombreCompetencia = form.cleaned_data['competencia']
+                descripcion = form.cleaned_data['descriptor']
+
+                guardar_db('competencia', 'descripcion, nombre, idplan', [nombreCompetencia, descripcion, idplan])
 
                 return mostrarPlanEstudiosDetalle(request, nombre, idplan)
 
@@ -394,14 +405,22 @@ def mostrarCompetenciaDetalle(request, nombre, idcompetencia):
 
     validated, rol = validar_usuario(nombre)
 
-    response_competencia = {'Items': [{'idCompetencia': '32', 'Descriptor': 'Sistemas informaticos'}], 'Count': 1, 'ScannedCount': 1}
+    df = buscar_db_id('competencia', 'idcompetencia', idcompetencia)
 
-    response_capacidades = {'Items': [{'idCapacidad': '7', 'Descriptor': 'Programar'}, {'idCapacidad': '5', 'Descriptor': 'Diagramar'}]}
+    # parsing the DataFrame in json format.
+    json_records = df.reset_index().to_json(orient='records')
+    competencias_json = json.loads(json_records)
+
+    df = buscar_db_id('capacidades', 'idcompetencia', idcompetencia)
+
+    # parsing the DataFrame in json format.
+    json_records = df.reset_index().to_json(orient='records')
+    capacidades_json = json.loads(json_records)
 
     return render(request, 'pg/mostrarcompetenciadetalle.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                             'status': status,
-                                            'competencias': response_competencia['Items'],
-                                            'capacidades': response_capacidades['Items']})
+                                            'competencias': competencias_json,
+                                            'capacidades': capacidades_json})
 
 
 def crearCapacidad(request, nombre, idcompetencia):
@@ -417,7 +436,10 @@ def crearCapacidad(request, nombre, idcompetencia):
             form = capacidadForm(request.POST)
             if form.is_valid():
 
-                # guardar con idcompetencia
+                nombreCapacidad = form.cleaned_data['capacidad']
+                descripcion = form.cleaned_data['descriptor']
+
+                guardar_db('capacidades', 'nombre, descripcion, idcompetencia', [nombreCapacidad, descripcion, idcompetencia])
 
                 return mostrarCompetenciaDetalle(request, nombre, idcompetencia)
 

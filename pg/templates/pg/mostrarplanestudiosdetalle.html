@@ -43,17 +43,28 @@
 <table>
   <tr>
     <th>id de Materia</th>
+    <th>Nombre</th>
     <th>Descripcion</th>
   </tr>
   <tr>
     {% for i in materias %}
-    <td>{{i.idMateria}}</td>
-    <td>{{i.Descriptor}}</td>
+      <td><a href="{% url 'mostrarMateriaDetalle' nombre=nombre idmateria=i.idmateria %}">{{i.idmateria}}</a></td>
+      <td><a href="{% url 'mostrarMateriaDetalle' nombre=nombre idmateria=i.idmateria %}">{{i.nombre}}</a></td>
+    <td>{{i.descripcion}}</td>
   </tr>
     {% endfor %}
 </table>
 
 <br>
+<br>
+
+  <div class="row d-flex justify-content-around mt-4">
+{% for i in plan %}
+     <a href="{% url 'crearCompetencia' nombre=nombre idplan=i.idplan %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
+    style='width:180px; height:50px'>Agregar Materia</a>
+{% endfor %}
+</div>
+
 <br>
 <br>
 
@@ -65,12 +76,14 @@
 <table>
   <tr>
     <th>id de Competencia</th>
+    <th>Nombre</th>
     <th>Descripcion</th>
   </tr>
   <tr>
     {% for i in competencias %}
-    <td>{{i.idCompetencia}}</td>
-    <td>{{i.Descriptor}}</td>
+    <td><a href="{% url 'mostrarCompetenciaDetalle' nombre=nombre idcompetencia=i.idcompetencia %}">{{i.idcompetencia}}</a></td>
+    <td><a href="{% url 'mostrarCompetenciaDetalle' nombre=nombre idcompetencia=i.idcompetencia %}">{{i.nombre}}</a></td>
+    <td>{{i.descripcion}}</td>
   </tr>
     {% endfor %}
 </table>
@@ -81,8 +94,8 @@
 
 
 <div class="row d-flex justify-content-around mt-4">
-{% for i in planes %}
-     <a href="{% url 'crearCompetencia' nombre=nombre idplan=i.idPlan %}" class="button"  role="button" aria-pressed="true"
+{% for i in plan %}
+     <a href="{% url 'crearCompetencia' nombre=nombre idplan=i.idplan %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
     style='width:180px; height:50px'>Crear Competencia</a>
 {% endfor %}
 </div>

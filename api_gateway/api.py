@@ -136,8 +136,6 @@ def buscar_db_id(tabla, id_col, id):
 
     q = """SELECT * FROM {} WHERE {} = '{}'""".format(tabla, id_col, id)
 
-    print(q)
-
     return dao.download_from_query(q)
 
 
