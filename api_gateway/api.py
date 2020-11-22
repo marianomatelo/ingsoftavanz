@@ -118,7 +118,7 @@ def guardar_db(tabla, fields, datos):
 
     query = """ INSERT INTO {} ({}) VALUES ({})""".format(tabla, fields, str(datos)[1:-1])
 
-    dao.run_query(query)
+    # dao.run_query(query)
 
 
 def buscar_db(tabla):
@@ -156,8 +156,6 @@ def write():
 
     response = requests.post('https://8luy98fw22.execute-api.us-east-1.amazonaws.com/default/tips', headers=headers, data=data)
 
-    print(response.content)
-
 
 def delete():
 
@@ -168,6 +166,24 @@ def delete():
     data = '{ "author": "Nick", "date": 1572462564420}'
 
     response = requests.post('https://8luy98fw22.execute-api.us-east-1.amazonaws.com/default/delete', headers=headers, data=data)
+
+
+def log_acceso(nombre, rol):
+
+    dao = connect()
+
+    q = """INSERT INTO logs (usuario, rol, fecha, accion) VALUES ('{}', '{}', '{}', '{}')""".format(nombre, rol, pd.to_datetime('today'), 'acceso autenticado')
+
+    dao.run_query(q)
+
+
+def log_creacion(nombre, rol, tabla):
+
+    dao = connect()
+
+    q = """INSERT INTO logs (usuario, rol, fecha, accion, recurso) VALUES ('{}', '{}', '{}', '{}', '{}')""".format(nombre, rol, pd.to_datetime('today'), 'creo un nuevo registro', tabla)
+
+    dao.run_query(q)
 
 
 def checkStatus():

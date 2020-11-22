@@ -19,7 +19,7 @@ import pandas as pd
 # from pg.tables import datasetTable
 import random
 import string
-from api_gateway.api import buscar_usuario, buscar_usuario_mfa, checkStatus, leer_tabla, validar_usuario, guardar_db, buscar_db, buscar_db_id
+from api_gateway.api import buscar_usuario, buscar_usuario_mfa, checkStatus, leer_tabla, validar_usuario, guardar_db, buscar_db, buscar_db_id, log_acceso, log_creacion
 from dao import Dao
 import json
 
@@ -65,6 +65,8 @@ def mfa(request, nombre):
 
         if len(df_mfa) > 0:
             print('MFA Validado')
+
+            log_acceso(nombre, df_mfa['rol'].iloc[0])
 
             return redirect('menu', nombre=nombre, rol=df_mfa['rol'].iloc[0])
 
@@ -134,8 +136,12 @@ def crearPlanEstudios(request, nombre):
                     resolucionMinEdu = form.cleaned_data['resolucionMinEdu']
                     resolucionRectoral = form.cleaned_data['resolucionRectoral']
 
-                    guardar_db('planestudios', 'nombreplan, cargahorariatotal, resolucionconeau, resolucionminedu, resolucionrectoral',
-                               [nombrePlan, cargaHorariaTotal, resolucionConeau, resolucionMinEdu, resolucionRectoral])
+                    guardar_db('planestudios', 'nombreplan, cargahorariatotal, resolucionconeau, resolucionminedu, resolucionrectoral'
+                                               ',fecha_creacion, usuario_creacion,fecha_modificacion, usuario_modificacion',
+                                           [nombrePlan, cargaHorariaTotal, resolucionConeau, resolucionMinEdu, resolucionRectoral,
+                                             str(pd.to_datetime('today')), nombre, str(pd.to_datetime('today')), nombre])
+
+                    log_creacion(nombre, rol, 'Plan de estudios')
 
                     return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol, 'status': status})
 
@@ -213,7 +219,13 @@ def crearMateria(request, nombre):
                 nombreMateria = form.cleaned_data['materia']
                 descripcion = form.cleaned_data['descriptor']
 
-                guardar_db('materias', 'nombre, descripcion', [nombreMateria, descripcion])
+                guardar_db('materias', 'nombre, descripcion'
+                                       ',fecha_creacion, usuario_creacion'
+                                       ',fecha_modificacion, usuario_modificacion',
+                                       [nombreMateria, descripcion, str(pd.to_datetime('today')),
+                                        nombre, str(pd.to_datetime('today')), nombre])
+
+                log_creacion(nombre, rol, 'Materias')
 
                 return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                                         'status': status})
@@ -286,7 +298,12 @@ def crearContenidoCurricular(request, nombre, idmateria):
                 nombreContenido = form.cleaned_data['contenido']
                 descripcion = form.cleaned_data['descriptor']
 
-                guardar_db('contenidocurricular', 'descripcion, idmateria, nombre', [nombreContenido, idmateria, descripcion])
+                guardar_db('contenidocurricular', 'descripcion, idmateria, nombre, '
+                                                  'fecha_creacion, usuario_creacion, fecha_modificacion, usuario_modificacion',
+                           [nombreContenido, idmateria, descripcion, descripcion, str(pd.to_datetime('today')),
+                                        nombre, str(pd.to_datetime('today')), nombre])
+
+                log_creacion(nombre, rol, 'Contenido Curricular')
 
                 return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                                         'status': status})
@@ -374,7 +391,12 @@ def crearCompetencia(request, nombre, idplan):
                 nombreCompetencia = form.cleaned_data['competencia']
                 descripcion = form.cleaned_data['descriptor']
 
-                guardar_db('competencia', 'descripcion, nombre, idplan', [nombreCompetencia, descripcion, idplan])
+                guardar_db('competencia', 'descripcion, nombre, idplan, '
+                                          'fecha_creacion, usuario_creacion, fecha_modificacion, usuario_modificacion',
+                           [nombreCompetencia, descripcion, idplan, str(pd.to_datetime('today')),
+                                        nombre, str(pd.to_datetime('today')), nombre])
+
+                log_creacion(nombre, rol, 'Competencia')
 
                 return mostrarPlanEstudiosDetalle(request, nombre, idplan)
 
@@ -392,10 +414,14 @@ def mostrarCompetencias(request, nombre):
 
     validated, rol = validar_usuario(nombre)
 
-    response_competencias = {'Items': [{'idCompetencia': '32', 'Descriptor': 'Sistemas informaticos'}], 'Count': 1, 'ScannedCount': 1}
+    df = buscar_db('competencia')
+
+    # parsing the DataFrame in json format.
+    json_records = df.reset_index().to_json(orient='records')
+    competencias_json = json.loads(json_records)
 
     return render(request, 'pg/mostrarcompetencias.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
-                                            'status': status, 'planes': response_competencias['Items']})
+                                            'status': status, 'competencias': competencias_json})
 
 
 def mostrarCompetenciaDetalle(request, nombre, idcompetencia):
@@ -439,7 +465,12 @@ def crearCapacidad(request, nombre, idcompetencia):
                 nombreCapacidad = form.cleaned_data['capacidad']
                 descripcion = form.cleaned_data['descriptor']
 
-                guardar_db('capacidades', 'nombre, descripcion, idcompetencia', [nombreCapacidad, descripcion, idcompetencia])
+                guardar_db('capacidades', 'nombre, descripcion, idcompetencia, '
+                                          'fecha_creacion, usuario_creacion, fecha_modificacion, usuario_modificacion',
+                           [nombreCapacidad, descripcion, idcompetencia, str(pd.to_datetime('today')),
+                            nombre, str(pd.to_datetime('today')), nombre])
+
+                log_creacion(nombre, rol, 'Capacidad')
 
                 return mostrarCompetenciaDetalle(request, nombre, idcompetencia)
 
@@ -466,7 +497,12 @@ def crearUnidad(request, nombre, idcontenidocurricular):
                 nombreunidad = form.cleaned_data['unidad']
                 descripcion = form.cleaned_data['descriptor']
 
-                guardar_db('unidades', 'nombre, descriptor, idcontenidocurricular', [nombreunidad, descripcion, idcontenidocurricular])
+                guardar_db('unidades', 'nombre, descriptor, idcontenidocurricular, '
+                                       'fecha_creacion, usuario_creacion, fecha_modificacion, usuario_modificacion',
+                           [nombreunidad, descripcion, idcontenidocurricular,
+                            str(pd.to_datetime('today')), nombre, str(pd.to_datetime('today')), nombre])
+
+                log_creacion(nombre, rol, 'Unidad')
 
                 return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                                         'status': status})
@@ -493,7 +529,12 @@ def crearActa(request, nombre, idcontenidocurricular):
                 nombreacta = form.cleaned_data['acta']
                 descripcion = form.cleaned_data['descriptor']
 
-                guardar_db('actaformacion', 'nombre, descriptor, idcontenidocurricular', [nombreacta, descripcion, idcontenidocurricular])
+                guardar_db('actaformacion', 'nombre, descriptor, idcontenidocurricular,'
+                                            ' fecha_creacion, usuario_creacion, fecha_modificacion, usuario_modificacion',
+                                           [nombreacta, descripcion, idcontenidocurricular,
+                                            str(pd.to_datetime('today')),nombre, str(pd.to_datetime('today')), nombre])
+
+                log_creacion(nombre, rol, 'Acta')
 
                 return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                                         'status': status})
