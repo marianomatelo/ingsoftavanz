@@ -60,8 +60,8 @@
 
   <div class="row d-flex justify-content-around mt-4">
 {% for i in plan %}
-     <a href="{% url 'crearCompetencia' nombre=nombre idplan=i.idplan %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
-    style='width:180px; height:50px'>Agregar Materia</a>
+     <a href="{% url 'agregarMateria' nombre=nombre idplan=i.idplan %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
+    style='width:190px; height:50px'>Agregar Materia</a>
 {% endfor %}
 </div>
 
@@ -96,7 +96,7 @@
 <div class="row d-flex justify-content-around mt-4">
 {% for i in plan %}
      <a href="{% url 'crearCompetencia' nombre=nombre idplan=i.idplan %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
-    style='width:180px; height:50px'>Crear Competencia</a>
+    style='width:190px; height:50px'>Crear Competencia</a>
 {% endfor %}
 </div>
 

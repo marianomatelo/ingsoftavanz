@@ -25,27 +25,38 @@ import json
 
 
 def index(request):
+    '''
+    Primera pagina visible al acceder a la url
+
+    :param request: solicitud de mostrar pagina
+    :return: pagina renderizada en navegador
+    '''
 
     return render(request, 'pg/index.html', {'title': 'ISA'})
 
 
 def Login(request):
+    '''
+    Pagina de logeo donde se solicita el usuario y contrasena
+
+    :param request: solicitud de mostrar pagina
+    :return: pagina renderizada en navegador
+    '''
 
     if request.method == 'POST':
 
-        dao = Dao(host='34.233.129.172', port='18081', user='postgres', password='continente7', db='nano')
+        validated, rol = validar_usuario(request.POST['username'])
 
-        df_usuarios = dao.download_from_query(
-            """SELECT * FROM usuarios WHERE usuario = '{}' AND password = '{}'""".format(request.POST['username'],
-                                                                                         request.POST['password']))
-
-        if len(df_usuarios) > 0:
+        if validated:
             print('Usuario validado')
+
             usuario = request.POST['username']
+
             return redirect('mfa', nombre=usuario)
 
         else:
             print('Usuario invalido')
+
             messages.info(request, f'Error: Intente log in nuevamente')
 
     form = AuthenticationForm()
@@ -54,6 +65,13 @@ def Login(request):
 
 
 def mfa(request, nombre):
+    '''
+    Pagina de validacion del MFA, genera un codigo MFA, lo envia por mail y lo valida.
+
+    :param request: solicitud de mostrar pagina
+    :param nombre: nombre de usuario ingresado
+    :return: pagina renderizada en navegador
+    '''
 
     if request.method == 'POST':\
 
@@ -200,6 +218,43 @@ def mostrarPlanEstudiosDetalle(request, nombre, idplan):
 
 
 def crearMateria(request, nombre):
+
+    # status = checkStatus()
+    status = 'UP'
+
+    validated, rol = validar_usuario(nombre)
+
+    form = materiaForm()
+
+    if request.method == 'POST':
+
+        try:
+
+            form = materiaForm(request.POST)
+
+            if form.is_valid():
+
+                nombreMateria = form.cleaned_data['materia']
+                descripcion = form.cleaned_data['descriptor']
+
+                guardar_db('materias', 'nombre, descripcion'
+                                       ',fecha_creacion, usuario_creacion'
+                                       ',fecha_modificacion, usuario_modificacion',
+                                       [nombreMateria, descripcion, str(pd.to_datetime('today')),
+                                        nombre, str(pd.to_datetime('today')), nombre])
+
+                log_creacion(nombre, rol, 'Materias')
+
+                return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                                        'status': status})
+        except Exception:
+            pass
+
+    return render(request, 'pg/crearmateria.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                            'status': status, 'form': form})
+
+
+def agregarMateria(request, nombre, idplan):
 
     # status = checkStatus()
     status = 'UP'

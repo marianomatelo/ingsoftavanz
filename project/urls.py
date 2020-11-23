@@ -28,6 +28,8 @@ urlpatterns = [
 
     path('crearMateria/(?P<nombre>\d+)/$', pg_view.crearMateria, name='crearMateria'),
 
+    path('agregarMateria/(?P<nombre>\d+)(?P<idplan>\d+)/$', pg_view.agregarMateria, name='agregarMateria'),
+
     path('mostrarMaterias/(?P<nombre>\d+)/$', pg_view.mostrarMaterias, name='mostrarMaterias'),
 
     path('mostrarMateriaDetalle/(?P<nombre>\d+)(?P<idmateria>\d+)/$', pg_view.mostrarMateriaDetalle,
