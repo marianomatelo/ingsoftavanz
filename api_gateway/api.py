@@ -118,14 +118,14 @@ def guardar_db(tabla, fields, datos):
 
     query = """ INSERT INTO {} ({}) VALUES ({})""".format(tabla, fields, str(datos)[1:-1])
 
-    # dao.run_query(query)
+    dao.run_query(query)
 
 
 def buscar_db(tabla):
 
     dao = connect()
 
-    q = """SELECT * FROM {} """.format(tabla)
+    q = """SELECT * FROM {} ORDER BY 1""".format(tabla)
 
     return dao.download_from_query(q)
 
@@ -137,6 +137,32 @@ def buscar_db_id(tabla, id_col, id):
     q = """SELECT * FROM {} WHERE {} = '{}'""".format(tabla, id_col, id)
 
     return dao.download_from_query(q)
+
+
+def chequeo_existencia(tabla, idplan, nombreMateria):
+
+    dao = connect()
+
+    query = """ SELECT idplan, nombre FROM public.{} WHERE idplan = '{}' AND nombre = '{}'""".format(tabla, idplan, nombreMateria)
+
+    df = dao.download_from_query(query)
+
+    if len(df) > 0:
+        return True
+
+    else:
+        return False
+
+
+def get_data(tabla, nombreMateria):
+
+    dao = connect()
+
+    query = """ SELECT idmateria, descripcion FROM public.{} WHERE nombre = '{}'""".format(tabla, nombreMateria)
+
+    df = dao.download_from_query(query)
+
+    return df['idmateria'].iloc[0], df['descripcion'].iloc[0]
 
 
 def connect():

@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field
 from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions
+from api_gateway.api import buscar_db
 
 
 class UserRegisterForm(UserCreationForm):
@@ -86,3 +87,29 @@ class unidadForm(forms.Form):
 class actaForm(forms.Form):
     acta = forms.CharField(label='Nombre del Acta', max_length=80)
     descriptor = forms.CharField(label='Descripcion del Acta', max_length=80)
+
+
+class agregarMateriaForm(forms.Form):
+
+    materia = forms.ChoiceField(choices=[], help_text="Seleccione la materia a sumar a la carrera")
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.form_class = 'form-horizontal'
+    helper.layout = Layout(
+        'materia',
+
+        FormActions(
+            Submit('save_changes', 'Agregar Materia', css_class="btn-primary"),
+            # Submit('cancel', 'Cancel'),
+        )
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(agregarMateriaForm, self).__init__(*args, **kwargs)
+
+        df = buscar_db('materias')
+
+        # self.fields['materia'].choices = df['nombre'].tolist()
+
+        self.fields['materia'].choices = [(x, x) for x in df['nombre'].tolist()]

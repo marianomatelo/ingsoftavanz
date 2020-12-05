@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate,login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import UserRegisterForm, keyForm
+from .forms import UserRegisterForm, keyForm, agregarMateriaForm
 from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
@@ -19,7 +19,8 @@ import pandas as pd
 # from pg.tables import datasetTable
 import random
 import string
-from api_gateway.api import buscar_usuario, buscar_usuario_mfa, checkStatus, leer_tabla, validar_usuario, guardar_db, buscar_db, buscar_db_id, log_acceso, log_creacion
+from api_gateway.api import buscar_usuario, buscar_usuario_mfa, checkStatus, leer_tabla, validar_usuario, guardar_db, \
+                        buscar_db, buscar_db_id, log_acceso, log_creacion, chequeo_existencia, get_data
 from dao import Dao
 import json
 
@@ -261,34 +262,39 @@ def agregarMateria(request, nombre, idplan):
 
     validated, rol = validar_usuario(nombre)
 
-    form = materiaForm()
-
     if request.method == 'POST':
 
         try:
 
-            form = materiaForm(request.POST)
+            form = agregarMateriaForm(request.POST)
 
             if form.is_valid():
 
                 nombreMateria = form.cleaned_data['materia']
-                descripcion = form.cleaned_data['descriptor']
 
-                guardar_db('materias', 'nombre, descripcion'
-                                       ',fecha_creacion, usuario_creacion'
-                                       ',fecha_modificacion, usuario_modificacion',
-                                       [nombreMateria, descripcion, str(pd.to_datetime('today')),
-                                        nombre, str(pd.to_datetime('today')), nombre])
+                exists = chequeo_existencia('planestudios_materia', idplan, nombreMateria)
 
-                log_creacion(nombre, rol, 'Materias')
+                if exists:
+                    print('La relacion materia-plan ya existe')
+
+                else:
+                    idmateria, descripcion = get_data('materias', nombreMateria)
+
+                    guardar_db('planestudios_materia', 'idplan, idmateria, nombre, descripcion'
+                                           ',fecha_creacion, usuario_creacion'
+                                           ',fecha_modificacion, usuario_modificacion',
+                                           [idplan, idmateria,nombreMateria, descripcion, str(pd.to_datetime('today')),
+                                            nombre, str(pd.to_datetime('today')), nombre])
+
+                    log_creacion(nombre, rol, 'Materias')
 
                 return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                                         'status': status})
         except Exception:
             pass
 
-    return render(request, 'pg/crearmateria.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
-                                            'status': status, 'form': form})
+    return render(request, 'pg/agregarmateria.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                                            'status': status, 'form': agregarMateriaForm()})
 
 
 def mostrarMaterias(request, nombre):
