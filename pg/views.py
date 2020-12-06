@@ -17,11 +17,12 @@ from django.shortcuts import redirect
 from . models import User
 import pandas as pd
 # from pg.tables import datasetTable
-import random
+from random import randrange
 import string
 from api_gateway.api import buscar_usuario, buscar_usuario_mfa, checkStatus, leer_tabla, validar_usuario, guardar_db, \
-                        buscar_db, buscar_db_id, log_acceso, log_creacion, chequeo_existencia, get_data
-from dao import Dao
+                        buscar_db, buscar_db_id, log_acceso, log_creacion, chequeo_existencia, get_data, connect, validar_mfa, \
+                        guardar_mfa
+from api_gateway.crypto import encrypt_message
 import json
 
 
@@ -46,12 +47,15 @@ def Login(request):
 
     if request.method == 'POST':
 
-        validated, rol = validar_usuario(request.POST['username'])
+        usuario = request.POST['username']
+        password = request.POST['password']
+
+        encrypted_password = encrypt_message(password)
+
+        validated, rol = validar_usuario(request.POST['username'], encrypted_password)
 
         if validated:
             print('Usuario validado')
-
-            usuario = request.POST['username']
 
             return redirect('mfa', nombre=usuario)
 
@@ -74,37 +78,37 @@ def mfa(request, nombre):
     :return: pagina renderizada en navegador
     '''
 
-    if request.method == 'POST':\
+    if request.method == 'POST':
 
-        dao = Dao(host='34.233.129.172', port='18081', user='postgres', password='continente7', db='nano')
+        validated, rol = validar_mfa(request.POST['username'])
 
-        df_mfa = dao.download_from_query(
-            """SELECT * FROM usuarios WHERE usuario = '{}' AND mfa = '{}'""".format(nombre,
-                                                                                    request.POST['clave_multifactor']))
-
-        if len(df_mfa) > 0:
+        if validated:
             print('MFA Validado')
 
-            log_acceso(nombre, df_mfa['rol'].iloc[0])
+            log_acceso(nombre, rol)
 
-            return redirect('menu', nombre=nombre, rol=df_mfa['rol'].iloc[0])
+            return redirect('menu', nombre=nombre, rol=rol)
+
+    generated_mfa = randrange(0, 999999, 6)
+
+    to_email = guardar_mfa(nombre, generated_mfa)
 
     form = keyForm()
-    # htmly = get_template('pg/Email.html')
-    # d = {'username': nombre, 'clave': clave_mfa}
-    # subject, from_email, to = 'ISA Clave MFA', 'trqarg@gmail.com', email
-    # html_content = htmly.render(d)
-    # msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
-    # msg.attach_alternative(html_content, "text/html")
-    # msg.send()
+
+    htmly = get_template('pg/Email.html')
+    d = {'username': nombre, 'clave': generated_mfa}
+    subject, from_email, to = 'ISA Clave MFA', 'trqarg@gmail.com', to_email
+    html_content = htmly.render(d)
+    msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
 
     return render(request, 'pg/mfa.html', {'form': form, 'title': 'MFA'})
 
 
 def menu(request, nombre, rol):
 
-    # status = checkStatus()
-    status = 'UP'
+    status = checkStatus()
 
     validated, rol = validar_usuario(nombre)
 
@@ -132,8 +136,7 @@ def menu(request, nombre, rol):
 
 def crearPlanEstudios(request, nombre):
 
-    # status = checkStatus()
-    status = 'UP'
+    status = checkStatus()
 
     validated, rol = validar_usuario(nombre)
 
@@ -173,8 +176,7 @@ def crearPlanEstudios(request, nombre):
 
 def mostrarPlanEstudios(request, nombre):
 
-    # status = checkStatus()
-    status = 'UP'
+    status = checkStatus()
 
     validated, rol = validar_usuario(nombre)
 
@@ -190,8 +192,7 @@ def mostrarPlanEstudios(request, nombre):
 
 def mostrarPlanEstudiosDetalle(request, nombre, idplan):
 
-    # status = checkStatus()
-    status = 'UP'
+    status = checkStatus()
 
     validated, rol = validar_usuario(nombre)
 
@@ -220,8 +221,7 @@ def mostrarPlanEstudiosDetalle(request, nombre, idplan):
 
 def crearMateria(request, nombre):
 
-    # status = checkStatus()
-    status = 'UP'
+    status = checkStatus()
 
     validated, rol = validar_usuario(nombre)
 
@@ -257,8 +257,7 @@ def crearMateria(request, nombre):
 
 def agregarMateria(request, nombre, idplan):
 
-    # status = checkStatus()
-    status = 'UP'
+    status = checkStatus()
 
     validated, rol = validar_usuario(nombre)
 
@@ -299,8 +298,7 @@ def agregarMateria(request, nombre, idplan):
 
 def mostrarMaterias(request, nombre):
 
-    # status = checkStatus()
-    status = 'UP'
+    status = checkStatus()
 
     validated, rol = validar_usuario(nombre)
 
@@ -316,8 +314,7 @@ def mostrarMaterias(request, nombre):
 
 def mostrarMateriaDetalle(request, nombre, idmateria):
 
-    # status = checkStatus()
-    status = 'UP'
+    status = checkStatus()
 
     validated, rol = validar_usuario(nombre)
 
@@ -341,8 +338,7 @@ def mostrarMateriaDetalle(request, nombre, idmateria):
 
 def crearContenidoCurricular(request, nombre, idmateria):
 
-    # status = checkStatus()
-    status = 'UP'
+    status = checkStatus()
 
     validated, rol = validar_usuario(nombre)
 
@@ -406,8 +402,7 @@ def mostrarContenidoCurricular(request, nombre, idcontenidocurricular, idmateria
 
 def mostrarUnidad(request, nombre, idunidad):
 
-    # status = checkStatus()
-    status = 'UP'
+    status = checkStatus()
 
     validated, rol = validar_usuario(nombre)
 
@@ -421,8 +416,7 @@ def mostrarUnidad(request, nombre, idunidad):
 
 def mostrarActFormacionPractica(request, nombre, idactformacionpractica):
 
-    # status = checkStatus()
-    status = 'UP'
+    status = checkStatus()
 
     validated, rol = validar_usuario(nombre)
 
@@ -438,8 +432,7 @@ def mostrarActFormacionPractica(request, nombre, idactformacionpractica):
 
 def crearCompetencia(request, nombre, idplan):
 
-    # status = checkStatus()
-    status = 'UP'
+    status = checkStatus()
 
     validated, rol = validar_usuario(nombre)
 
@@ -470,8 +463,7 @@ def crearCompetencia(request, nombre, idplan):
 
 def mostrarCompetencias(request, nombre):
 
-    # status = checkStatus()
-    status = 'UP'
+    status = checkStatus()
 
     validated, rol = validar_usuario(nombre)
 
@@ -487,8 +479,7 @@ def mostrarCompetencias(request, nombre):
 
 def mostrarCompetenciaDetalle(request, nombre, idcompetencia):
 
-    # status = checkStatus()
-    status = 'UP'
+    status = checkStatus()
 
     validated, rol = validar_usuario(nombre)
 
@@ -512,8 +503,7 @@ def mostrarCompetenciaDetalle(request, nombre, idcompetencia):
 
 def crearCapacidad(request, nombre, idcompetencia):
 
-    # status = checkStatus()
-    status = 'UP'
+    status = checkStatus()
 
     validated, rol = validar_usuario(nombre)
 
@@ -544,8 +534,7 @@ def crearCapacidad(request, nombre, idcompetencia):
 
 def crearUnidad(request, nombre, idcontenidocurricular):
 
-    # status = checkStatus()
-    status = 'UP'
+    status = checkStatus()
 
     validated, rol = validar_usuario(nombre)
 
@@ -576,8 +565,7 @@ def crearUnidad(request, nombre, idcontenidocurricular):
 
 def crearActa(request, nombre, idcontenidocurricular):
 
-    # status = checkStatus()
-    status = 'UP'
+    status = checkStatus()
 
     validated, rol = validar_usuario(nombre)
 

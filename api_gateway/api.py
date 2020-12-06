@@ -5,6 +5,7 @@ import pandas as pd
 import base64
 from dao import Dao
 import os
+from api_gateway.crypto import decrypt_message
 
 
 def leer_tabla(tabla):
@@ -87,7 +88,7 @@ def buscar_usuario_mfa(tabla, input_usuario):
                 return []
 
 
-def validar_usuario(nombre):
+def validar_usuario(nombre, encrypted_password):
 
     dao = connect()
 
@@ -95,15 +96,47 @@ def validar_usuario(nombre):
 
     df = dao.download_from_query(q)
 
-    if len(df) == 1:
-        print('User Validated')
+    if len(df) == 1 and decrypt_message(bytes(df['password'].iloc[0], 'utf-8')) == decrypt_message(encrypted_password):
 
         return True, df['rol'].iloc[0]
 
     else:
-        print('Invalid user')
+        print('Error Usuario Invalido')
 
     return False, 'Guest'
+
+
+def validar_mfa(nombre, encrypted_mfa):
+
+    dao = connect()
+
+    df = dao.download_from_query(
+        """SELECT * FROM usuarios WHERE usuario = '{}' AND mfa = '{}'""".
+            format(nombre, encrypted_mfa))
+
+    if len(df) == 1 and decrypt_message(bytes(df['mfa'].iloc[0], 'utf-8')) == decrypt_message(encrypted_mfa):
+
+        return True, df['rol'].iloc[0]
+
+    else:
+        print('Error Usuario Invalido')
+
+    return False, 'Guest'
+
+
+def guardar_mfa(nombre, mfa):
+
+    dao = connect()
+
+    q = """UPDATE usuarios SET mfa = '{}' WHERE usuario = '{}'""".format(mfa, nombre)
+
+    dao.run_query(q)
+
+    df = dao.download_from_query(
+        """SELECT email FROM usuarios WHERE usuario = '{}'""".
+            format(nombre))
+
+    return df['email'].iloc[0]
 
 
 def guardar_db(tabla, fields, datos):
@@ -217,7 +250,7 @@ def checkStatus():
     status = True if os.system("ping -c 1 " + '34.233.129.172') is 0 else False
 
     if status:
-        return 'UP'
+        return 'DOWN'
 
     else:
-        return 'DOWN'
+        return 'UP'
