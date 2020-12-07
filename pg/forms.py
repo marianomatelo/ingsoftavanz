@@ -40,7 +40,7 @@ class UserRegisterForm(UserCreationForm):
 
 class keyForm(forms.Form):
 
-    clave_multifactor = forms.CharField(help_text="Se ha enviado la clave multifactor a su email", required=True)
+    clave_multifactor = forms.CharField(help_text="Se ha enviado la clave multifactor a su email", required=True, widget=forms.PasswordInput())
 
     helper = FormHelper()
     helper.form_method = 'POST'

@@ -88,7 +88,7 @@ def buscar_usuario_mfa(tabla, input_usuario):
                 return []
 
 
-def validar_usuario(nombre, encrypted_password):
+def validar_usuario_password(nombre, encrypted_password):
 
     dao = connect()
 
@@ -106,15 +106,33 @@ def validar_usuario(nombre, encrypted_password):
     return False, 'Guest'
 
 
-def validar_mfa(nombre, encrypted_mfa):
+def validar_usuario(nombre):
+
+    dao = connect()
+
+    q = """SELECT usuario, email, rol, id, "password", mfa FROM public.usuarios WHERE usuario = '{}'""".format(nombre)
+
+    df = dao.download_from_query(q)
+
+    if len(df) == 1:
+        print('User Validated')
+
+        return True, df['rol'].iloc[0]
+
+    else:
+        print('Invalid user')
+
+    return False, 'Guest'
+
+
+def validar_mfa(nombre, mfa):
 
     dao = connect()
 
     df = dao.download_from_query(
-        """SELECT * FROM usuarios WHERE usuario = '{}' AND mfa = '{}'""".
-            format(nombre, encrypted_mfa))
+        """SELECT * FROM usuarios WHERE usuario = '{}' AND mfa = '{}'""".format(nombre, mfa))
 
-    if len(df) == 1 and decrypt_message(bytes(df['mfa'].iloc[0], 'utf-8')) == decrypt_message(encrypted_mfa):
+    if len(df) == 1 and df['mfa'].iloc[0] == mfa:
 
         return True, df['rol'].iloc[0]
 

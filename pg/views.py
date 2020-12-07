@@ -21,7 +21,7 @@ from random import randrange
 import string
 from api_gateway.api import buscar_usuario, buscar_usuario_mfa, checkStatus, leer_tabla, validar_usuario, guardar_db, \
                         buscar_db, buscar_db_id, log_acceso, log_creacion, chequeo_existencia, get_data, connect, validar_mfa, \
-                        guardar_mfa
+                        guardar_mfa, validar_usuario_password
 from api_gateway.crypto import encrypt_message
 import json
 
@@ -52,7 +52,7 @@ def Login(request):
 
         encrypted_password = encrypt_message(password)
 
-        validated, rol = validar_usuario(request.POST['username'], encrypted_password)
+        validated, rol = validar_usuario_password(request.POST['username'], encrypted_password)
 
         if validated:
             print('Usuario validado')
@@ -80,7 +80,7 @@ def mfa(request, nombre):
 
     if request.method == 'POST':
 
-        validated, rol = validar_mfa(request.POST['username'])
+        validated, rol = validar_mfa(nombre, request.POST['clave_multifactor'])
 
         if validated:
             print('MFA Validado')
@@ -97,7 +97,7 @@ def mfa(request, nombre):
 
     htmly = get_template('pg/Email.html')
     d = {'username': nombre, 'clave': generated_mfa}
-    subject, from_email, to = 'ISA Clave MFA', 'trqarg@gmail.com', to_email
+    subject, from_email, to = 'Clave MFA', 'trqarg@gmail.com', to_email
     html_content = htmly.render(d)
     msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
     msg.attach_alternative(html_content, "text/html")
