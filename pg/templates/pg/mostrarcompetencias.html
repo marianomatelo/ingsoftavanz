@@ -3,11 +3,28 @@
 {% block start %}
 {% load widget_tweaks %}
 
-<ul>
-{% for i in planes %}
-    <li><a href="{% url 'mostrarCompetenciaDetalle' nombre=nombre idcompetencia=i.idCompetencia %}">{{i.idCompetencia}} - {{i.Descriptor}}</a></li>
-{% endfor %}
-</ul>
+<div style="margin-left:40%;">
 
+<b>Competencias Formadas</b>
+
+<br>
+<br>
+
+<table>
+  <tr>
+    <th>id Competencia</th>
+    <th>Nombre</th>
+    <th>Descripcion</th>
+  </tr>
+  <tr>
+    {% for i in competencias %}
+      <td><a href="{% url 'mostrarCompetenciaDetalle' nombre=nombre idcompetencia=i.idcompetencia %}">{{i.idcompetencia}}</a></td>
+    <td><a href="{% url 'mostrarCompetenciaDetalle' nombre=nombre idcompetencia=i.idcompetencia %}">{{i.nombre}}</a></td>
+    <td>{{i.descripcion}}</td>
+  </tr>
+    {% endfor %}
+</table>
+
+</div>
 
 {% endblock start %}

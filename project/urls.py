@@ -18,7 +18,7 @@ urlpatterns = [
 
     path('mfa/(?P<nombre>\d+)/$', pg_view.mfa, name='mfa'),
 
-    path('menu/(?P<nombre>\d+)/$', pg_view.menu, name='menu'),
+    path('menu/(?P<nombre>\d+)(?P<rol>\d+)$', pg_view.menu, name='menu'),
 
     path('crearPlanEstudios/(?P<nombre>\d+)/$', pg_view.crearPlanEstudios, name='crearPlanEstudios'),
 
@@ -27,6 +27,8 @@ urlpatterns = [
     path('mostrarPlanEstudiosDetalle/(?P<nombre>\d+)(?P<idplan>\d+)/$', pg_view.mostrarPlanEstudiosDetalle, name='mostrarPlanEstudiosDetalle'),
 
     path('crearMateria/(?P<nombre>\d+)/$', pg_view.crearMateria, name='crearMateria'),
+
+    path('agregarMateria/(?P<nombre>\d+)(?P<idplan>\d+)/$', pg_view.agregarMateria, name='agregarMateria'),
 
     path('mostrarMaterias/(?P<nombre>\d+)/$', pg_view.mostrarMaterias, name='mostrarMaterias'),
 
@@ -52,4 +54,8 @@ urlpatterns = [
          name='mostrarCompetenciaDetalle'),
 
     path('crearCapacidad/(?P<nombre>\d+)(?P<idcompetencia>\d+)/$', pg_view.crearCapacidad, name='crearCapacidad'),
+
+    path('crearUnidad/(?P<nombre>\d+)(?P<idcontenidocurricular>\d+)/$', pg_view.crearUnidad, name='crearUnidad'),
+
+    path('crearActa/(?P<nombre>\d+)(?P<idcontenidocurricular>\d+)/$', pg_view.crearActa, name='crearActa'),
 ]

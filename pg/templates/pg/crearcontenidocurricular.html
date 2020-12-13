@@ -3,15 +3,17 @@
 {% block start %}
 {% load widget_tweaks %}
 
-Materia: {{idmateria}}
-
   <form method="post">
        {% csrf_token %}
     <div class="bloque_form">
-        <h4>Datos de la materia</h4>
+        <h4>Crear contenido curricular para Materia: {{nombre_materia}}</h4>
       <div class="form-row">
+        <div class="col-sm-12 col-md-6 form-group">
+            <div class="col-sm-12 col-md-6 form-group">
+            <input id="{{ form.contenido.id_for_label }}" name="{{ form.contenido.name }}" type="text" class="form-control {% if form.contenido.errors %}is-invalid{% endif %}"  placeholder="Nombre del Contenido Curricular" required="" value="{{ form.contenido.value|default:'' }}" />
+          </div>
           <div class="col-sm-12 col-md-6 form-group">
-            <input id="{{ form.descriptor.id_for_label }}" name="{{ form.descriptor.name }}" type="text" class="form-control {% if form.descriptor.errors %}is-invalid{% endif %}"  placeholder="Descripcion del contenido curricular" required="" value="{{ form.descriptor.value|default:'' }}" />
+            <input id="{{ form.descriptor.id_for_label }}" name="{{ form.descriptor.name }}" type="text" class="form-control {% if form.descriptor.errors %}is-invalid{% endif %}"  placeholder="Descripcion del Contenido Curricular" required="" value="{{ form.descriptor.value|default:'' }}" />
           </div>
       </div>
 

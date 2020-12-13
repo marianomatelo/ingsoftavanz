@@ -3,10 +3,26 @@
 {% block start %}
 {% load widget_tweaks %}
 
-<ul>
-{% for i in planes %}
-    <li><a href="{% url 'mostrarPlanEstudiosDetalle' nombre=nombre idplan=i.idPlan %}">{{i.idPlan}} - {{i.nombrePlan}}</a></li>
-{% endfor %}
-</ul>
+<div style="margin-left:40%;">
+
+<b>Planes de estudio</b>
+
+<br>
+<br>
+
+<table>
+  <tr>
+    <th>id Plan de Estudios</th>
+    <th>Nombre</th>
+  </tr>
+  <tr>
+    {% for i in planes %}
+    <td><a href="{% url 'mostrarPlanEstudiosDetalle' nombre=nombre idplan=i.idplan %}">{{i.idplan}}</a></td>
+    <td><a href="{% url 'mostrarPlanEstudiosDetalle' nombre=nombre idplan=i.idplan %}">{{i.nombreplan}}</a></td>
+  </tr>
+    {% endfor %}
+</table>
+
+</div>
 
 {% endblock start %}

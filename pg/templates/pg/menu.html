@@ -39,23 +39,14 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
-          <button class="navbar-toggle" data-toggle="collapse" data-target="#mainNavBar">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" class="styleheader" href="{% url 'menu' nombre=nombre %}">ISA</a>
-
+          <a class="navbar-brand" class="styleheader" href="{% url 'menu' nombre=nombre rol=rol %}">MENU</a>
         </div>
-
 
         <div class="collapse navbar-collapse" id="mainNavBar">
 
           <ul class="nav navbar-nav navbar-right">
 
-            <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-out"></span> &nbsp; Salir</a></li>
-
+            <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-out"></span> &nbsp; SALIR</a></li>
 
           </ul>
         </div>
@@ -66,85 +57,155 @@
   <br/>
   <br>
   <br>
+  <br>
+  <br>
 
-  <div class="row">
     {% block start %}
 
-      <div id="wrapper" >
-
-      </div>
-
-      <br>
-      <br>
-
-      <div style="text-align:center; font-weight: bold;">
+      <div style="margin-left:50%; font-weight: bold;">
           Bienvenido {{nombre}}
       </div>
 
-      <div style="text-align:center; font-weight: bold;">
+      <div style="margin-left:50%; font-weight: bold;">
           Rol: {{rol}}
       </div>
 
-      <div style="text-align:center; font-weight: bold;">
-          Status: {{status}}
+      <div style="margin-left:50%; font-weight: bold;">
+          Status API: {{status}}
       </div>
 
-      <div style="text-align:center; font-weight: bold;">
+      <div style="margin-left:50%; font-weight: bold;">
           Status DB: {{status}}
       </div>
 
-      {% if rol == 'Director' %}
+      {% if rol == 'Dir Carrera' %}
 
         <br>
-        <div style="text-align: center">
+
+         <a href="{% url 'crearPlanEstudios' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Crear Plan de Estudios</a>
+
+         <a href="{% url 'mostrarPlanEstudios' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Mostrar Planes de Estudios</a>
+
+         <a href="{% url 'crearMateria' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Crear Materia</a>
+
+         <a href="{% url 'mostrarMaterias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Mostrar Materias</a>
+
+         <a href="{% url 'mostrarCompetencias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Mostrar Competencias</a>
+
+         <a href="{% url 'mostrarCompetencias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Ver logs</a>
+
+      {% endif %}
 
 
-            <div class="">
-               <div class="row d-flex justify-content-around mt-4">
-                 <a href="{% url 'crearPlanEstudios' nombre=nombre %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
-                    style='width:180px; height:50px'>Crear Plan de Estudios</a>
-              </div>
-              </div>
 
-            <div class="">
-                 <div class="row d-flex justify-content-around mt-4">
-                     <a href="{% url 'mostrarPlanEstudios' nombre=nombre %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
-                        style='width:180px; height:50px'>Mostrar Planes de Estudios</a>
-                </div>
-            </div>
+      {% if rol == 'admin' %}
 
-            <div class="">
-                 <div class="row d-flex justify-content-around mt-4">
-                     <a href="{% url 'crearMateria' nombre=nombre %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
-                        style='width:180px; height:50px'>Crear Materia</a>
-                </div>
-            </div>
+        <br>
 
-            <div class="">
-                 <div class="row d-flex justify-content-around mt-4">
-                     <a href="{% url 'mostrarMaterias' nombre=nombre %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
-                        style='width:180px; height:50px'>Mostrar Materias</a>
-                </div>
-            </div>
+         <a href="{% url 'crearPlanEstudios' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Crear Plan de Estudios</a>
+
+         <a href="{% url 'mostrarPlanEstudios' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Mostrar Planes de Estudios</a>
+
+         <a href="{% url 'crearMateria' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Crear Materia</a>
+
+         <a href="{% url 'mostrarMaterias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Mostrar Materias</a>
+
+         <a href="{% url 'mostrarCompetencias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Mostrar Competencias</a>
+
+         <a href="{% url 'mostrarCompetencias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Ver logs</a>
+
+      {% endif %}
 
 
-            <div class="">
-                 <div class="row d-flex justify-content-around mt-4">
-                     <a href="{% url 'mostrarCompetencias' nombre=nombre %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
-                        style='width:180px; height:50px'>Mostrar Competencias</a>
-                </div>
-            </div>
+    {% if rol == 'Docente' %}
+
+        <br>
+
+         <a href="{% url 'crearPlanEstudios' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Crear Plan de Estudios</a>
+
+         <a href="{% url 'mostrarPlanEstudios' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Mostrar Planes de Estudios</a>
+
+         <a href="{% url 'crearMateria' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Crear Materia</a>
+
+         <a href="{% url 'mostrarMaterias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Mostrar Materias</a>
+
+         <a href="{% url 'mostrarCompetencias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Mostrar Competencias</a>
+
+         <a href="{% url 'mostrarCompetencias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Ver logs</a>
+
+      {% endif %}
 
 
-            <div style="text-align: center">
-              <input type="button" value="Ver logs">
-            </div>
 
-      {% else %}
+    {% if rol == 'Especialista' %}
+
+        <br>
+
+         <a href="{% url 'crearPlanEstudios' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Crear Plan de Estudios</a>
+
+         <a href="{% url 'mostrarPlanEstudios' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Mostrar Planes de Estudios</a>
+
+         <a href="{% url 'crearMateria' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Crear Materia</a>
+
+         <a href="{% url 'mostrarMaterias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Mostrar Materias</a>
+
+         <a href="{% url 'mostrarCompetencias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Mostrar Competencias</a>
+
+         <a href="{% url 'mostrarCompetencias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Ver logs</a>
+
+      {% endif %}
+
+
+      {% if rol == 'Evaluador' %}
+
+        <br>
+
+         <a href="{% url 'crearPlanEstudios' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Crear Plan de Estudios</a>
+
+         <a href="{% url 'mostrarPlanEstudios' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Mostrar Planes de Estudios</a>
+
+         <a href="{% url 'crearMateria' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Crear Materia</a>
+
+         <a href="{% url 'mostrarMaterias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Mostrar Materias</a>
+
+         <a href="{% url 'mostrarCompetencias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Mostrar Competencias</a>
+
+         <a href="{% url 'mostrarCompetencias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+            style='width:180px; height:50px'>Ver logs</a>
+
       {% endif %}
 
     {% endblock %}
-  </div>
+
 </body>
 
 </html>

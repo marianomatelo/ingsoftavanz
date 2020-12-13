@@ -3,42 +3,103 @@
 {% block start %}
 {% load widget_tweaks %}
 
-<ul>
-    <li>idPlan nombrePlan cargaHorariaTota resolucionConeau resolucionMinEdu resolucionRectoral</li>
-{% for i in planes %}
-    <li>{{i.idPlan}} {{i.nombrePlan}} {{i.cargaHorariaTotal}} {{i.resolucionConeau}} {{i.resolucionMinEdu}} {{i.resolucionRectoral}}</li>
-{% endfor %}
-</ul>
+<div style="margin-left:40%;">
 
+<b>Plan de estudio - Detalle</b>
 
-Materias
+<br>
+<br>
 
-<ul>
-    id Materia    Descriptor
-{% for i in materias %}
-    {{i.idMateria}} - {{i.Descriptor}}
+<table>
+  <tr>
+    <th>id de Plan</th>
+    <th>Nombre de Plan</th>
+    <th>Carga horaria total</th>
+    <th>Resolucion Coneau</th>
+    <th>Resolucion Min Edu</th>
+    <th>Resolucion Rectoral</th>
+  </tr>
+  <tr>
+    {% for i in plan %}
+    <td>{{i.idplan}}</td>
+    <td>{{i.nombreplan}}</td>
+    <td>{{i.cargahorariatotal}}</td>
+    <td>{{i.resolucionconeau}}</td>
+    <td>{{i.resolucionminedu}}</td>
+    <td>{{i.resolucionrectoral}}</td>
+  </tr>
+    {% endfor %}
+</table>
 
-{% endfor %}
-</ul>
+<br>
+<br>
+<br>
 
+<b>Materias</b>
 
-Competencias
+<br>
+<br>
 
-<ul>
-    id Competencia    Descriptor
-{% for i in competencias %}
-    {{i.idCompetencia}} - {{i.Descriptor}}
+<table>
+  <tr>
+    <th>id de Materia</th>
+    <th>Nombre</th>
+    <th>Descripcion</th>
+  </tr>
+  <tr>
+    {% for i in materias %}
+      <td><a href="{% url 'mostrarMateriaDetalle' nombre=nombre idmateria=i.idmateria %}">{{i.idmateria}}</a></td>
+      <td><a href="{% url 'mostrarMateriaDetalle' nombre=nombre idmateria=i.idmateria %}">{{i.nombre}}</a></td>
+    <td>{{i.descripcion}}</td>
+  </tr>
+    {% endfor %}
+</table>
 
-{% endfor %}
-</ul>
+<br>
+<br>
 
-
-<div class="row d-flex justify-content-around mt-4">
-{% for i in planes %}
-     <a href="{% url 'crearCompetencia' nombre=nombre idplan=i.idPlan %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
-    style='width:180px; height:50px'>Crear Competencia</a>
+  <div class="row d-flex justify-content-around mt-4">
+{% for i in plan %}
+     <a href="{% url 'agregarMateria' nombre=nombre idplan=i.idplan %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
+    style='width:190px; height:50px'>Agregar Materia</a>
 {% endfor %}
 </div>
 
+<br>
+<br>
+
+<b>Competencias</b>
+
+<br>
+<br>
+
+<table>
+  <tr>
+    <th>id de Competencia</th>
+    <th>Nombre</th>
+    <th>Descripcion</th>
+  </tr>
+  <tr>
+    {% for i in competencias %}
+    <td><a href="{% url 'mostrarCompetenciaDetalle' nombre=nombre idcompetencia=i.idcompetencia %}">{{i.idcompetencia}}</a></td>
+    <td><a href="{% url 'mostrarCompetenciaDetalle' nombre=nombre idcompetencia=i.idcompetencia %}">{{i.nombre}}</a></td>
+    <td>{{i.descripcion}}</td>
+  </tr>
+    {% endfor %}
+</table>
+
+
+<br>
+<br>
+
+
+<div class="row d-flex justify-content-around mt-4">
+{% for i in plan %}
+     <a href="{% url 'crearCompetencia' nombre=nombre idplan=i.idplan %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
+    style='width:190px; height:50px'>Crear Competencia</a>
+{% endfor %}
+</div>
+
+</div>
 
 {% endblock start %}

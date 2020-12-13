@@ -6,10 +6,10 @@
   <form method="post">
        {% csrf_token %}
     <div class="bloque_form">
-        <h4>Datos del Plan de Estudio </h4>
+        <b>Crear Plan de Estudios </b>
       <div class="form-row">
           <div class="col-sm-12 col-md-6 form-group">
-            <input id="{{ form.nombrePlan.id_for_label }}" name="{{ form.nombrePlan.name }}" type="text" class="form-control {% if form.nombrePlan.errors %}is-invalid{% endif %}"  placeholder="nombrePlan" required="" value="{{ form.nombrePlan.value|default:'' }}" />
+            <input id="{{ form.nombrePlan.id_for_label }}" name="{{ form.nombrePlan.name }}" type="text" class="form-control {% if form.nombrePlan.errors %}is-invalid{% endif %}"  placeholder="Nombre del plan" required="" value="{{ form.nombrePlan.value|default:'' }}" />
           </div>
           <div class="col-sm-12 col-md-6 form-group">
             <input id="{{ form.cargaHorariaTotal.id_for_label }}" name="{{ form.cargaHorariaTotal.name }}" type="text" class="form-control {% if form.cargaHorariaTotal.errors %}is-invalid{% endif %}" placeholder="Carga Horaria (Horas)" required="" value="{{ form.cargaHorariaTotal.value|default:'' }}" />

@@ -3,23 +3,61 @@
 {% block start %}
 {% load widget_tweaks %}
 
-Contenido curricular
+<div style="margin-left:40%;">
 
-<ul>
-    <li>idContenidoCurricular Descriptor</li>
-{% for i in planes %}
-    <li>
-         <a href="{% url 'mostrarContenidoCurricular' nombre=nombre idcontenidocurricular=i.idContenidoCurricular idmateria=i.idMateria descriptor=i.Descriptor%}">
-             {{i.idContenidoCurricular}} {{i.Descriptor}} {{i.idMateria}}</a>
-    </li>
-{% endfor %}
-</ul>
+<b>Materia - Detalle</b>
+
+<br>
+<br>
+
+<table>
+  <tr>
+    <th>id Materia</th>
+    <th>Nombre</th>
+    <th>Descripcion</th>
+  </tr>
+  <tr>
+    {% for i in materias %}
+      <td>{{i.idmateria}}</td>
+      <td>{{i.nombre}}</td>
+      <td>{{i.descripcion}}</td>
+  </tr>
+    {% endfor %}
+</table>
+
+<br>
+<br>
+
+<b>Contenido Curricular</b>
+
+<table>
+  <tr>
+    <th>id Contenido Curricular</th>
+    <th>Nombre</th>
+    <th>Descripcion</th>
+    <th>id de Materia</th>
+  </tr>
+  <tr>
+    {% for i in contenidos %}
+    <td>   <a href="{% url 'mostrarContenidoCurricular' nombre=nombre idcontenidocurricular=i.idcontenidocurricular idmateria=i.idmateria descriptor=i.descripcion%}">
+             {{i.idcontenidocurricular}}</a></td>
+      <td>   <a href="{% url 'mostrarContenidoCurricular' nombre=nombre idcontenidocurricular=i.idcontenidocurricular idmateria=i.idmateria descriptor=i.descripcion%}">
+             {{i.nombre}}</a></td>
+    <td>{{i.descripcion}}</td>
+      <td>{{i.idmateria}}</td>
+  </tr>
+    {% endfor %}
+</table>
+
+
+<br>
+<br>
 
 
 <div class="row d-flex justify-content-around mt-4">
  <a href="{% url 'crearContenidoCurricular' nombre=nombre idmateria=idmateria%}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
-    style='width:180px; height:50px'>Crear Contenido Curricular</a>
+    style='width:240px; height:50px'>Crear Contenido Curricular</a>
 </div>
 
-
+</div>
 {% endblock start %}

@@ -3,38 +3,90 @@
 {% block start %}
 {% load widget_tweaks %}
 
-Contenido curricular
-<br>
-idcontenidocurricular idmateria descriptor
-<br>
-{{idcontenidocurricular}}
-{{idmateria}}
-{{descriptor}}
+<div style="margin-left:40%;">
+
+<b>Contenido curricular</b>
 
 <br>
 <br>
 
-<ul>
-    <li>Unidades</li>
-{% for i in response_unidades %}
-    <li>
-         <a href="{% url 'mostrarUnidad' nombre=nombre idunidad=i.idUnidad%}">
-             {{i.idUnidad}} {{i.Descriptor}} {{i.idContenidoCurricular}}</a>
-    </li>
-{% endfor %}
-</ul>
+<table>
+  <tr>
+    <th>id de Contenido Curricular</th>
+    <th>id de Materia</th>
+    <th>Descripcion</th>
+  </tr>
+  <tr>
+    <td>{{idcontenidocurricular}}</td>
+    <td>{{idmateria}}</td>
+    <td>{{descriptor}}</td>
+  </tr>
+</table>
 
 <br>
 <br>
 
-<ul>
-    <li>Act Formacion Practica</li>
-{% for i in response_act_formacion %}
-    <li>
-         <a href="{% url 'mostrarActFormacionPractica' nombre=nombre idactformacionpractica=i.idActFormacionPractica%}">
-             {{i.idActFormacionPractica}} {{i.Descriptor}} {{i.idContenidoCurricular}}</a>
-    </li>
-{% endfor %}
-</ul>
+<b>Unidades</b>
+
+<br>
+<br>
+
+<table>
+  <tr>
+    <th>id Unidad</th>
+    <th>Nombre</th>
+    <th>Descripcion</th>
+  </tr>
+  <tr>
+    {% for i in response_unidades %}
+      <td>{{i.idunidad}}</td>
+      <td>{{i.nombre}}</td>
+      <td>{{i.descriptor}}</td>
+  </tr>
+    {% endfor %}
+</table>
+
+<br>
+<br>
+
+<div class="row d-flex justify-content-around mt-4">
+ <a href="{% url 'crearUnidad' nombre=nombre idcontenidocurricular=idcontenidocurricular %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
+    style='width:180px; height:50px' >Crear Unidad</a>
+</div>
+
+<br>
+<br>
+
+<b>Act Formacion Practica</b>
+
+<br>
+<br>
+
+<table>
+  <tr>
+    <th>id Acta de Formacion Practica</th>
+    <th>Nombre</th>
+    <th>Descripcion</th>
+  </tr>
+  <tr>
+    {% for i in response_act_formacion %}
+  <tr>
+      <td>{{i.idacta}}</td>
+      <td>{{i.nombre}}</td>
+      <td>{{i.descriptor}}</td>
+  </tr>
+    {% endfor %}
+</table>
+
+
+<br>
+<br>
+
+<div class="row d-flex justify-content-around mt-4">
+ <a href="{% url 'crearActa' nombre=nombre idcontenidocurricular=idcontenidocurricular %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
+    style='width:180px; height:50px' >Crear Acta</a>
+</div>
+
+</div>
 
 {% endblock start %}

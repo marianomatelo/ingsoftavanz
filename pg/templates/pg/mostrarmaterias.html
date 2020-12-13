@@ -3,12 +3,28 @@
 {% block start %}
 {% load widget_tweaks %}
 
+<div style="margin-left:40%;">
 
-<ul>
-    id Materia    Descriptor
-{% for i in planes %}
-    <li><a href="{% url 'mostrarMateriaDetalle' nombre=nombre idmateria=i.idMateria %}">{{i.idMateria}} - {{i.Descriptor}}</a></li>
-{% endfor %}
-</ul>
+<b>Materias</b>
+
+<br>
+<br>
+
+<table>
+  <tr>
+    <th>id Materia</th>
+    <th>Nombre</th>
+    <th>Descripcion</th>
+  </tr>
+  <tr>
+    {% for i in materias %}
+      <td><a href="{% url 'mostrarMateriaDetalle' nombre=nombre idmateria=i.idmateria %}">{{i.idmateria}}</a></td>
+      <td><a href="{% url 'mostrarMateriaDetalle' nombre=nombre idmateria=i.idmateria %}">{{i.nombre}}</a></td>
+      <td>{{i.descripcion}}</td>
+  </tr>
+    {% endfor %}
+</table>
+
+</div>
 
 {% endblock start %}
