@@ -1,26 +1,15 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from pg.forms import *
 from django.contrib import messages
-from django.contrib.auth import authenticate,login
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import UserRegisterForm, keyForm, agregarMateriaForm
-from django.core.mail import send_mail
+from .forms import keyForm, agregarMateriaForm
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
-from django.template import Context
-from django.http import HttpResponse
-from django.http import JsonResponse
-from django.utils.timezone import datetime
-from django.urls import reverse
 from django.shortcuts import redirect
-from . models import User
 import pandas as pd
-# from pg.tables import datasetTable
 from random import randrange
-import string
-from api_gateway.api import buscar_usuario, buscar_usuario_mfa, checkStatus, leer_tabla, validar_usuario, guardar_db, \
-                        buscar_db, buscar_db_id, log_acceso, log_creacion, chequeo_existencia, get_data, connect, validar_mfa, \
+from api_gateway.api import checkStatus, validar_usuario, guardar_db, \
+                        buscar_db, buscar_db_id, log_acceso, log_creacion, chequeo_existencia, get_data, validar_mfa, \
                         guardar_mfa, validar_usuario_password
 from api_gateway.crypto import encrypt_message
 import json
@@ -28,10 +17,10 @@ import json
 
 def index(request):
     '''
-    Primera pagina visible al acceder a la url
+    Primera pagina, punto de acceso de la aplicacion
 
-    :param request: solicitud de mostrar pagina
-    :return: pagina renderizada en navegador
+    :param request: solicitud de mostrar pagina de index
+    :return: pagina Index renderizada en navegador
     '''
 
     return render(request, 'pg/index.html', {'title': 'ISA'})
@@ -39,31 +28,38 @@ def index(request):
 
 def Login(request):
     '''
-    Pagina de logeo donde se solicita el usuario y contrasena
+    Pagina de login donde se solicita el usuario y contrasena
 
-    :param request: solicitud de mostrar pagina
+    :param request: solicitud de mostrar pagina de login
     :return: pagina renderizada en navegador
     '''
 
+    # Si el usuario envio el formulario
     if request.method == 'POST':
 
+        # Obtengo los parametros ingresados por el usuario
         usuario = request.POST['username']
         password = request.POST['password']
 
+        # Encripto la password ingresada por el usuario
         encrypted_password = encrypt_message(password)
 
+        # Comparo la password ingresada con la almacenada
         validated, rol = validar_usuario_password(request.POST['username'], encrypted_password)
 
         if validated:
+            # Passwords coinciden
             print('Usuario validado')
 
             return redirect('mfa', nombre=usuario)
 
         else:
+            # Password no coincide
             print('Usuario invalido')
 
             messages.info(request, f'Error: Intente log in nuevamente')
 
+    # Formulario de login para que el usuario complete
     form = AuthenticationForm()
 
     return render(request, 'pg/login.html', {'form': form, 'title': 'Log In'})
@@ -74,7 +70,7 @@ def mfa(request, nombre):
     Pagina de validacion del MFA, genera un codigo MFA, lo envia por mail y lo valida.
 
     :param request: solicitud de mostrar pagina
-    :param nombre: nombre de usuario ingresado
+    :param nombre: nombre del usuario recibido por el contexto
     :return: pagina renderizada en navegador
     '''
 
@@ -89,55 +85,62 @@ def mfa(request, nombre):
 
             return redirect('menu', nombre=nombre, rol=rol)
 
-    generated_mfa = randrange(0, 999999, 6)
-
-    to_email = guardar_mfa(nombre, generated_mfa)
-
+    # Formulario de MFA para que el usuario complete
     form = keyForm()
 
-    htmly = get_template('pg/Email.html')
-    d = {'username': nombre, 'clave': generated_mfa}
-    subject, from_email, to = 'Clave MFA', 'trqarg@gmail.com', to_email
-    html_content = htmly.render(d)
-    msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
-    msg.attach_alternative(html_content, "text/html")
-    msg.send()
+    # Genero un nuevo MFA para el usuario
+    generated_mfa = randrange(0, 999999, 6)
+
+    # Almaceno en la base el nuevo codigo de MFA
+    to_email = guardar_mfa(nombre, generated_mfa)
+
+    # Preparo para enviarle el nuevo codigo MFA por email
+    try:
+        htmly = get_template('pg/Email.html')
+        d = {'username': nombre, 'clave': generated_mfa}
+        subject, from_email, to = 'Clave MFA', 'trqarg@gmail.com', to_email
+        html_content = htmly.render(d)
+        msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+
+        # Enviando mensaje por email
+        msg.send()
+
+    except Exception as e:
+        print('Error enviando codigo MFA por email ', e)
 
     return render(request, 'pg/mfa.html', {'form': form, 'title': 'MFA'})
 
 
 def menu(request, nombre, rol):
+    '''
+    Pagina de menu principal donde el usuario tiene los principales accesos
+    :param request: solicitud de mostrar pagina
+    :param nombre: nombre del usuario recibido por el contexto
+    :return: pagina renderizada en navegador
+    '''
 
+    # Valido el estado de los servicios
     status = checkStatus()
 
+    # Valido la sesion del usuario
     validated, rol = validar_usuario(nombre)
 
     return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
                                             'status': status})
 
 
-# def register(request):
-#     if request.method == 'POST':
-#         form = UserRegisterForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             nuevo_usuario = User(rol=request.POST['rol'], name=request.POST['username'],
-#                                  email=request.POST['email'], password=request.POST['password1'])
-#             nuevo_usuario.save()
-#
-#             messages.success(request, f'Your account has been created! You are now able to log in')
-#             return redirect('login')
-#
-#     else:
-#         form = UserRegisterForm()
-#
-#     return render(request, 'pg/register.html', {'form': form, 'title': 'Reqister'})
-
-
 def crearPlanEstudios(request, nombre):
-
+    '''
+    Pagina de menu principal donde el usuario tiene los principales accesos
+    :param request: solicitud de mostrar pagina
+    :param nombre: nombre del usuario recibido por el contexto
+    :return: pagina renderizada en navegador
+    '''
+    # Valido el estado de los servicios
     status = checkStatus()
 
+    # Valido la sesion del usuario
     validated, rol = validar_usuario(nombre)
 
     form = planEstudioForm()
@@ -175,14 +178,23 @@ def crearPlanEstudios(request, nombre):
 
 
 def mostrarPlanEstudios(request, nombre):
+    '''
+    Pagina que lista los planes de estudio y sus detalles
+    :param request: solicitud de mostrar pagina
+    :param nombre: nombre del usuario recibido por el contexto
+    :return: pagina renderizada en navegador
+    '''
 
+    # Valido el estado de los servicios
     status = checkStatus()
 
+    # Valido la sesion del usuario
     validated, rol = validar_usuario(nombre)
 
+    # Busco en la DB todos los Planes de Estudio
     df = buscar_db('planestudios')
 
-    # parsing the DataFrame in json format.
+    # Parseo el DataFrame al formato JSON
     json_records = df.reset_index().to_json(orient='records')
     planes_json = json.loads(json_records)
 
@@ -191,26 +203,39 @@ def mostrarPlanEstudios(request, nombre):
 
 
 def mostrarPlanEstudiosDetalle(request, nombre, idplan):
+    '''
+    Pagina de plan de estudios donde se visualizan sus detalles
 
+    :param request: solicitud de mostrar pagina
+    :param nombre: nombre del usuario recibido por el contexto
+    :param idplan: id de plan seleccionado por el usuario
+    :return: pagina renderizada en navegador
+    '''
+
+    # Valido el estado de los servicios
     status = checkStatus()
 
+    # Valido la sesion del usuario
     validated, rol = validar_usuario(nombre)
 
+    # Busco en la tabla de Planes de Estudio el Plan con el idplan
     df_planes = buscar_db_id('planestudios', 'idplan', idplan)
 
-    # parsing the DataFrame in json format.
+    # Parseo el DataFrame al formato JSON
     json_records = df_planes.reset_index().to_json(orient='records')
     json_plan = json.loads(json_records)
 
+    # Busco en la tabla de Materias las materias correspondientes al idplan
     df = buscar_db_id('planestudios_materia', 'idplan', idplan)
 
-    # parsing the DataFrame in json format.
+    # Parseo el DataFrame al formato JSON
     json_records = df.reset_index().to_json(orient='records')
     materias_json = json.loads(json_records)
 
+    # Busco en la tabla de Competencias las competencias correspondientes al idplan
     df = buscar_db_id('competencia', 'idplan', idplan)
 
-    # parsing the DataFrame in json format.
+    # Parseo el DataFrame al formato JSON
     json_records = df.reset_index().to_json(orient='records')
     competencias_json = json.loads(json_records)
 
@@ -220,9 +245,18 @@ def mostrarPlanEstudiosDetalle(request, nombre, idplan):
 
 
 def crearMateria(request, nombre):
+    '''
+    Pagina para crear una nueva Materia
 
+    :param request: solicitud de mostrar pagina
+    :param nombre: nombre del usuario recibido por el contexto
+    :return: materia creada
+    '''
+
+    # Valido el estado de los servicios
     status = checkStatus()
 
+    # Valido la sesion del usuario
     validated, rol = validar_usuario(nombre)
 
     form = materiaForm()
@@ -256,9 +290,18 @@ def crearMateria(request, nombre):
 
 
 def agregarMateria(request, nombre, idplan):
+    '''
+    Pagina para agregar una materia a un Plan de Estudios
 
+    :param request: solicitud de mostrar pagina
+    :param nombre: nombre del usuario recibido por el contexto
+    :param idplan: id de plan seleccionado por el usuario
+    :return: materia creada
+    '''
+    # Valido el estado de los servicios
     status = checkStatus()
 
+    # Valido la sesion del usuario
     validated, rol = validar_usuario(nombre)
 
     if request.method == 'POST':
@@ -297,14 +340,23 @@ def agregarMateria(request, nombre, idplan):
 
 
 def mostrarMaterias(request, nombre):
+    '''
+    Pagina para mostrar todas las Materias
 
+    :param request: solicitud de mostrar pagina
+    :param nombre: nombre del usuario recibido por el contexto
+    :return: pagina listando todas las materias
+    '''
+
+    # Valido el estado de los servicios
     status = checkStatus()
 
+    # Valido la sesion del usuario
     validated, rol = validar_usuario(nombre)
 
     df = buscar_db('materias')
 
-    # parsing the DataFrame in json format.
+    # Parseo el DataFrame al formato JSON
     json_records = df.reset_index().to_json(orient='records')
     materias_json = json.loads(json_records)
 
@@ -313,21 +365,31 @@ def mostrarMaterias(request, nombre):
 
 
 def mostrarMateriaDetalle(request, nombre, idmateria):
+    '''
+    Pagina para mostrar el detalle de la materia seleccionada por el usuario
 
+    :param request: solicitud de mostrar pagina
+    :param nombre: nombre del usuario recibido por el contexto
+    :param idmateria: id de la materia seleccionada por el usuario
+    :return: pagina mostrando detalles de la materia
+    '''
+    # Valido el estado de los servicios
     status = checkStatus()
 
+    # Valido la sesion del usuario
     validated, rol = validar_usuario(nombre)
 
+    # Busco detalles de la Materia segun idmateria
     df = buscar_db_id('materias', 'idmateria', idmateria)
 
-    # parsing the DataFrame in json format.
+    # Parseo el DataFrame al formato JSON
     json_records = df.reset_index().to_json(orient='records')
     materias_json = json.loads(json_records)
 
     # Busco Contenidos Curriculares relacionados a la Materia
     df = buscar_db_id('contenidocurricular', 'idmateria', idmateria)
 
-    # parsing the DataFrame in json format.
+    # Parseo el DataFrame al formato JSON
     json_records = df.reset_index().to_json(orient='records')
     contenidos_json = json.loads(json_records)
 
@@ -337,29 +399,50 @@ def mostrarMateriaDetalle(request, nombre, idmateria):
 
 
 def crearContenidoCurricular(request, nombre, idmateria):
+    '''
+    Pagina para crear un nuevo Contenido Curricular
 
+    :param request: solicitud de mostrar pagina
+    :param nombre: nombre del usuario recibido por el contexto
+    :param idmateria: id de la materia seleccionada por el usuario
+    :return: pagina mostrando detalles de la materia
+    '''
+
+    # Valido el estado de los servicios
     status = checkStatus()
 
+    # Valido la sesion del usuario
     validated, rol = validar_usuario(nombre)
 
+    # Busco detalles de la Materia segun idmateria
     df = buscar_db_id('materias', 'idmateria', idmateria)
 
+    # Almaceno el nombre de la materia seleccionada
     nombre_materia = df['nombre'].iloc[0]
 
+    # Creo formulacion de creacion de Contenido Curricular
     form = curricularForm()
+
+    # Si el usuario envio el formulario
     if request.method == 'POST':
+
         try:
             form = curricularForm(request.POST)
+
+            # Valido el formulario
             if form.is_valid():
 
+                # Obtengo los parametros ingresados por el usuario en el formulario
                 nombreContenido = form.cleaned_data['contenido']
                 descripcion = form.cleaned_data['descriptor']
 
+                # Almaceno el nuevo Contenido Curricular en la DB
                 guardar_db('contenidocurricular', 'descripcion, idmateria, nombre, '
                                                   'fecha_creacion, usuario_creacion, fecha_modificacion, usuario_modificacion',
                            [nombreContenido, idmateria, descripcion, descripcion, str(pd.to_datetime('today')),
                                         nombre, str(pd.to_datetime('today')), nombre])
 
+                # Registro la creacion en el Log
                 log_creacion(nombre, rol, 'Contenido Curricular')
 
                 return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
@@ -372,25 +455,33 @@ def crearContenidoCurricular(request, nombre, idmateria):
 
 
 def mostrarContenidoCurricular(request, nombre, idcontenidocurricular, idmateria, descriptor):
+    '''
+    Pagina para mostrar el Contenido Curricular
 
+    :param request: solicitud de mostrar pagina
+    :param nombre: nombre del usuario recibido por el contexto
+    :param idmateria: id de la materia seleccionada por el usuario
+    :return: pagina mostrando detalles de la materia
+    '''
+    # Valido la sesion del usuario
     validated, rol = validar_usuario(nombre)
 
     df = buscar_db_id('contenidocurricular', 'idmateria', idmateria)
 
-    # parsing the DataFrame in json format.
+    # Parseo el DataFrame al formato JSON
     json_records = df.reset_index().to_json(orient='records')
     contenido_json = json.loads(json_records)
 
     df = buscar_db_id('unidades', 'idcontenidocurricular', idcontenidocurricular)
 
-    # parsing the DataFrame in json format.
+    # Parseo el DataFrame al formato JSON
     json_records = df.reset_index().to_json(orient='records')
     unidades_json = json.loads(json_records)
 
-
+    # Busco en la tabla de actaformacion segun el idcontenidocurricular
     df = buscar_db_id('actaformacion', 'idcontenidocurricular', idcontenidocurricular)
 
-    # parsing the DataFrame in json format.
+    # Parseo el DataFrame al formato JSON
     json_records = df.reset_index().to_json(orient='records')
     actas_json = json.loads(json_records)
 
@@ -401,9 +492,16 @@ def mostrarContenidoCurricular(request, nombre, idcontenidocurricular, idmateria
                                                                   })
 
 def mostrarUnidad(request, nombre, idunidad):
+    '''
+    Pagina para mostrar la Unidad
 
-    status = checkStatus()
+    :param request: solicitud de mostrar pagina
+    :param nombre: nombre del usuario recibido por el contexto
+    :param idmateria: id de la materia seleccionada por el usuario
+    :return: pagina mostrando detalles de la materia
+    '''
 
+    # Valido la sesion del usuario
     validated, rol = validar_usuario(nombre)
 
     response_unidades = {'Items': [{'idUnidad': '1', 'Descriptor': 'Repaso', 'idContenidoCurricular': 1}], 'Count': 1, 'ScannedCount': 1}
@@ -415,13 +513,18 @@ def mostrarUnidad(request, nombre, idunidad):
 
 
 def mostrarActFormacionPractica(request, nombre, idactformacionpractica):
+    '''
+    Pagina para mostrar Acta de Formacion Practica
 
-    status = checkStatus()
+    :param request: solicitud de mostrar pagina
+    :param nombre: nombre del usuario recibido por el contexto
+    :param idactformacionpractica: id del acta de formacion practica seleccionada por el usuario
+    :return: pagina mostrando detalles de la materia
+    '''
 
+    # Valido la sesion del usuario
     validated, rol = validar_usuario(nombre)
 
-    response_cont_curricular = {'Items': [{'idContenidoCurricular': '1', 'Descriptor': 'Objetivo', 'idMateria': 1}], 'Count': 1, 'ScannedCount': 1}
-    response_unidades = {'Items': [{'idUnidad': '1', 'Descriptor': 'Repaso', 'idContenidoCurricular': 1}], 'Count': 1, 'ScannedCount': 1}
     response_act_formacion = {'Items': [{'idActFormacionPractica': '1', 'Descriptor': 'TP 1', 'idContenidoCurricular': 1}], 'Count': 1, 'ScannedCount': 1}
 
     return render(request, 'pg/mostraractformacionpractica.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
@@ -431,9 +534,19 @@ def mostrarActFormacionPractica(request, nombre, idactformacionpractica):
 
 
 def crearCompetencia(request, nombre, idplan):
+    '''
+    Pagina para crear una nueva Competencia
 
+    :param request: solicitud de mostrar pagina
+    :param nombre: nombre del usuario recibido por el contexto
+    :param idplan: idplan del Plan de Estudios seleccionado
+    :return: pagina mostrando detalles de la materia
+    '''
+
+    # Valido el estado de los servicios
     status = checkStatus()
 
+    # Valido la sesion del usuario
     validated, rol = validar_usuario(nombre)
 
     form = competenciaForm()
@@ -462,14 +575,24 @@ def crearCompetencia(request, nombre, idplan):
 
 
 def mostrarCompetencias(request, nombre):
+    '''
+    Pagina para mostrar todas las Competencias
 
+    :param request: solicitud de mostrar pagina
+    :param nombre: nombre del usuario recibido por el contexto
+    :return: pagina mostrando detalles de la materia
+    '''
+
+    # Valido el estado de los servicios
     status = checkStatus()
 
+    # Valido la sesion del usuario
     validated, rol = validar_usuario(nombre)
 
+    # Busco todas las Competencias
     df = buscar_db('competencia')
 
-    # parsing the DataFrame in json format.
+    # Parseo el DataFrame al formato JSON
     json_records = df.reset_index().to_json(orient='records')
     competencias_json = json.loads(json_records)
 
@@ -478,20 +601,30 @@ def mostrarCompetencias(request, nombre):
 
 
 def mostrarCompetenciaDetalle(request, nombre, idcompetencia):
+    '''
+    Pagina para mostrar el detalle de la Competencia seleccionada
 
+    :param request: solicitud de mostrar pagina
+    :param nombre: nombre del usuario recibido por el contexto
+    :param idcompetencia: idcompetencia de la Competencia elegida
+    :return: pagina mostrando detalles de la materia
+    '''
+
+    # Valido el estado de los servicios
     status = checkStatus()
 
+    # Valido la sesion del usuario
     validated, rol = validar_usuario(nombre)
 
     df = buscar_db_id('competencia', 'idcompetencia', idcompetencia)
 
-    # parsing the DataFrame in json format.
+    # Parseo el DataFrame al formato JSON
     json_records = df.reset_index().to_json(orient='records')
     competencias_json = json.loads(json_records)
 
     df = buscar_db_id('capacidades', 'idcompetencia', idcompetencia)
 
-    # parsing the DataFrame in json format.
+    # Parseo el DataFrame al formato JSON
     json_records = df.reset_index().to_json(orient='records')
     capacidades_json = json.loads(json_records)
 
@@ -502,9 +635,19 @@ def mostrarCompetenciaDetalle(request, nombre, idcompetencia):
 
 
 def crearCapacidad(request, nombre, idcompetencia):
+    '''
+    Pagina para crear una nueva Capacidad
 
+    :param request: solicitud de mostrar pagina
+    :param nombre: nombre del usuario recibido por el contexto
+    :param idcompetencia: idcompetencia de la Competencia elegida
+    :return: pagina mostrando detalles de la materia
+    '''
+
+    # Valido el estado de los servicios
     status = checkStatus()
 
+    # Valido la sesion del usuario
     validated, rol = validar_usuario(nombre)
 
     form = capacidadForm()
@@ -533,9 +676,19 @@ def crearCapacidad(request, nombre, idcompetencia):
 
 
 def crearUnidad(request, nombre, idcontenidocurricular):
+    '''
+    Pagina para crear una nueva Unidad
 
+    :param request: solicitud de mostrar pagina
+    :param nombre: nombre del usuario recibido por el contexto
+    :param idcontenidocurricular: idcontenidocurricular de la Unidad elegida
+    :return: pagina mostrando detalles de la materia
+    '''
+
+    # Valido el estado de los servicios
     status = checkStatus()
 
+    # Valido la sesion del usuario
     validated, rol = validar_usuario(nombre)
 
     form = unidadForm()
@@ -564,9 +717,19 @@ def crearUnidad(request, nombre, idcontenidocurricular):
 
 
 def crearActa(request, nombre, idcontenidocurricular):
+    '''
+    Pagina para crear una nueva Acta
 
+    :param request: solicitud de mostrar pagina
+    :param nombre: nombre del usuario recibido por el contexto
+    :param idcontenidocurricular: idcontenidocurricular de la Unidad elegida
+    :return: pagina mostrando detalles de la materia
+    '''
+
+    # Valido el estado de los servicios
     status = checkStatus()
 
+    # Valido la sesion del usuario
     validated, rol = validar_usuario(nombre)
 
     form = actaForm()
