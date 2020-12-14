@@ -218,7 +218,13 @@ def get_data(tabla, nombreMateria):
 
 def connect():
 
-    dao = Dao(host='34.233.129.172', port='18081', user='postgres', password='continente7', db='nano')
+    if os.name == 'nt':
+
+        dao = Dao(host='34.233.129.172', port='18081', user='postgres', password='continente7', db='nano')
+
+    else:
+
+        dao = Dao(host='localhost', port='18081', user='postgres', password='continente7', db='nano')
 
     return dao
 
