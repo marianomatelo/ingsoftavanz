@@ -14,7 +14,7 @@
   </tr>
   <tr>
     {% for i in planes %}
-      <td><a href="{% url 'mostrarMateriaDetalle' nombre=nombre idmateria=i.idMateria %}">{{i.Descriptor}}</a></td>
+      <td><a href="{% url 'mostrarMateriaDetalle' sesion=sesion idmateria=i.idMateria %}">{{i.Descriptor}}</a></td>
   </tr>
     {% endfor %}
 </table>
