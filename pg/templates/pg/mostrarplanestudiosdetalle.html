@@ -48,8 +48,8 @@
   </tr>
   <tr>
     {% for i in materias %}
-      <td><a href="{% url 'mostrarMateriaDetalle' nombre=nombre idmateria=i.idmateria %}">{{i.idmateria}}</a></td>
-      <td><a href="{% url 'mostrarMateriaDetalle' nombre=nombre idmateria=i.idmateria %}">{{i.nombre}}</a></td>
+      <td><a href="{% url 'mostrarMateriaDetalle' sesion=sesion idmateria=i.idmateria %}">{{i.idmateria}}</a></td>
+      <td><a href="{% url 'mostrarMateriaDetalle' sesion=sesion idmateria=i.idmateria %}">{{i.nombre}}</a></td>
     <td>{{i.descripcion}}</td>
   </tr>
     {% endfor %}
@@ -60,7 +60,7 @@
 
   <div class="row d-flex justify-content-around mt-4">
 {% for i in plan %}
-     <a href="{% url 'agregarMateria' nombre=nombre idplan=i.idplan %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
+     <a href="{% url 'agregarMateria' sesion=sesion idplan=i.idplan %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
     style='width:190px; height:50px'>Agregar Materia</a>
 {% endfor %}
 </div>
@@ -81,8 +81,8 @@
   </tr>
   <tr>
     {% for i in competencias %}
-    <td><a href="{% url 'mostrarCompetenciaDetalle' nombre=nombre idcompetencia=i.idcompetencia %}">{{i.idcompetencia}}</a></td>
-    <td><a href="{% url 'mostrarCompetenciaDetalle' nombre=nombre idcompetencia=i.idcompetencia %}">{{i.nombre}}</a></td>
+    <td><a href="{% url 'mostrarCompetenciaDetalle' sesion=sesion idcompetencia=i.idcompetencia %}">{{i.idcompetencia}}</a></td>
+    <td><a href="{% url 'mostrarCompetenciaDetalle' sesion=sesion idcompetencia=i.idcompetencia %}">{{i.nombre}}</a></td>
     <td>{{i.descripcion}}</td>
   </tr>
     {% endfor %}
@@ -95,7 +95,7 @@
 
 <div class="row d-flex justify-content-around mt-4">
 {% for i in plan %}
-     <a href="{% url 'crearCompetencia' nombre=nombre idplan=i.idplan %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
+     <a href="{% url 'crearCompetencia' sesion=sesion idplan=i.idplan %}" class="btn btn-primary btn-lg active"  role="button" aria-pressed="true"
     style='width:190px; height:50px'>Crear Competencia</a>
 {% endfor %}
 </div>

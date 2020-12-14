@@ -18,8 +18,8 @@
   </tr>
   <tr>
     {% for i in competencias %}
-      <td><a href="{% url 'mostrarCompetenciaDetalle' nombre=nombre idcompetencia=i.idcompetencia %}">{{i.idcompetencia}}</a></td>
-    <td><a href="{% url 'mostrarCompetenciaDetalle' nombre=nombre idcompetencia=i.idcompetencia %}">{{i.nombre}}</a></td>
+      <td><a href="{% url 'mostrarCompetenciaDetalle' sesion=sesion idcompetencia=i.idcompetencia %}">{{i.idcompetencia}}</a></td>
+    <td><a href="{% url 'mostrarCompetenciaDetalle' sesion=sesion idcompetencia=i.idcompetencia %}">{{i.nombre}}</a></td>
     <td>{{i.descripcion}}</td>
   </tr>
     {% endfor %}

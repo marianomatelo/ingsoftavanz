@@ -39,7 +39,7 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" class="styleheader" href="{% url 'menu' nombre=nombre rol=rol %}">MENU</a>
+          <a class="navbar-brand" class="styleheader" href="{% url 'menu' sesion=sesion rol=rol %}">MENU</a>
         </div>
 
         <div class="collapse navbar-collapse" id="mainNavBar">
@@ -63,7 +63,7 @@
     {% block start %}
 
       <div style="margin-left:50%; font-weight: bold;">
-          Bienvenido {{nombre}}
+          Bienvenido {{sesion}}
       </div>
 
       <div style="margin-left:50%; font-weight: bold;">
@@ -82,19 +82,19 @@
 
         <br>
 
-         <a href="{% url 'crearPlanEstudios' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+         <a href="{% url 'crearPlanEstudios' sesion=sesion %}" class="button"  role="button" aria-pressed="true"
             style='width:180px; height:50px'>Crear Plan de Estudios</a>
 
-         <a href="{% url 'mostrarPlanEstudios' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+         <a href="{% url 'mostrarPlanEstudios' sesion=sesion %}" class="button"  role="button" aria-pressed="true"
             style='width:180px; height:50px'>Mostrar Planes de Estudios</a>
 
-         <a href="{% url 'crearMateria' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+         <a href="{% url 'crearMateria' sesion=sesion %}" class="button"  role="button" aria-pressed="true"
             style='width:180px; height:50px'>Crear Materia</a>
 
-         <a href="{% url 'mostrarMaterias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+         <a href="{% url 'mostrarMaterias' sesion=sesion %}" class="button"  role="button" aria-pressed="true"
             style='width:180px; height:50px'>Mostrar Materias</a>
 
-         <a href="{% url 'mostrarCompetencias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+         <a href="{% url 'mostrarCompetencias' sesion=sesion %}" class="button"  role="button" aria-pressed="true"
             style='width:180px; height:50px'>Mostrar Competencias</a>
 
       {% endif %}
@@ -105,19 +105,19 @@
 
         <br>
 
-         <a href="{% url 'crearPlanEstudios' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+         <a href="{% url 'crearPlanEstudios' sesion=sesion %}" class="button"  role="button" aria-pressed="true"
             style='width:180px; height:50px'>Crear Plan de Estudios</a>
 
-         <a href="{% url 'mostrarPlanEstudios' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+         <a href="{% url 'mostrarPlanEstudios' sesion=sesion %}" class="button"  role="button" aria-pressed="true"
             style='width:180px; height:50px'>Mostrar Planes de Estudios</a>
 
-         <a href="{% url 'crearMateria' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+         <a href="{% url 'crearMateria' sesion=sesion %}" class="button"  role="button" aria-pressed="true"
             style='width:180px; height:50px'>Crear Materia</a>
 
-         <a href="{% url 'mostrarMaterias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+         <a href="{% url 'mostrarMaterias' sesion=sesion %}" class="button"  role="button" aria-pressed="true"
             style='width:180px; height:50px'>Mostrar Materias</a>
 
-         <a href="{% url 'mostrarCompetencias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+         <a href="{% url 'mostrarCompetencias' sesion=sesion %}" class="button"  role="button" aria-pressed="true"
             style='width:180px; height:50px'>Mostrar Competencias</a>
 
       {% endif %}
@@ -127,10 +127,10 @@
 
         <br>
 
-         <a href="{% url 'mostrarPlanEstudios' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+         <a href="{% url 'mostrarPlanEstudios' sesion=sesion %}" class="button"  role="button" aria-pressed="true"
             style='width:180px; height:50px'>Mostrar Planes de Estudios</a>
 
-         <a href="{% url 'mostrarMaterias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+         <a href="{% url 'mostrarMaterias' sesion=sesion %}" class="button"  role="button" aria-pressed="true"
             style='width:180px; height:50px'>Mostrar Materias</a>
 
       {% endif %}
@@ -141,13 +141,13 @@
 
         <br>
 
-         <a href="{% url 'mostrarPlanEstudios' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+         <a href="{% url 'mostrarPlanEstudios' sesion=sesion %}" class="button"  role="button" aria-pressed="true"
             style='width:180px; height:50px'>Mostrar Planes de Estudios</a>
 
-         <a href="{% url 'mostrarMaterias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+         <a href="{% url 'mostrarMaterias' sesion=sesion %}" class="button"  role="button" aria-pressed="true"
             style='width:180px; height:50px'>Mostrar Materias</a>
 
-         <a href="{% url 'mostrarCompetencias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+         <a href="{% url 'mostrarCompetencias' sesion=sesion %}" class="button"  role="button" aria-pressed="true"
             style='width:180px; height:50px'>Mostrar Competencias</a>
 
       {% endif %}
@@ -157,13 +157,13 @@
 
         <br>
 
-         <a href="{% url 'mostrarPlanEstudios' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+         <a href="{% url 'mostrarPlanEstudios' sesion=sesion %}" class="button"  role="button" aria-pressed="true"
             style='width:180px; height:50px'>Mostrar Planes de Estudios</a>
 
-         <a href="{% url 'mostrarMaterias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+         <a href="{% url 'mostrarMaterias' sesion=sesion %}" class="button"  role="button" aria-pressed="true"
             style='width:180px; height:50px'>Mostrar Materias</a>
 
-         <a href="{% url 'mostrarCompetencias' nombre=nombre %}" class="button"  role="button" aria-pressed="true"
+         <a href="{% url 'mostrarCompetencias' sesion=sesion %}" class="button"  role="button" aria-pressed="true"
             style='width:180px; height:50px'>Mostrar Competencias</a>
 
       {% endif %}

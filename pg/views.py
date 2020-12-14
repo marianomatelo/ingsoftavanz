@@ -51,7 +51,7 @@ def Login(request):
             # Passwords coinciden
             print('Usuario validado')
 
-            return redirect('mfa', nombre=usuario)
+            return redirect('mfa', sesion=usuario)
 
         else:
             # Password no coincide
@@ -65,25 +65,25 @@ def Login(request):
     return render(request, 'pg/login.html', {'form': form, 'title': 'Log In'})
 
 
-def mfa(request, nombre):
+def mfa(request, sesion):
     '''
     Pagina de validacion del MFA, genera un codigo MFA, lo envia por mail y lo valida.
 
     :param request: solicitud de mostrar pagina
-    :param nombre: nombre del usuario recibido por el contexto
+    :param sesion: sesion del usuario recibido por el contexto
     :return: pagina renderizada en navegador
     '''
 
     if request.method == 'POST':
 
-        validated, rol = validar_mfa(nombre, request.POST['clave_multifactor'])
+        validated, rol = validar_mfa(sesion, request.POST['clave_multifactor'])
 
         if validated:
             print('MFA Validado')
 
-            log_acceso(nombre, rol)
+            log_acceso(sesion, rol)
 
-            return redirect('menu', nombre=nombre, rol=rol)
+            return redirect('menu', sesion=sesion, rol=rol)
 
     # Formulario de MFA para que el usuario complete
     form = keyForm()
@@ -92,12 +92,12 @@ def mfa(request, nombre):
     generated_mfa = randrange(0, 999999, 6)
 
     # Almaceno en la base el nuevo codigo de MFA
-    to_email = guardar_mfa(nombre, generated_mfa)
+    to_email = guardar_mfa(sesion, generated_mfa)
 
     # Preparo para enviarle el nuevo codigo MFA por email
     try:
         htmly = get_template('pg/Email.html')
-        d = {'username': nombre, 'clave': generated_mfa}
+        d = {'username': sesion, 'clave': generated_mfa}
         subject, from_email, to = 'Clave MFA', 'trqarg@gmail.com', to_email
         html_content = htmly.render(d)
         msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
@@ -112,11 +112,11 @@ def mfa(request, nombre):
     return render(request, 'pg/mfa.html', {'form': form, 'title': 'MFA'})
 
 
-def menu(request, nombre, rol):
+def menu(request, sesion, rol):
     '''
     Pagina de menu principal donde el usuario tiene los principales accesos
     :param request: solicitud de mostrar pagina
-    :param nombre: nombre del usuario recibido por el contexto
+    :param sesion: sesion del usuario recibido por el contexto
     :return: pagina renderizada en navegador
     '''
 
@@ -124,24 +124,24 @@ def menu(request, nombre, rol):
     status = checkStatus()
 
     # Valido la sesion del usuario
-    validated, rol = validar_usuario(nombre)
+    validated, rol = validar_usuario(sesion)
 
-    return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+    return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                                             'status': status})
 
 
-def crearPlanEstudios(request, nombre):
+def crearPlanEstudios(request, sesion):
     '''
     Pagina de menu principal donde el usuario tiene los principales accesos
     :param request: solicitud de mostrar pagina
-    :param nombre: nombre del usuario recibido por el contexto
+    :param sesion: sesion del usuario recibido por el contexto
     :return: pagina renderizada en navegador
     '''
     # Valido el estado de los servicios
     status = checkStatus()
 
     # Valido la sesion del usuario
-    validated, rol = validar_usuario(nombre)
+    validated, rol = validar_usuario(sesion)
 
     form = planEstudioForm()
 
@@ -164,24 +164,24 @@ def crearPlanEstudios(request, nombre):
                     guardar_db('planestudios', 'nombreplan, cargahorariatotal, resolucionconeau, resolucionminedu, resolucionrectoral'
                                                ',fecha_creacion, usuario_creacion,fecha_modificacion, usuario_modificacion',
                                            [nombrePlan, cargaHorariaTotal, resolucionConeau, resolucionMinEdu, resolucionRectoral,
-                                             str(pd.to_datetime('today')), nombre, str(pd.to_datetime('today')), nombre])
+                                             str(pd.to_datetime('today')), sesion, str(pd.to_datetime('today')), sesion])
 
-                    log_creacion(nombre, rol, 'Plan de estudios')
+                    log_creacion(sesion, rol, 'Plan de estudios')
 
-                    return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol, 'status': status})
+                    return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol, 'status': status})
 
             except Exception:
                 pass
 
-    return render(request, 'pg/crearplanestudios.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+    return render(request, 'pg/crearplanestudios.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                                             'status': status, 'form': form})
 
 
-def mostrarPlanEstudios(request, nombre):
+def mostrarPlanEstudios(request, sesion):
     '''
     Pagina que lista los planes de estudio y sus detalles
     :param request: solicitud de mostrar pagina
-    :param nombre: nombre del usuario recibido por el contexto
+    :param sesion: sesion del usuario recibido por el contexto
     :return: pagina renderizada en navegador
     '''
 
@@ -189,7 +189,7 @@ def mostrarPlanEstudios(request, nombre):
     status = checkStatus()
 
     # Valido la sesion del usuario
-    validated, rol = validar_usuario(nombre)
+    validated, rol = validar_usuario(sesion)
 
     # Busco en la DB todos los Planes de Estudio
     df = buscar_db('planestudios')
@@ -198,16 +198,16 @@ def mostrarPlanEstudios(request, nombre):
     json_records = df.reset_index().to_json(orient='records')
     planes_json = json.loads(json_records)
 
-    return render(request, 'pg/mostrarplanestudios.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+    return render(request, 'pg/mostrarplanestudios.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                                             'status': status, 'planes': planes_json})
 
 
-def mostrarPlanEstudiosDetalle(request, nombre, idplan):
+def mostrarPlanEstudiosDetalle(request, sesion, idplan):
     '''
     Pagina de plan de estudios donde se visualizan sus detalles
 
     :param request: solicitud de mostrar pagina
-    :param nombre: nombre del usuario recibido por el contexto
+    :param sesion: sesion del usuario recibido por el contexto
     :param idplan: id de plan seleccionado por el usuario
     :return: pagina renderizada en navegador
     '''
@@ -216,7 +216,7 @@ def mostrarPlanEstudiosDetalle(request, nombre, idplan):
     status = checkStatus()
 
     # Valido la sesion del usuario
-    validated, rol = validar_usuario(nombre)
+    validated, rol = validar_usuario(sesion)
 
     # Busco en la tabla de Planes de Estudio el Plan con el idplan
     df_planes = buscar_db_id('planestudios', 'idplan', idplan)
@@ -239,17 +239,17 @@ def mostrarPlanEstudiosDetalle(request, nombre, idplan):
     json_records = df.reset_index().to_json(orient='records')
     competencias_json = json.loads(json_records)
 
-    return render(request, 'pg/mostrarplanestudiosdetalle.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+    return render(request, 'pg/mostrarplanestudiosdetalle.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                                             'status': status, 'plan': json_plan, 'materias': materias_json,
                                             'competencias': competencias_json})
 
 
-def crearMateria(request, nombre):
+def crearMateria(request, sesion):
     '''
     Pagina para crear una nueva Materia
 
     :param request: solicitud de mostrar pagina
-    :param nombre: nombre del usuario recibido por el contexto
+    :param sesion: sesion del usuario recibido por el contexto
     :return: materia creada
     '''
 
@@ -257,7 +257,7 @@ def crearMateria(request, nombre):
     status = checkStatus()
 
     # Valido la sesion del usuario
-    validated, rol = validar_usuario(nombre)
+    validated, rol = validar_usuario(sesion)
 
     form = materiaForm()
 
@@ -276,25 +276,25 @@ def crearMateria(request, nombre):
                                        ',fecha_creacion, usuario_creacion'
                                        ',fecha_modificacion, usuario_modificacion',
                                        [nombreMateria, descripcion, str(pd.to_datetime('today')),
-                                        nombre, str(pd.to_datetime('today')), nombre])
+                                        sesion, str(pd.to_datetime('today')), sesion])
 
-                log_creacion(nombre, rol, 'Materias')
+                log_creacion(sesion, rol, 'Materias')
 
-                return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                                                         'status': status})
         except Exception:
             pass
 
-    return render(request, 'pg/crearmateria.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+    return render(request, 'pg/crearmateria.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                                             'status': status, 'form': form})
 
 
-def agregarMateria(request, nombre, idplan):
+def agregarMateria(request, sesion, idplan):
     '''
     Pagina para agregar una materia a un Plan de Estudios
 
     :param request: solicitud de mostrar pagina
-    :param nombre: nombre del usuario recibido por el contexto
+    :param sesion: sesion del usuario recibido por el contexto
     :param idplan: id de plan seleccionado por el usuario
     :return: materia creada
     '''
@@ -302,7 +302,7 @@ def agregarMateria(request, nombre, idplan):
     status = checkStatus()
 
     # Valido la sesion del usuario
-    validated, rol = validar_usuario(nombre)
+    validated, rol = validar_usuario(sesion)
 
     if request.method == 'POST':
 
@@ -326,25 +326,25 @@ def agregarMateria(request, nombre, idplan):
                                            ',fecha_creacion, usuario_creacion'
                                            ',fecha_modificacion, usuario_modificacion',
                                            [idplan, idmateria,nombreMateria, descripcion, str(pd.to_datetime('today')),
-                                            nombre, str(pd.to_datetime('today')), nombre])
+                                            sesion, str(pd.to_datetime('today')), sesion])
 
-                    log_creacion(nombre, rol, 'Materias')
+                    log_creacion(sesion, rol, 'Materias')
 
-                return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                                                         'status': status})
         except Exception:
             pass
 
-    return render(request, 'pg/agregarmateria.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+    return render(request, 'pg/agregarmateria.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                                             'status': status, 'form': agregarMateriaForm()})
 
 
-def mostrarMaterias(request, nombre):
+def mostrarMaterias(request, sesion):
     '''
     Pagina para mostrar todas las Materias
 
     :param request: solicitud de mostrar pagina
-    :param nombre: nombre del usuario recibido por el contexto
+    :param sesion: sesion del usuario recibido por el contexto
     :return: pagina listando todas las materias
     '''
 
@@ -352,7 +352,7 @@ def mostrarMaterias(request, nombre):
     status = checkStatus()
 
     # Valido la sesion del usuario
-    validated, rol = validar_usuario(nombre)
+    validated, rol = validar_usuario(sesion)
 
     df = buscar_db('materias')
 
@@ -360,16 +360,16 @@ def mostrarMaterias(request, nombre):
     json_records = df.reset_index().to_json(orient='records')
     materias_json = json.loads(json_records)
 
-    return render(request, 'pg/mostrarmaterias.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+    return render(request, 'pg/mostrarmaterias.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                                             'status': status, 'materias': materias_json})
 
 
-def mostrarMateriaDetalle(request, nombre, idmateria):
+def mostrarMateriaDetalle(request, sesion, idmateria):
     '''
     Pagina para mostrar el detalle de la materia seleccionada por el usuario
 
     :param request: solicitud de mostrar pagina
-    :param nombre: nombre del usuario recibido por el contexto
+    :param sesion: sesion del usuario recibido por el contexto
     :param idmateria: id de la materia seleccionada por el usuario
     :return: pagina mostrando detalles de la materia
     '''
@@ -377,7 +377,7 @@ def mostrarMateriaDetalle(request, nombre, idmateria):
     status = checkStatus()
 
     # Valido la sesion del usuario
-    validated, rol = validar_usuario(nombre)
+    validated, rol = validar_usuario(sesion)
 
     # Busco detalles de la Materia segun idmateria
     df = buscar_db_id('materias', 'idmateria', idmateria)
@@ -393,17 +393,17 @@ def mostrarMateriaDetalle(request, nombre, idmateria):
     json_records = df.reset_index().to_json(orient='records')
     contenidos_json = json.loads(json_records)
 
-    return render(request, 'pg/mostrarmateriadetalle.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+    return render(request, 'pg/mostrarmateriadetalle.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                                             'status': status, 'materias': materias_json, 'idmateria': idmateria, 'contenidos': contenidos_json})
 
 
 
-def crearContenidoCurricular(request, nombre, idmateria):
+def crearContenidoCurricular(request, sesion, idmateria):
     '''
     Pagina para crear un nuevo Contenido Curricular
 
     :param request: solicitud de mostrar pagina
-    :param nombre: nombre del usuario recibido por el contexto
+    :param sesion: sesion del usuario recibido por el contexto
     :param idmateria: id de la materia seleccionada por el usuario
     :return: pagina mostrando detalles de la materia
     '''
@@ -412,13 +412,13 @@ def crearContenidoCurricular(request, nombre, idmateria):
     status = checkStatus()
 
     # Valido la sesion del usuario
-    validated, rol = validar_usuario(nombre)
+    validated, rol = validar_usuario(sesion)
 
     # Busco detalles de la Materia segun idmateria
     df = buscar_db_id('materias', 'idmateria', idmateria)
 
     # Almaceno el nombre de la materia seleccionada
-    nombre_materia = df['nombre'].iloc[0]
+    nombre_materia = df['sesion'].iloc[0]
 
     # Creo formulacion de creacion de Contenido Curricular
     form = curricularForm()
@@ -440,31 +440,31 @@ def crearContenidoCurricular(request, nombre, idmateria):
                 guardar_db('contenidocurricular', 'descripcion, idmateria, nombre, '
                                                   'fecha_creacion, usuario_creacion, fecha_modificacion, usuario_modificacion',
                            [nombreContenido, idmateria, descripcion, descripcion, str(pd.to_datetime('today')),
-                                        nombre, str(pd.to_datetime('today')), nombre])
+                                        sesion, str(pd.to_datetime('today')), sesion])
 
                 # Registro la creacion en el Log
-                log_creacion(nombre, rol, 'Contenido Curricular')
+                log_creacion(sesion, rol, 'Contenido Curricular')
 
-                return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                                                         'status': status})
         except Exception:
             pass
 
-    return render(request, 'pg/crearcontenidocurricular.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
-                                            'status': status, 'form': form, 'nombre_materia': nombre_materia})
+    return render(request, 'pg/crearcontenidocurricular.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
+                                            'status': status, 'form': form, 'sesion_materia': nombre_materia})
 
 
-def mostrarContenidoCurricular(request, nombre, idcontenidocurricular, idmateria, descriptor):
+def mostrarContenidoCurricular(request, sesion, idcontenidocurricular, idmateria, descriptor):
     '''
     Pagina para mostrar el Contenido Curricular
 
     :param request: solicitud de mostrar pagina
-    :param nombre: nombre del usuario recibido por el contexto
+    :param sesion: sesion del usuario recibido por el contexto
     :param idmateria: id de la materia seleccionada por el usuario
     :return: pagina mostrando detalles de la materia
     '''
     # Valido la sesion del usuario
-    validated, rol = validar_usuario(nombre)
+    validated, rol = validar_usuario(sesion)
 
     df = buscar_db_id('contenidocurricular', 'idmateria', idmateria)
 
@@ -485,60 +485,60 @@ def mostrarContenidoCurricular(request, nombre, idcontenidocurricular, idmateria
     json_records = df.reset_index().to_json(orient='records')
     actas_json = json.loads(json_records)
 
-    return render(request, 'pg/mostrarcontenidocurricular.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+    return render(request, 'pg/mostrarcontenidocurricular.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                             'response_cont_curricular': contenido_json,
                             'idcontenidocurricular': idcontenidocurricular, 'idmateria': idmateria, 'descriptor': descriptor,
                             'response_unidades': unidades_json, 'response_act_formacion': actas_json
                                                                   })
 
-def mostrarUnidad(request, nombre, idunidad):
+def mostrarUnidad(request, sesion, idunidad):
     '''
     Pagina para mostrar la Unidad
 
     :param request: solicitud de mostrar pagina
-    :param nombre: nombre del usuario recibido por el contexto
+    :param sesion: sesion del usuario recibido por el contexto
     :param idmateria: id de la materia seleccionada por el usuario
     :return: pagina mostrando detalles de la materia
     '''
 
     # Valido la sesion del usuario
-    validated, rol = validar_usuario(nombre)
+    validated, rol = validar_usuario(sesion)
 
     response_unidades = {'Items': [{'idUnidad': '1', 'Descriptor': 'Repaso', 'idContenidoCurricular': 1}], 'Count': 1, 'ScannedCount': 1}
 
-    return render(request, 'pg/mostrarunidad.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+    return render(request, 'pg/mostrarunidad.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                                                      'idunidad': idunidad,
                                                      'response_unidades': response_unidades['Items']
                                                                   })
 
 
-def mostrarActFormacionPractica(request, nombre, idactformacionpractica):
+def mostrarActFormacionPractica(request, sesion, idactformacionpractica):
     '''
     Pagina para mostrar Acta de Formacion Practica
 
     :param request: solicitud de mostrar pagina
-    :param nombre: nombre del usuario recibido por el contexto
+    :param sesion: sesion del usuario recibido por el contexto
     :param idactformacionpractica: id del acta de formacion practica seleccionada por el usuario
     :return: pagina mostrando detalles de la materia
     '''
 
     # Valido la sesion del usuario
-    validated, rol = validar_usuario(nombre)
+    validated, rol = validar_usuario(sesion)
 
     response_act_formacion = {'Items': [{'idActFormacionPractica': '1', 'Descriptor': 'TP 1', 'idContenidoCurricular': 1}], 'Count': 1, 'ScannedCount': 1}
 
-    return render(request, 'pg/mostraractformacionpractica.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+    return render(request, 'pg/mostraractformacionpractica.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                             'response_act_formacion': response_act_formacion['Items'],
                             'idactformacionpractica': idactformacionpractica,
                                                                   })
 
 
-def crearCompetencia(request, nombre, idplan):
+def crearCompetencia(request, sesion, idplan):
     '''
     Pagina para crear una nueva Competencia
 
     :param request: solicitud de mostrar pagina
-    :param nombre: nombre del usuario recibido por el contexto
+    :param sesion: sesion del usuario recibido por el contexto
     :param idplan: idplan del Plan de Estudios seleccionado
     :return: pagina mostrando detalles de la materia
     '''
@@ -547,7 +547,7 @@ def crearCompetencia(request, nombre, idplan):
     status = checkStatus()
 
     # Valido la sesion del usuario
-    validated, rol = validar_usuario(nombre)
+    validated, rol = validar_usuario(sesion)
 
     form = competenciaForm()
     if request.method == 'POST':
@@ -561,25 +561,25 @@ def crearCompetencia(request, nombre, idplan):
                 guardar_db('competencia', 'descripcion, nombre, idplan, '
                                           'fecha_creacion, usuario_creacion, fecha_modificacion, usuario_modificacion',
                            [nombreCompetencia, descripcion, idplan, str(pd.to_datetime('today')),
-                                        nombre, str(pd.to_datetime('today')), nombre])
+                                        sesion, str(pd.to_datetime('today')), sesion])
 
-                log_creacion(nombre, rol, 'Competencia')
+                log_creacion(sesion, rol, 'Competencia')
 
-                return mostrarPlanEstudiosDetalle(request, nombre, idplan)
+                return mostrarPlanEstudiosDetalle(request, sesion, idplan)
 
         except Exception:
             pass
 
-    return render(request, 'pg/crearcompetencia.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+    return render(request, 'pg/crearcompetencia.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                                             'status': status, 'form': form})
 
 
-def mostrarCompetencias(request, nombre):
+def mostrarCompetencias(request, sesion):
     '''
     Pagina para mostrar todas las Competencias
 
     :param request: solicitud de mostrar pagina
-    :param nombre: nombre del usuario recibido por el contexto
+    :param sesion: sesion del usuario recibido por el contexto
     :return: pagina mostrando detalles de la materia
     '''
 
@@ -587,7 +587,7 @@ def mostrarCompetencias(request, nombre):
     status = checkStatus()
 
     # Valido la sesion del usuario
-    validated, rol = validar_usuario(nombre)
+    validated, rol = validar_usuario(sesion)
 
     # Busco todas las Competencias
     df = buscar_db('competencia')
@@ -596,16 +596,16 @@ def mostrarCompetencias(request, nombre):
     json_records = df.reset_index().to_json(orient='records')
     competencias_json = json.loads(json_records)
 
-    return render(request, 'pg/mostrarcompetencias.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+    return render(request, 'pg/mostrarcompetencias.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                                             'status': status, 'competencias': competencias_json})
 
 
-def mostrarCompetenciaDetalle(request, nombre, idcompetencia):
+def mostrarCompetenciaDetalle(request, sesion, idcompetencia):
     '''
     Pagina para mostrar el detalle de la Competencia seleccionada
 
     :param request: solicitud de mostrar pagina
-    :param nombre: nombre del usuario recibido por el contexto
+    :param sesion: sesion del usuario recibido por el contexto
     :param idcompetencia: idcompetencia de la Competencia elegida
     :return: pagina mostrando detalles de la materia
     '''
@@ -614,7 +614,7 @@ def mostrarCompetenciaDetalle(request, nombre, idcompetencia):
     status = checkStatus()
 
     # Valido la sesion del usuario
-    validated, rol = validar_usuario(nombre)
+    validated, rol = validar_usuario(sesion)
 
     df = buscar_db_id('competencia', 'idcompetencia', idcompetencia)
 
@@ -628,18 +628,18 @@ def mostrarCompetenciaDetalle(request, nombre, idcompetencia):
     json_records = df.reset_index().to_json(orient='records')
     capacidades_json = json.loads(json_records)
 
-    return render(request, 'pg/mostrarcompetenciadetalle.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+    return render(request, 'pg/mostrarcompetenciadetalle.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                                             'status': status,
                                             'competencias': competencias_json,
                                             'capacidades': capacidades_json})
 
 
-def crearCapacidad(request, nombre, idcompetencia):
+def crearCapacidad(request, sesion, idcompetencia):
     '''
     Pagina para crear una nueva Capacidad
 
     :param request: solicitud de mostrar pagina
-    :param nombre: nombre del usuario recibido por el contexto
+    :param sesion: sesion del usuario recibido por el contexto
     :param idcompetencia: idcompetencia de la Competencia elegida
     :return: pagina mostrando detalles de la materia
     '''
@@ -648,7 +648,7 @@ def crearCapacidad(request, nombre, idcompetencia):
     status = checkStatus()
 
     # Valido la sesion del usuario
-    validated, rol = validar_usuario(nombre)
+    validated, rol = validar_usuario(sesion)
 
     form = capacidadForm()
     if request.method == 'POST':
@@ -662,25 +662,25 @@ def crearCapacidad(request, nombre, idcompetencia):
                 guardar_db('capacidades', 'nombre, descripcion, idcompetencia, '
                                           'fecha_creacion, usuario_creacion, fecha_modificacion, usuario_modificacion',
                            [nombreCapacidad, descripcion, idcompetencia, str(pd.to_datetime('today')),
-                            nombre, str(pd.to_datetime('today')), nombre])
+                            sesion, str(pd.to_datetime('today')), sesion])
 
-                log_creacion(nombre, rol, 'Capacidad')
+                log_creacion(sesion, rol, 'Capacidad')
 
-                return mostrarCompetenciaDetalle(request, nombre, idcompetencia)
+                return mostrarCompetenciaDetalle(request, sesion, idcompetencia)
 
         except Exception:
             pass
 
-    return render(request, 'pg/crearcapacidad.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+    return render(request, 'pg/crearcapacidad.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                                             'status': status, 'form': form})
 
 
-def crearUnidad(request, nombre, idcontenidocurricular):
+def crearUnidad(request, sesion, idcontenidocurricular):
     '''
     Pagina para crear una nueva Unidad
 
     :param request: solicitud de mostrar pagina
-    :param nombre: nombre del usuario recibido por el contexto
+    :param sesion: sesion del usuario recibido por el contexto
     :param idcontenidocurricular: idcontenidocurricular de la Unidad elegida
     :return: pagina mostrando detalles de la materia
     '''
@@ -689,7 +689,7 @@ def crearUnidad(request, nombre, idcontenidocurricular):
     status = checkStatus()
 
     # Valido la sesion del usuario
-    validated, rol = validar_usuario(nombre)
+    validated, rol = validar_usuario(sesion)
 
     form = unidadForm()
     if request.method == 'POST':
@@ -703,25 +703,25 @@ def crearUnidad(request, nombre, idcontenidocurricular):
                 guardar_db('unidades', 'nombre, descriptor, idcontenidocurricular, '
                                        'fecha_creacion, usuario_creacion, fecha_modificacion, usuario_modificacion',
                            [nombreunidad, descripcion, idcontenidocurricular,
-                            str(pd.to_datetime('today')), nombre, str(pd.to_datetime('today')), nombre])
+                            str(pd.to_datetime('today')), sesion, str(pd.to_datetime('today')), sesion])
 
-                log_creacion(nombre, rol, 'Unidad')
+                log_creacion(sesion, rol, 'Unidad')
 
-                return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                                                         'status': status})
         except Exception:
             pass
 
-    return render(request, 'pg/crearunidad.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+    return render(request, 'pg/crearunidad.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                                             'status': status, 'form': form})
 
 
-def crearActa(request, nombre, idcontenidocurricular):
+def crearActa(request, sesion, idcontenidocurricular):
     '''
     Pagina para crear una nueva Acta
 
     :param request: solicitud de mostrar pagina
-    :param nombre: nombre del usuario recibido por el contexto
+    :param sesion: sesion del usuario recibido por el contexto
     :param idcontenidocurricular: idcontenidocurricular de la Unidad elegida
     :return: pagina mostrando detalles de la materia
     '''
@@ -730,7 +730,7 @@ def crearActa(request, nombre, idcontenidocurricular):
     status = checkStatus()
 
     # Valido la sesion del usuario
-    validated, rol = validar_usuario(nombre)
+    validated, rol = validar_usuario(sesion)
 
     form = actaForm()
     if request.method == 'POST':
@@ -744,14 +744,14 @@ def crearActa(request, nombre, idcontenidocurricular):
                 guardar_db('actaformacion', 'nombre, descriptor, idcontenidocurricular,'
                                             ' fecha_creacion, usuario_creacion, fecha_modificacion, usuario_modificacion',
                                            [nombreacta, descripcion, idcontenidocurricular,
-                                            str(pd.to_datetime('today')),nombre, str(pd.to_datetime('today')), nombre])
+                                            str(pd.to_datetime('today')), sesion, str(pd.to_datetime('today')), sesion])
 
-                log_creacion(nombre, rol, 'Acta')
+                log_creacion(sesion, rol, 'Acta')
 
-                return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+                return render(request, 'pg/menu.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                                                         'status': status})
         except Exception:
             pass
 
-    return render(request, 'pg/crearacta.html', {'title': 'Bienvenido', 'nombre': nombre, 'rol': rol,
+    return render(request, 'pg/crearacta.html', {'title': 'Bienvenido', 'sesion': sesion, 'rol': rol,
                                             'status': status, 'form': form})

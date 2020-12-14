@@ -18,8 +18,8 @@
   </tr>
   <tr>
     {% for i in materias %}
-      <td><a href="{% url 'mostrarMateriaDetalle' nombre=nombre idmateria=i.idmateria %}">{{i.idmateria}}</a></td>
-      <td><a href="{% url 'mostrarMateriaDetalle' nombre=nombre idmateria=i.idmateria %}">{{i.nombre}}</a></td>
+      <td><a href="{% url 'mostrarMateriaDetalle' sesion=sesion idmateria=i.idmateria %}">{{i.idmateria}}</a></td>
+      <td><a href="{% url 'mostrarMateriaDetalle' sesion=sesion idmateria=i.idmateria %}">{{i.nombre}}</a></td>
       <td>{{i.descripcion}}</td>
   </tr>
     {% endfor %}
