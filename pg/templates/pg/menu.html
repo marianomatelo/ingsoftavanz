@@ -81,7 +81,7 @@
       {% if rol == 'Dir Carrera' %}
 
         <br>
-
+      <div style="margin-left:40%; font-weight: bold;">
          <a href="{% url 'crearPlanEstudios' sesion=sesion %}" class="button"  role="button" aria-pressed="true"
             style='width:180px; height:50px'>Crear Plan de Estudios</a>
 
@@ -165,7 +165,7 @@
 
          <a href="{% url 'mostrarCompetencias' sesion=sesion %}" class="button"  role="button" aria-pressed="true"
             style='width:180px; height:50px'>Mostrar Competencias</a>
-
+      </div>
       {% endif %}
 
     {% endblock %}
